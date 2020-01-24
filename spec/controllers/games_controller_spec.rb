@@ -15,11 +15,11 @@ RSpec.describe GamesController, type: :controller do
   #   end
   # end
 
-  # describe "games#show action" do
-  #   it "should successfully show the page" do
-  #     get :show
-  #     expect(response).to have_http_status(:success)
-  #   end
-  # end
+  describe "games#show action" do
+    it "should successfully show the page" do
+      get :show, params: { id: 1 }
+      expect(response).to have_http_status(:success)
+    end
+  end
 
 end
