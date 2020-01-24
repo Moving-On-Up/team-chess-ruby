@@ -1,7 +1,7 @@
 require 'rails_helper'
 
-RSpec.describe HomeController, type: :controller do
-  describe "home#index action" do
+RSpec.describe GamesController, type: :controller do
+  describe "games#index action" do
     it "should successfully show the page" do
       get :index
       expect(response).to have_http_status(:success)
