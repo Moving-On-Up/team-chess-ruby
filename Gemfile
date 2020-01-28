@@ -76,3 +76,5 @@ end
 
 # add  Devise gem for User interface
 gem 'devise'
+#add Ruboco gem for code readability and consistency
+gem 'rubocop', require: false
