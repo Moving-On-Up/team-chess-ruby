@@ -10,12 +10,12 @@ class Piece < ApplicationRecord
   end
 
   def contains_own_piece?(x_end, y_end)
-    piece = game.pieces.where("x_coord = ? AND y_coord = ?", x_end, y_end).first
+    piece = game.pieces.where("x_position = ? AND y_position = ?", x_end, y_end).first
     piece.present? && piece.white == white
   end
 
   def opposition_piece?(x_end, y_end, id = nil, color = nil)
-    piece = game.pieces.where("x_coord = ? AND y_coord = ?", x_end, y_end).first
+    piece = game.pieces.where("x_position = ? AND y_position = ?", x_end, y_end).first
     if id == nil
       if piece.blank?
         return false
@@ -37,22 +37,22 @@ class Piece < ApplicationRecord
 
   #build_obstruction_array is identical to is_obstruct, except that we want the array, and not the boolean
   def build_obstruction_array(x_end, y_end)
-    y_change = y_coord - y_end
-    x_change = x_coord - x_end
+    y_change = y_position - y_end
+    x_change = x_position - x_end
 
     # Build array squares which piece must move through
     obstruction_array = []
     if x_change.abs == 0 # If it's moving vertically
       (1..(y_change.abs-1)).each do |i|
-          obstruction_array << [x_coord, y_coord - (y_change/y_change.abs) * i]
+          obstruction_array << [x_position, y_position - (y_change/y_change.abs) * i]
       end
     elsif y_change.abs == 0 # If horizontally
       (1..(x_change.abs-1)).each do |i| # 7 times do (0..6).each do
-          obstruction_array << [x_coord - (x_change/x_change.abs) * i, y_coord]
+          obstruction_array << [x_position - (x_change/x_change.abs) * i, y_position]
       end
     elsif y_change.abs == x_change.abs #if diagonally
       (1..(y_change.abs-1)).each do |i|
-          obstruction_array << [x_coord - (x_change/x_change.abs) * i, y_coord - (y_change/y_change.abs) * i]
+          obstruction_array << [x_position - (x_change/x_change.abs) * i, y_position - (y_change/y_change.abs) * i]
       end
     end
     obstruction_array
@@ -81,23 +81,23 @@ class Piece < ApplicationRecord
   end
 
   # determines horizontal distance travelled by piece
-  def x_distance(new_x_coord)
-    x_distance = (new_x_coord - x_coord).abs
+  def x_distance(new_x_position)
+    x_distance = (new_x_position - x_position).abs
   end
 
   # determines vertical distance travelled by piece
-  def y_distance(new_y_coord)
-    y_distance = (new_y_coord - y_coord).abs
+  def y_distance(new_y_position)
+    y_distance = (new_y_position - y_position).abs
   end
 
   # returns true if piece is moving from bottom to top
-  def up?(new_y_coord)
-    (y_coord - new_y_coord) > 0
+  def up?(new_y_position)
+    (y_position - new_y_position) > 0
   end
 
   # returns true if piece is moving from top to bottom
-  def down?(new_y_coord)
-    (y_coord - new_y_coord) < 0
+  def down?(new_y_position)
+    (y_position - new_y_position) < 0
   end
 
   def diagonal?(x_distance, y_distance)
@@ -111,31 +111,31 @@ class Piece < ApplicationRecord
   def find_capture_piece(x_end, y_end)
     if self.type == "Pawn"
       if en_passant?(x_end, y_end)
-        game.pieces.where(y_coord: y_coord, x_coord: x_end, type: "Pawn").first
+        game.pieces.where(y_position: y_position, x_position: x_end, type: "Pawn").first
       else
-        game.pieces.find_by(x_coord: x_end, y_coord: y_end)
+        game.pieces.find_by(x_position: x_end, y_position: y_end)
       end
     else
-      game.pieces.where(x_coord: x_end, y_coord: y_end).first
+      game.pieces.where(x_position: x_end, y_position: y_end).first
     end
   end
 
   #def move_to_capture_piece_and_capture(dead_piece, x_end, y_end)
-  #  update_attributes(x_coord: x_end, y_coord: y_end)
+  #  update_attributes(x_position: x_end, y_position: y_end)
   #  remove_piece(dead_piece)
   #end
 
   #def capture(capture_piece)
-  #  move_to_empty_square(capture_piece.x_coord, capture_piece.y_coord)
+  #  move_to_empty_square(capture_piece.x_position, capture_piece.y_position)
 #    remove_piece(capture_piece)
   #end
 
   def remove_piece(dead_piece)
-      dead_piece.update_attributes(x_coord: nil, y_coord: nil, captured: true) ##Should we have a piece status to add to db? Like captured/in play? This would be helpful for stats also
+      dead_piece.update_attributes(x_position: nil, y_position: nil, captured: true) ##Should we have a piece status to add to db? Like captured/in play? This would be helpful for stats also
   end
 
   #def move_to_empty_square(x_end, y_end)
-  #  update_attributes(x_coord: x_end, y_coord: y_end)
+  #  update_attributes(x_position: x_end, y_position: y_end)
   #end
 
   def update_winner
