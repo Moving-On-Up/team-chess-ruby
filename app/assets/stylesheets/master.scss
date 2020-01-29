@@ -1,1 +1,41 @@
 @import "bootstrap";
+
+
+body {
+    height: 100%;
+    width: 100%;
+    margin: auto;
+  }
+  
+  .flex-container {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .container {
+    width: 642px;
+    margin: auto;
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    border: 1px solid black;
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  
+
+.square {
+    width: 80px;
+    height: 80px;
+    text-align: center;
+    line-height: 75px;
+    font-size: 30px;
+}
+  
+.blackSquare {
+background-color: black;
+}
+
+.whiteSquare {
+background-color: white;
+}
