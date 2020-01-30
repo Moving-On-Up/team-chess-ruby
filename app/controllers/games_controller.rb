@@ -1,5 +1,10 @@
 class GamesController < ApplicationController
  before_action :authenticate_user!, only: [:new, :create, :show]
+
+RSpec.configure do |config|
+  config.include Devise::Test::ControllerHelpers, type: :controller
+end
+
     def new
         @game = Game.new
     end
