@@ -1,4 +1,8 @@
 class Game < ApplicationRecord
+  scope :available, -> { Game.where(white_player_id: [nil, ""]).or(Game.where(black_player_id: [nil, ""])) }
+  
+  belongs_to :user
+  
   has_many :pieces
   has_many :user_games
   has_many :users, through: :user_games
