@@ -13,5 +13,4 @@ class User < ApplicationRecord
   :uniqueness => {
     :case_sensitive => false
   }
-
 end

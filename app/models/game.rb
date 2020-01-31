@@ -92,5 +92,4 @@ class Game < ApplicationRecord
     User.find_by_id(loser_user_id)
   end
 
-
 end

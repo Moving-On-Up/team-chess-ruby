@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Piece, type: :model do
+  
   describe "#contains_own_piece?" do
     it "should return true if the end coordinates contains own piece" do
       game = FactoryGirl.create(:game)
@@ -45,4 +46,5 @@ RSpec.describe Piece, type: :model do
       expect(bishop.x_coord).to eq nil
     end
   end
+
 end
