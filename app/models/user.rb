@@ -5,4 +5,14 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :games
+  has_many :user_games
+  has_many :games, through: :user_games
+  has_many :pieces
+
+  validates :username,
+  :presence => true,
+  :uniqueness => {
+    :case_sensitive => false
+  }
+
 end
