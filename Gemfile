@@ -71,7 +71,7 @@ end
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.5'
-  gem "factory_girl_rails", "~> 4.0"
+  gem "factory_bot_rails"
 end
 
 #add Ruboco gem for code readability and consistency

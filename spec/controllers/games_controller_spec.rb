@@ -8,7 +8,7 @@ RSpec.describe GamesController, type: :controller do
     end
 
     it "should successfully show the new form" do
-      user = FactoryGirl.create(:user)
+      user = FactoryBot.create(:user)
       sign_in user
 
       get :new
