@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Piece, type: :model do
-  
+
   describe "#contains_own_piece?" do
     it "should return true if the end coordinates contains own piece" do
       game = FactoryBot.create(:game)
