@@ -69,7 +69,7 @@ source 'https://rails-assets.org' do
   gem 'rails-assets-tether', '>= 1.3.3'
 end
 
- group :development, :test do
+group :development, :test do
   gem 'rspec-rails', '~> 3.5'
 end
 
@@ -77,3 +77,4 @@ end
 gem 'rubocop', require: false
 
 gem 'jquery-rails'
+gem "factory_girl_rails", "~> 4.0"
