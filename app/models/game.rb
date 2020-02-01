@@ -1,16 +1,9 @@
 class Game < ApplicationRecord
-<<<<<<< HEAD
-  scope :available, -> { Game.where(white_player_id: [nil, ""]).or(Game.where(black_player_id: [nil, ""])) }
-  
-  belongs_to :user
-  
-=======
 
   scope :available, -> { Game.where(white_player_id: [nil, ""]).or(Game.where(black_player_id: [nil, ""])) }
   
   belongs_to :user
 
->>>>>>> master
   has_many :pieces
   has_many :user_games
   has_many :users, through: :user_games
@@ -99,8 +92,5 @@ class Game < ApplicationRecord
   def loser
     User.find_by_id(loser_user_id)
   end
-<<<<<<< HEAD
 
-=======
->>>>>>> master
 end
