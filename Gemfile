@@ -71,10 +71,11 @@ end
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.5'
+  gem "factory_girl_rails", "~> 4.0"
 end
 
 #add Ruboco gem for code readability and consistency
 gem 'rubocop', require: false
 
 gem 'jquery-rails'
-gem "factory_girl_rails", "~> 4.0"
+
