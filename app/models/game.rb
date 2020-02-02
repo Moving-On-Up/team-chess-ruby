@@ -85,6 +85,72 @@ class Game < ApplicationRecord
     User.find_by_id(black_player_id)
   end
 
+  
+ 
+
+ def is_obstructed?(white_player, black_player, new_x, new_y)
+   current_piece = Piece.find(white_player, black_player)
+
+    x_diff = current_piece.x_coord - new_x
+    y_diff = current_piece.y_coord - new_y
+
+    if !(((x_diff == y_diff) || (x_diff == 0) || (y_diff == 0)))
+      return nil
+    end
+
+    places_between = [ [new_x, new_y] ]
+    back_to_start = false
+    current_coordinates = [current_piece.x_coord, current_piece.y_coord]
+
+    until back_to_start
+      if new_x > current_piece.x_coord
+        new_x = new_x - 1
+      elsif new_x < current_piece.x_coord
+        new_x = new_x + 1
+      end
+
+      if new_y > current_piece.y_coord
+        new_y = new_y -  1
+      elsif new_y < current_piece.y_coord
+        new_y = new_y + 1
+      end
+
+      if current_coordinates == [new_x, new_y]
+        back_to_start = true
+      else
+        if x_diff == y_diff
+          places_between << [new_x, new_y]
+        elsif x_diff == 0
+          places_between << [current_piece.x_coord, new_y]
+        else
+          places_between << [new_x, current_piece.y_coord]
+        end
+      end
+    end
+    
+    pieces = self.pieces.to_a
+    
+    all_piece_coordinates = pieces.map { |p| [p.x_coord, p.y_coord] }
+    
+    obstruction = false
+    all_piece_coordinates.each do |piece_coordinates|
+      is_current_piece = current_coordinates == piece_coordinates
+      is_destination_piece = piece_coordinates == [new_x, new_y]  
+
+      if x_diff == 0 && y_diff == 0
+        obstruction = true
+      end
+
+      if places_between.include?(piece_coordinates) && !is_current_piece && !is_destination_piece       
+        obstruction = true
+        break
+      end   
+    end
+    return obstruction
+  end
+
+
+  
   def winner
     User.find_by_id(winner_player_id)
   end
