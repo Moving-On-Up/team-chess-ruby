@@ -1,4 +1,5 @@
-<p style="text-align:center"><b><%= @game.name %></b></p>
+<p style="text-align:center"><b>Game Name: <%= @game.name %></b></p>
+<p style="text-align:center"><b>Current Player: <%= User.find_by_id(@game.user_id).email %></b></p>
 
 <div class="flex-container">
     <div class="container">

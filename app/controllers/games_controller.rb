@@ -7,13 +7,15 @@ class GamesController < ApplicationController
 
     def create
         current_user.games.create(game_params.merge(white_player_id: current_user.id)
-            .merge(current_status: "inactive"))
+            .merge(current_status: "inactive").merge(current_user: current_user.id))
         redirect_to root_path
     end
+
 
     def update
         @game = Game.find_by_id(params[:id])
         @game.update_attributes(black_player_id: current_user.id)
+        @game.update_attributes(current_status: "active")
         redirect_to game_path(@game)
     end
     

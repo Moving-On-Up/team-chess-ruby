@@ -3,6 +3,7 @@ class Game < ApplicationRecord
   scope :available, -> { Game.where(white_player_id: [nil, ""]).or(Game.where(black_player_id: [nil, ""])) }
   scope :active, -> { Game.where(current_status: "active") }
   
+
   belongs_to :user
 
   has_many :pieces
