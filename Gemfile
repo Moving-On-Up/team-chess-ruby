@@ -61,10 +61,7 @@ end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
-<<<<<<< HEAD
-# add Ruboco for 
-gem 'rubocop', require: false
-=======
+
 gem 'jquery-rails'
 gem 'popper_js', '~> 1.11.1'
 gem 'bootstrap', '4.0.0.alpha6'
@@ -80,4 +77,6 @@ end
 
 # add  Devise gem for User interface
 gem 'devise'
->>>>>>> 90503f3d50816d32e1fd411a788045fbf63fa9f6
+#add Ruboco gem for code readability and consistency
+gem 'rubocop', require: false
+gem 'travis'
