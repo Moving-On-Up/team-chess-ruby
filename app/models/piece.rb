@@ -58,10 +58,68 @@ class Piece < ApplicationRecord
     obstruction_array
   end
 
-  def is_obstructed(x_end, y_end)
-    obstruction_array = build_obstruction_array(x_end, y_end)
-    # Check if end square contains own piece and if any of in between squares have a piece of any colour in
-    obstruction_array.any?{|square| game.contains_piece?(square[0], square[1]) == true}
+   def is_obstructed?(white_player, black_player, new_x, new_y)
+   current_piece = Piece.find(white_player, black_player)
+    @game = game
+    
+    x_diff = current_piece.x_position - new_x
+    y_diff = current_piece.y_position - new_y
+
+    if !(((x_diff == y_diff) || (x_diff == 0) || (y_diff == 0)))
+      return nil
+    end
+
+    places_between = [ [new_x, new_y] ]
+    back_to_start = false
+    current_position = [current_piece.x_position, current_piece.y_position]
+
+    until back_to_start
+      if new_x > current_piece.x_position
+        new_x = new_x - 1
+      elsif new_x < current_piece.x_position
+        new_x = new_x + 1
+      end
+
+      if new_y > current_piece.y_position
+        new_y = new_y -  1
+      elsif new_y < current_piece.y_position
+        new_y = new_y + 1
+      end
+
+      if current_position == [new_x, new_y]
+        back_to_start = true
+      else
+        if x_diff == y_diff
+          places_between << [new_x, new_y]
+        elsif x_diff == 0
+          places_between << [current_piece.x_position, new_y]
+        else
+          places_between << [new_x, current_piece.y_position]
+        end
+      end
+    end
+    
+    pieces = self.pieces.to_a
+    
+    all_pieces_positions = pieces.map { |p| [p.x_position, p.y_position] }
+    
+    obstruction = false
+    all_pieces_positions.each do |piece_position|
+      is_current_piece = current_position == piece_position
+      is_destination_piece = piece_position == [new_x, new_y]  
+
+      if x_diff == 0 && y_diff == 0
+        obstruction = true
+      end
+
+      if places_between.include?(piece_position) && !is_current_piece && !is_destination_piece       
+        obstruction = true
+        break
+      end   
+    end
+    return obstruction
+  end
+
   end
 
   def color
