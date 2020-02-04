@@ -58,7 +58,7 @@ class Piece < ApplicationRecord
     obstruction_array
   end
 
-   def is_obstructed?(new_x, new_y)
+  def is_obstructed?(new_x, new_y)
    current_piece = self
     @game = self.game
     
@@ -120,7 +120,6 @@ class Piece < ApplicationRecord
     return obstruction
   end
 
-  end
 
   def color
     white? ? 'white' : 'black'
@@ -185,7 +184,7 @@ class Piece < ApplicationRecord
 
   #def capture(capture_piece)
   #  move_to_empty_square(capture_piece.x_position, capture_piece.y_position)
-#    remove_piece(capture_piece)
+  #  remove_piece(capture_piece)
   #end
 
   def remove_piece(dead_piece)
@@ -217,5 +216,4 @@ class Piece < ApplicationRecord
   def name
     "#{self.type}_#{self.white ? 'white' : 'black' }"
   end
-
 end
