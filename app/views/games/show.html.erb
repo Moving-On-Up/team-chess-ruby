@@ -1,1 +1,24 @@
-<h1><%= @game.name %></h1>
+<p style="text-align:center"><b>Game Name: <%= @game.name %></b></p>
+<p style="text-align:center"><b>Current Player: <%= User.find_by_id(@game.user_id).email %></b></p>
+
+<div class="flex-container">
+    <div class="container">
+    <% for j in 1..8 %>
+        <% for i in 1..8 do %>
+            <% if j % 2 == 1 %>
+                <% if i % 2 == 1 %>
+                <div class="square whiteSquare"></div>
+                <% else %>
+                <div class="square blackSquare"></div>
+                <% end %>
+            <% else %>
+                <% if i % 2 == 1 %>
+                <div class="square blackSquare"></div>
+                <% else %>
+                <div class="square whiteSquare"></div>
+                <% end %>
+            <% end %>
+        <% end %>
+    <% end %>
+    </div>
+</div>
