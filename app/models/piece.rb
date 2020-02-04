@@ -58,9 +58,9 @@ class Piece < ApplicationRecord
     obstruction_array
   end
 
-   def is_obstructed?(white_player, black_player, new_x, new_y)
-   current_piece = Piece.find(white_player, black_player)
-    @game = game
+   def is_obstructed?(new_x, new_y)
+   current_piece = self
+    @game = self.game
     
     x_diff = current_piece.x_position - new_x
     y_diff = current_piece.y_position - new_y
