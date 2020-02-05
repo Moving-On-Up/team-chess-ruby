@@ -36,9 +36,9 @@ class PiecesController < ApplicationController
     if game_end == false && !(@piece.type == "Pawn" && @piece.pawn_promotion?)
       update_moves
       switch_turns
-      render json: {}, status: 200
+      format.json {render :json => { message: "Need to wait for second player!", class: "alert alert-warning"}, status: 200}
     else
-      render json: {}, status: 201
+      format.json {render :json => { message: "Need to wait for second player!", class: "alert alert-warning"}, status: 201}
       #somehow will need the code below to pass so we can have a message. Right now below is failing tests and saying the http code is 200 :(
       #render json: {status: "Not modified (standing in for success)", code: 304, message: "Game over!"}
     end
@@ -52,7 +52,6 @@ class PiecesController < ApplicationController
       format.json {render :json => { message: "Need to wait for second player!", class: "alert alert-warning"}, status: 422}
     end
   end
-
 
   def switch_turns
     if @game.white_player_id == @game.turn_player_id
@@ -68,15 +67,25 @@ class PiecesController < ApplicationController
   end
 
   def verify_valid_move
-    return if @piece.valid_move?(piece_params[:x_position], piece_params[:y_position], piece_params[:id], piece_params[:white]) &&
-    (@piece.is_obstructed(piece_params[:x_position], piece_params[:y_position]) == false) &&
-    (@piece.contains_own_piece?(piece_params[:x_position], piece_params[:y_position]) == false) &&
-    (king_not_moved_to_check_or_king_not_kept_in_check? == true) ||
-    piece_params[:type == "Pawn"] && @piece.pawn_promotion?
+    return if @piece.valid_move?(@piece.x_position, @piece.y_position, @piece.id, @piece.white) &&
+    (@piece.is_obstructed(@piece.x_position, @piece.y_position) == false) &&
+    (@piece.contains_own_piece?(@piece.x_position, @piece.y_position) == false) #&&
+    #(king_not_moved_to_check_or_king_not_kept_in_check? == true) ||
+    #@piece.piece_type == "Pawn" && @piece.pawn_promotion?
     respond_to do |format|
       format.json {render :json => { message: "Invalid move!", class: "alert alert-warning"}, status: 422}
     end
   end
+  #def verify_valid_move
+  #  return if @piece.valid_move?(piece_params[:x_position], piece_params[:y_position], piece_params[:id], piece_params[:white]) &&
+  #  (@piece.is_obstructed(piece_params[:x_position], piece_params[:y_position]) == false) &&
+  #  (@piece.contains_own_piece?(piece_params[:x_position], piece_params[:y_position]) == false) &&
+  #  (king_not_moved_to_check_or_king_not_kept_in_check? == true) ||
+  #  piece_params[:type == "Pawn"] && @piece.pawn_promotion?
+  #  respond_to do |format|
+  #    format.json {render :json => { message: "Invalid move!", class: "alert alert-warning"}, status: 422}
+  #  end
+  #end
 
   def verify_player_turn
     return if correct_turn? &&
