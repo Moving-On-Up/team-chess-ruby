@@ -3,51 +3,36 @@ require 'rails_helper'
 RSpec.describe King, type: :model do
 
   describe "#valid move?" do
+   let(:current_user) { FactoryBot.create(:user, id: 1) }
+   let(:current_user2) { FactoryBot.create(:user, id: 2) }
+   let(:game) { FactoryBot.create(:game, user_id: current_user.id, turn_player_id: current_user.id, white_player_id: current_user.id, black_player_id: current_user2.id) }
    it "should return true to move one square forward" do
-    current_user = FactoryBot.create(:user, id: 1)
-    current_user2 = FactoryBot.create(:user, id: 2)
-    game = FactoryBot.create(:game, user_id: 1, turn_player_id: 1, white_player_id: 1, black_player_id: 2)
-    king = FactoryBot.create(:king, x_position:5, y_position: 5, player_id: 2, game_id: game.id, white: false)
+    king = FactoryBot.create(:king, x_position:5, y_position: 5, player_id: current_user2.id, game_id: game.id, white: false)
     expect(king.valid_move?(6, 5)).to eq(true)
    end
 
    it "should return true to move one square backward" do
-    current_user = FactoryBot.create(:user, id: 1)
-    current_user2 = FactoryBot.create(:user, id: 2)
-    game = FactoryBot.create(:game, user_id: 1, turn_player_id: 1, white_player_id: 1, black_player_id: 2)
-    king = FactoryBot.create(:king, x_position:5, y_position: 5, player_id: 2, game_id: game.id, white: false)
+    king = FactoryBot.create(:king, x_position:5, y_position: 5, player_id: current_user2.id, game_id: game.id, white: false)
     expect(king.valid_move?(4, 5)).to eq(true)
    end
 
    it "should return true to move one square up" do
-    current_user = FactoryBot.create(:user, id: 1)
-    current_user2 = FactoryBot.create(:user, id: 2)
-    game = FactoryBot.create(:game, user_id: 1, turn_player_id: 1, white_player_id: 1, black_player_id: 2)
-    king = FactoryBot.create(:king, x_position:5, y_position: 5, player_id: 2, game_id: game.id, white: false)
+    king = FactoryBot.create(:king, x_position:5, y_position: 5, player_id: current_user2.id, game_id: game.id, white: false)
     expect(king.valid_move?(5, 4)).to eq(true)
    end
 
    it "should return true to move one square down" do
-    current_user = FactoryBot.create(:user, id: 1)
-    current_user2 = FactoryBot.create(:user, id: 2)
-    game = FactoryBot.create(:game, user_id: 1, turn_player_id: 1, white_player_id: 1, black_player_id: 2)
-    king = FactoryBot.create(:king, x_position:5, y_position: 5, player_id: 2, game_id: game.id, white: false)
+    king = FactoryBot.create(:king, x_position:5, y_position: 5, player_id: current_user2.id, game_id: game.id, white: false)
     expect(king.valid_move?(5, 6)).to eq(true)
    end
 
    it "should return true to move one square diagonally" do
-    current_user = FactoryBot.create(:user, id: 1)
-    current_user2 = FactoryBot.create(:user, id: 2)
-    game = FactoryBot.create(:game, user_id: 1, turn_player_id: 1, white_player_id: 1, black_player_id: 2)
-    king = FactoryBot.create(:king, x_position:5, y_position: 5, player_id: 2, game_id: game.id, white: false)
+    king = FactoryBot.create(:king, x_position:5, y_position: 5, player_id: current_user2.id, game_id: game.id, white: false)
     expect(king.valid_move?(6, 6)).to eq(true)
    end
 
    #it "should return false to move two squares forward" do
-   # current_user = FactoryBot.create(:user, id: 1)
-   # current_user2 = FactoryBot.create(:user, id: 2)
-   # game = FactoryBot.create(:game, user_id: 1, turn_player_id: 1, white_player_id: 1, black_player_id: 2)
-   # king = FactoryBot.create(:king, x_position:5, y_position: 5, player_id: 1, game_id: game.id, white: true)
+   # king = FactoryBot.create(:king, x_position:5, y_position: 5, player_id: current_user.id, game_id: game.id, white: true)
    # expect(king.valid_move?(7, 5)).to eq(false)
    #end
 

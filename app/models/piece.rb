@@ -141,18 +141,18 @@ class Piece < ApplicationRecord
   def update_winner
     game.update_attributes(state: "end")
     if white?
-      game.update_attributes(winner_user_id: game.black_player_user_id)
+      game.update_attributes(winner_user_id: game.black_player_id)
     else
-      game.update_attributes(winner_user_id: game.white_player_user_id)
+      game.update_attributes(winner_user_id: game.white_player_id)
     end
   end
 
   def update_loser
     game.update_attributes(state: "end")
     if white?
-      game.update_attributes(loser_user_id: game.black_player_user_id)
+      game.update_attributes(loser_user_id: game.black_player_id)
     else
-      game.update_attributes(loser_user_id: game.white_player_user_id)
+      game.update_attributes(loser_user_id: game.white_player_id)
     end
   end
 

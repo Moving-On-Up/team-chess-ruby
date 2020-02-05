@@ -18,8 +18,8 @@ class PiecesController < ApplicationController
     #if the opponent's king is stuck, the game is over, right now noted by the 401 error
     #will need to do a proper game end
 
-    king_opp = @game.pieces.where(:type =>"King").where.not(:user_id => @game.turn_user_id)[0]
-    king_current = @game.pieces.where(:type =>"King").where(:user_id => @game.turn_user_id)[0]
+    king_opp = @game.pieces.where(:type =>"King").where.not(:user_id => @game.turn_player_id)[0]
+    king_current = @game.pieces.where(:type =>"King").where(:user_id => @game.turn_player_id)[0]
     game_end = false
     if king_opp.check?(king_opp.x_position, king_opp.y_position).present?
       if king_opp.find_threat_and_determine_checkmate
@@ -55,10 +55,10 @@ class PiecesController < ApplicationController
 
 
   def switch_turns
-    if @game.white_player_id == @game.turn_user_id
-      @game.update_attributes(turn_user_id:@game.black_player_id)
-    elsif @game.black_player_id == @game.turn_user_id
-      @game.update_attributes(turn_user_id:@game.white_player_id)
+    if @game.white_player_id == @game.turn_player_id
+      @game.update_attributes(turn_player_id:@game.black_player_id)
+    elsif @game.black_player_id == @game.turn_player_id
+      @game.update_attributes(turn_player_id:@game.white_player_id)
     end
   end
 
@@ -68,12 +68,11 @@ class PiecesController < ApplicationController
   end
 
   def verify_valid_move
-    return if @piece.valid_move?(piece_params[:x_position].to_i, piece_params[:y_position].to_i, @piece.id, @piece.white == true) &&
-    (@piece.is_obstructed(piece_params[:x_position].to_i, piece_params[:y_position].to_i) == false) &&
-    (@piece.contains_own_piece?(piece_params[:x_position].to_i, piece_params[:y_position].to_i) == false) &&
+    return if @piece.valid_move?(piece_params[:x_position], piece_params[:y_position], piece_params[:id], piece_params[:white]) &&
+    (@piece.is_obstructed(piece_params[:x_position], piece_params[:y_position]) == false) &&
+    (@piece.contains_own_piece?(piece_params[:x_position], piece_params[:y_position]) == false) &&
     (king_not_moved_to_check_or_king_not_kept_in_check? == true) ||
-    @piece.type == "Pawn" && @piece.pawn_promotion?
-
+    piece_params[:type == "Pawn"] && @piece.pawn_promotion?
     respond_to do |format|
       format.json {render :json => { message: "Invalid move!", class: "alert alert-warning"}, status: 422}
     end
@@ -81,15 +80,26 @@ class PiecesController < ApplicationController
 
   def verify_player_turn
     return if correct_turn? &&
-    ((@piece.game.white_player_id == current_user.id && @piece.white?) ||
-    (@piece.game.black_player_id == current_user.id && @piece.black?))
+    ((@piece.game.white_player_id == @piece.player_id && @piece.white?) ||
+    (@piece.game.black_player_id == @piece.player_id && @piece.black?))
     respond_to do |format|
       format.json {render :json => { message: "Not yet your turn!", class: "alert alert-warning"}, status: 422}
     end
   end
 
+  #def verify_player_turn
+  #  return if correct_turn? &&
+  #  ((@piece.game.white_player_id == current_user.id && @piece.white?) ||
+  #  (@piece.game.black_player_id == current_user.id && @piece.black?))
+  #  respond_to do |format|
+  #    format.json {render :json => { message: "Not yet your turn!", class: "alert alert-warning"}, status: 422}
+  #  end
+  #end
+  #def correct_turn?
+  #  @piece.game.turn_player_id == user.id
+  #end
   def correct_turn?
-    @piece.game.turn_user_id == current_user.id
+    @piece.game.turn_player_id == @piece.player_id
   end
 
   def piece_params
@@ -107,7 +117,7 @@ class PiecesController < ApplicationController
     #function checks if player is not moving king into a check position
     #and also checking that if king is in check, player must move king out of check,
     #this function restricts any other random move if king is in check.
-    king = @game.pieces.where(:type =>"King").where(:user_id => @game.turn_user_id)[0]
+    king = @game.pieces.where(:type =>"King").where(:user_id => @game.turn_player_id)[0]
     if @piece.type == "King"
       if @piece.check?(piece_params[:x_position].to_i, piece_params[:y_position].to_i, @piece.id, @piece.white == true).blank?
         king.update_attributes(king_check: 0)
