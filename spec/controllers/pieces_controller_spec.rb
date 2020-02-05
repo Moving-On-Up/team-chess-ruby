@@ -3,15 +3,17 @@ require 'rails_helper'
 RSpec.describe PiecesController, type: :controller do
 
   describe "#update" do
-    
+    let(:current_user) { FactoryBot.create(:user) }
+
     it "should update coordinates if successful move" do
-      current_user = FactoryBot.create(:user, id: 1)
+      #current_user = FactoryBot.create(:user, id: 1)
       current_user2 = FactoryBot.create(:user, id: 2)    
-      game = FactoryBot.create(:game, user_id: 1, turn_player_id: 1, white_player_id: 1, black_player_id: 2)
+      game = FactoryBot.create(:game, user_id: current_user.id, turn_player_id: 1, white_player_id: 1, black_player_id: 2)
       black_king = FactoryBot.create(:king, x_position: 5, y_position: 1, player_id: 2, game_id: game.id, white: false)
       white_king = FactoryBot.create(:king, x_position: 5, y_position: 8, player_id: 1, game_id: game.id, white:true)
       pawn = FactoryBot.create(:pawn, x_position: 1, y_position: 6, player_id: 1, game_id: game.id, white: true)
-      post :update, params: {id: pawn.id, piece:{x_position: 1, y_position: 5}}
+      patch :update, params: {id: pawn.id, piece:{x_position: 1, y_position: 5}}
+      #patch :update, piece: pawn.attributes
       expect(response).to have_http_status(200)
       pawn.reload
       expect(pawn.y_position).to eq 5
