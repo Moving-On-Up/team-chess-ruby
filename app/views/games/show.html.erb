@@ -7,16 +7,24 @@
         <% for i in 1..8 do %>
             <% if j % 2 == 1 %>
                 <% if i % 2 == 1 %>
-                <div class="square whiteSquare"></div>
+                    <div class = "square whiteSquare" %>
                 <% else %>
-                <div class="square blackSquare"></div>
+                    <div class = "square brownSquare" %>
                 <% end %>
+                <% if @game.contains_piece?(i, j) %>
+                <%= image_tag @game.pieces.find_by(x_position: i, y_position: j).name + ".png" %>
+                <% end %>
+		        </div>
             <% else %>
                 <% if i % 2 == 1 %>
-                <div class="square blackSquare"></div>
+                    <div class="square brownSquare">
                 <% else %>
-                <div class="square whiteSquare"></div>
+                    <div class="square whiteSquare">
                 <% end %>
+                <% if @game.contains_piece?(i, j) %>
+                <%= image_tag @game.pieces.find_by(x_position: i, y_position: j).name + ".png" %>
+                <% end %>
+                </div>
             <% end %>
         <% end %>
     <% end %>
