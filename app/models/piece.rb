@@ -156,8 +156,4 @@ class Piece < ApplicationRecord
     end
   end
 
-  def name
-    "#{self.type}_#{self.white ? 'white' : 'black' }"
-  end
-
 end
