@@ -9,6 +9,10 @@ class Piece < ApplicationRecord
     %w(Pawn Rook Knight Bishop Queen King)
   end
 
+  def valid_move?(new_x_position, new_y_position, id = nil, color = nil)
+    
+  end
+
   def contains_own_piece?(x_end, y_end)
     piece = game.pieces.where("x_position = ? AND y_position = ?", x_end, y_end).first
     piece.present? && piece.white == white
@@ -120,40 +124,44 @@ class Piece < ApplicationRecord
     end
   end
 
-  #def move_to_capture_piece_and_capture(dead_piece, x_end, y_end)
-  #  update_attributes(x_position: x_end, y_position: y_end)
-  #  remove_piece(dead_piece)
-  #end
+  def move_to_capture_piece_and_capture(dead_piece, x_end, y_end)
+    update_attributes(x_position: x_end, y_position: y_end)
+    remove_piece(dead_piece)
+  end
 
-  #def capture(capture_piece)
-  #  move_to_empty_square(capture_piece.x_position, capture_piece.y_position)
-#    remove_piece(capture_piece)
-  #end
+  def capture(capture_piece)
+    move_to_empty_square(capture_piece.x_position, capture_piece.y_position)
+    remove_piece(capture_piece)
+  end
 
   def remove_piece(dead_piece)
       dead_piece.update_attributes(x_position: nil, y_position: nil, captured: true) ##Should we have a piece status to add to db? Like captured/in play? This would be helpful for stats also
   end
 
-  #def move_to_empty_square(x_end, y_end)
-  #  update_attributes(x_position: x_end, y_position: y_end)
-  #end
+  def move_to_empty_square(x_end, y_end)
+    update_attributes(x_position: x_end, y_position: y_end)
+  end
 
   def update_winner
     game.update_attributes(state: "end")
     if white?
-      game.update_attributes(winner_user_id: game.black_player_user_id)
+      game.update_attributes(winner_user_id: game.black_player_id)
     else
-      game.update_attributes(winner_user_id: game.white_player_user_id)
+      game.update_attributes(winner_user_id: game.white_player_id)
     end
   end
 
   def update_loser
     game.update_attributes(state: "end")
     if white?
-      game.update_attributes(loser_user_id: game.black_player_user_id)
+      game.update_attributes(loser_user_id: game.black_player_id)
     else
-      game.update_attributes(loser_user_id: game.white_player_user_id)
+      game.update_attributes(loser_user_id: game.white_player_id)
     end
+  end
+
+  def name
+    "#{self.piece_type}_#{self.white ? 'white' : 'black' }"
   end
 
 end
