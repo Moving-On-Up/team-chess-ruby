@@ -78,7 +78,6 @@ class Game < ApplicationRecord
       Queen.create(game_id: id, piece_type: "Queen", white: false, x_position: 4, y_position: 1, player_id: black_player_id, name: "Queen_black")
   end
 
-
   def white_player
     User.find_by_id(white_player_id)
   end
@@ -87,6 +86,7 @@ class Game < ApplicationRecord
     User.find_by_id(black_player_id)
   end
 
+ 
   def winner
     User.find_by_id(winner_player_id)
   end

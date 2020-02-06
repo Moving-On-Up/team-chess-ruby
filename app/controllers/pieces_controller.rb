@@ -36,9 +36,9 @@ class PiecesController < ApplicationController
     if game_end == false && !(@piece.piece_type == "Pawn" && @piece.pawn_promotion?)
       update_moves
       switch_turns
-      render json: {}, status: 200
+      format.json {render :json => { message: "Need to wait for second player!", class: "alert alert-warning"}, status: 200}
     else
-      render json: {}, status: 201
+      format.json {render :json => { message: "Need to wait for second player!", class: "alert alert-warning"}, status: 201}
       #somehow will need the code below to pass so we can have a message. Right now below is failing tests and saying the http code is 200 :(
       #render json: {status: "Not modified (standing in for success)", code: 304, message: "Game over!"}
     end
@@ -47,18 +47,17 @@ class PiecesController < ApplicationController
   private
 
   def verify_two_players
-    return if @game.black_player_user_id && @game.white_player_user_id
+    return if @game.black_player_id && @game.white_player_id
     respond_to do |format|
       format.json {render :json => { message: "Need to wait for second player!", class: "alert alert-warning"}, status: 422}
     end
   end
 
-
   def switch_turns
-    if @game.white_player_user_id == @game.turn_user_id
-      @game.update_attributes(turn_user_id:@game.black_player_user_id)
-    elsif @game.black_player_user_id == @game.turn_user_id
-      @game.update_attributes(turn_user_id:@game.white_player_user_id)
+    if @game.white_player_id == @game.turn_player_id
+      @game.update_attributes(turn_player_id:@game.black_player_id)
+    elsif @game.black_player_id == @game.turn_player_id
+      @game.update_attributes(turn_player_id:@game.white_player_id)
     end
   end
 
@@ -78,18 +77,39 @@ class PiecesController < ApplicationController
       format.json {render :json => { message: "Invalid move!", class: "alert alert-warning"}, status: 422}
     end
   end
+  #def verify_valid_move
+  #  return if @piece.valid_move?(piece_params[:x_position], piece_params[:y_position], piece_params[:id], piece_params[:white]) &&
+  #  (@piece.is_obstructed(piece_params[:x_position], piece_params[:y_position]) == false) &&
+  #  (@piece.contains_own_piece?(piece_params[:x_position], piece_params[:y_position]) == false) &&
+  #  (king_not_moved_to_check_or_king_not_kept_in_check? == true) ||
+  #  piece_params[:type == "Pawn"] && @piece.pawn_promotion?
+  #  respond_to do |format|
+  #    format.json {render :json => { message: "Invalid move!", class: "alert alert-warning"}, status: 422}
+  #  end
+  #end
 
   def verify_player_turn
     return if correct_turn? &&
-    ((@piece.game.white_player_user_id == current_user.id && @piece.white?) ||
-    (@piece.game.black_player_user_id == current_user.id && @piece.black?))
+    ((@piece.game.white_player_id == @piece.player_id && @piece.white?) ||
+    (@piece.game.black_player_id == @piece.player_id && @piece.black?))
     respond_to do |format|
       format.json {render :json => { message: "Not yet your turn!", class: "alert alert-warning"}, status: 422}
     end
   end
 
+  #def verify_player_turn
+  #  return if correct_turn? &&
+  #  ((@piece.game.white_player_id == current_user.id && @piece.white?) ||
+  #  (@piece.game.black_player_id == current_user.id && @piece.black?))
+  #  respond_to do |format|
+  #    format.json {render :json => { message: "Not yet your turn!", class: "alert alert-warning"}, status: 422}
+  #  end
+  #end
+  #def correct_turn?
+  #  @piece.game.turn_player_id == user.id
+  #end
   def correct_turn?
-    @piece.game.turn_user_id == current_user.id
+    @piece.game.turn_player_id == @piece.player_id
   end
 
   def piece_params
@@ -107,6 +127,7 @@ class PiecesController < ApplicationController
     #function checks if player is not moving king into a check position
     #and also checking that if king is in check, player must move king out of check,
     #this function restricts any other random move if king is in check.
+
     king = @game.pieces.where(:piece_type =>"King").where(:user_id => @game.turn_user_id)[0]
     if @piece.piece_type == "King"
       if @piece.check?(piece_params[:x_position].to_i, piece_params[:y_position].to_i, @piece.id, @piece.white == true).blank?

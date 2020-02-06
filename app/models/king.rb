@@ -12,7 +12,7 @@ class King < Piece
 
   def check?(x_position, y_position, id = nil, color = nil)
     game.pieces.each do | f |
-      if f.user_id != self.user_id && f.x_position != nil
+      if f.player_id != self.player_id && f.x_position != nil
         if f.valid_move?(x_position, y_position, id, color) == true && f.is_obstructed(x_position, y_position) == false
           return f
           break
@@ -103,7 +103,7 @@ class King < Piece
 
   def can_block_king?(threat,obstruction_array)
     game.pieces.each do |f|
-      if f.user_id == self.user_id && f.x_position != nil && f != self
+      if f.player_id == self.player_id && f.x_position != nil && f != self
         if (f.valid_move?(threat.x_position, threat.y_position) == true &&
         f.contains_own_piece?(threat.x_position, threat.y_position) == false &&
         f.is_obstructed(threat.x_position, threat.y_position) == false)
