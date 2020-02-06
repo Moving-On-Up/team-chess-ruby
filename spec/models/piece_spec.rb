@@ -2,7 +2,6 @@ require 'rails_helper'
 
 RSpec.describe Piece, type: :model do
   
-
   describe "#contains_own_piece?" do
     let(:current_user) { FactoryBot.create(:user, id: 1) }
     let(:current_user2) { FactoryBot.create(:user, id: 2) }
@@ -51,5 +50,4 @@ RSpec.describe Piece, type: :model do
       expect(bishop.x_position).to eq nil
     end
   end
-
 end
