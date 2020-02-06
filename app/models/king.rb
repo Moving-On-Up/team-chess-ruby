@@ -53,9 +53,9 @@ class King < Piece
     return false unless self.move_number == 0
     return false unless x_distance(new_x_position) == 2 && y_distance(new_y_position) == 0
     if new_x_position > x_position
-      @rook_for_castling = self.game.pieces.where(type: "Rook", user_id: self.user.id, x_position: 8).first
+      @rook_for_castling = self.game.pieces.where(piece_type: "Rook", user_id: self.user.id, x_position: 8).first
     else
-      @rook_for_castling = self.game.pieces.where(type: "Rook", user_id: self.user.id, x_position: 1).first
+      @rook_for_castling = self.game.pieces.where(piece_type: "Rook", user_id: self.user.id, x_position: 1).first
     end
     return false if @rook_for_castling.nil?
     if !@rook_for_castling.nil?

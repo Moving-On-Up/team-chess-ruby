@@ -30,7 +30,7 @@ ActiveRecord::Schema.define(version: 2020_02_02_001013) do
   create_table "pieces", force: :cascade do |t|
     t.integer "x_position"
     t.integer "y_position"
-    t.string "type"
+    t.string "piece_type"
     t.integer "player_id"
     t.integer "game_id"
     t.datetime "created_at", null: false
