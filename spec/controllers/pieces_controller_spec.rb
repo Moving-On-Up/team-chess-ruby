@@ -215,13 +215,13 @@ RSpec.describe PiecesController, type: :controller do
       expect(response).to have_http_status(201)
     end
 
-    it "should update the piece move into the moves model" do
-      black_king = FactoryBot.create(:king, x_position:5, y_position: 1, player_id: current_user2.id, game_id: game.id, white: false)
-      white_king = FactoryBot.create(:king, player_id: current_user.id, x_position:5, y_position: 8, game_id: game.id, white:true)
-      black_pawn = FactoryBot.create(:pawn, x_position: 4, y_position: 2, game_id: game.id, white:false, player_id: current_user2.id)
-      post :update, params: {id: black_pawn.id, piece: {x_position:4, y_position:3 }}
-      expect(game.moves.last.x_position).to eq 4
-      expect(game.moves.last.piece_type).to eq "Pawn"
-    end
+    #it "should update the piece move into the moves model" do
+    #  black_king = FactoryBot.create(:king, x_position:5, y_position: 1, player_id: current_user2.id, game_id: game.id, white: false)
+    #  white_king = FactoryBot.create(:king, player_id: current_user.id, x_position:5, y_position: 8, game_id: game.id, white:true)
+    #  black_pawn = FactoryBot.create(:pawn, x_position: 4, y_position: 2, game_id: game.id, white:false, player_id: current_user2.id)
+    #  post :update, params: {id: black_pawn.id, piece: {x_position:4, y_position:3 }}
+    #  expect(game.moves.last.x_position).to eq 4
+    #  expect(game.moves.last.piece_type).to eq "Pawn"
+    #end
   end
 end
