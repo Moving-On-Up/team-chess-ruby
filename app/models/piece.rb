@@ -201,7 +201,6 @@ class Piece < ApplicationRecord
     self.save
   end
 
-
   def remove_piece(dead_piece)
       dead_piece.update_attributes(x_position: nil, y_position: nil) ##Should we have a piece status to add to db? Like captured/in play? This would be helpful for stats also
   end
