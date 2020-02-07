@@ -77,16 +77,6 @@ class PiecesController < ApplicationController
       format.any {render :json => { :response => "Invalid move!", class: "alert alert-warning"}, :status => 422}
     end
   end
-  #def verify_valid_move
-  #  return if @piece.valid_move?(piece_params[:x_position], piece_params[:y_position], piece_params[:id], piece_params[:white]) &&
-  #  (@piece.is_obstructed(piece_params[:x_position], piece_params[:y_position]) == false) &&
-  #  (@piece.contains_own_piece?(piece_params[:x_position], piece_params[:y_position]) == false) &&
-  #  (king_not_moved_to_check_or_king_not_kept_in_check? == true) ||
-  #  piece_params[:type == "Pawn"] && @piece.pawn_promotion?
-  #  respond_to do |format|
-  #    format.json {render :json => { message: "Invalid move!", class: "alert alert-warning"}, status: 422}
-  #  end
-  #end
 
   def verify_player_turn
     return if correct_turn? &&
