@@ -36,9 +36,9 @@ class PiecesController < ApplicationController
     if game_end == false && !(@piece.piece_type == "Pawn" && @piece.pawn_promotion?)
       update_moves
       switch_turns
-      format.json {render :json => { message: "Need to wait for second player!", class: "alert alert-warning"}, status: 200}
+      format.any { render :json => {:response => "Need to wait for second player!", class: "alert alert-warning"}, :status => 200}
     else
-      format.json {render :json => { message: "Need to wait for second player!", class: "alert alert-warning"}, status: 201}
+      format.any {render :json => { :response => "Need to wait for second player!", class: "alert alert-warning"}, :status => 201}
       #somehow will need the code below to pass so we can have a message. Right now below is failing tests and saying the http code is 200 :(
       #render json: {status: "Not modified (standing in for success)", code: 304, message: "Game over!"}
     end
@@ -49,7 +49,7 @@ class PiecesController < ApplicationController
   def verify_two_players
     return if @game.black_player_id && @game.white_player_id
     respond_to do |format|
-      format.json {render :json => { message: "Need to wait for second player!", class: "alert alert-warning"}, status: 422}
+      format.any {render :json => { :response => "Need to wait for second player!", class: "alert alert-warning"}, :status => 422}
     end
   end
 
@@ -69,12 +69,12 @@ class PiecesController < ApplicationController
   def verify_valid_move
     return if @piece.valid_move?(piece_params[:x_position].to_i, piece_params[:y_position].to_i, @piece.id, @piece.white == true) &&
     (@piece.is_obstructed(piece_params[:x_position].to_i, piece_params[:y_position].to_i) == false) &&
-    (@piece.contains_own_piece?(piece_params[:x_position].to_i, piece_params[:y_position].to_i) == false) &&
-    (king_not_moved_to_check_or_king_not_kept_in_check? == true) ||
-    @piece.piece_type == "Pawn" && @piece.pawn_promotion?
+    (@piece.contains_own_piece?(piece_params[:x_position].to_i, piece_params[:y_position].to_i) == false) #&&
+    #(king_not_moved_to_check_or_king_not_kept_in_check? == true) ||
+    #@piece.piece_type == "Pawn" && @piece.pawn_promotion?
 
     respond_to do |format|
-      format.json {render :json => { message: "Invalid move!", class: "alert alert-warning"}, status: 422}
+      format.any {render :json => { :response => "Invalid move!", class: "alert alert-warning"}, :status => 422}
     end
   end
   #def verify_valid_move
@@ -93,21 +93,11 @@ class PiecesController < ApplicationController
     ((@piece.game.white_player_id == @piece.player_id && @piece.white?) ||
     (@piece.game.black_player_id == @piece.player_id && @piece.black?))
     respond_to do |format|
-      format.json {render :json => { message: "Not yet your turn!", class: "alert alert-warning"}, status: 422}
+        #format.any { render :json => {:response => 'Unable to authenticate' },:status => 401  }
+      format.any {render :json => { :response => "Not yet your turn!", class: "alert alert-warning"}, :status => 422}
     end
   end
 
-  #def verify_player_turn
-  #  return if correct_turn? &&
-  #  ((@piece.game.white_player_id == current_user.id && @piece.white?) ||
-  #  (@piece.game.black_player_id == current_user.id && @piece.black?))
-  #  respond_to do |format|
-  #    format.json {render :json => { message: "Not yet your turn!", class: "alert alert-warning"}, status: 422}
-  #  end
-  #end
-  #def correct_turn?
-  #  @piece.game.turn_player_id == user.id
-  #end
   def correct_turn?
     @piece.game.turn_player_id == @piece.player_id
   end
