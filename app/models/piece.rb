@@ -130,6 +130,17 @@ class Piece < ApplicationRecord
 #    remove_piece(capture_piece)
   #end
 
+def move_to!(new_x,new_y)
+  a_piece = Piece.find_by(x_position: new_x, y_position: new_y)
+  if a_piece != nil
+    remove_piece(a_piece)
+  end
+  self.x_position = new_x
+  self.y_position = new_y
+  self.save
+end
+
+
   def remove_piece(dead_piece)
       dead_piece.update_attributes(x_position: nil, y_position: nil, captured: true) ##Should we have a piece status to add to db? Like captured/in play? This would be helpful for stats also
   end
