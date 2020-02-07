@@ -17,12 +17,43 @@ RSpec.describe GamesController, type: :controller do
     end
   end
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> a6396816c798e4955980840ebdc59aca2528a829
+  describe "games#create action" do
+    it "should successfully show the page" do
+      user = FactoryBot.create(:user)
+      sign_in user
+
+      game = FactoryBot.create(:game, user: user, white_player_id: user, current_status: "inactive", current_user: user)
+
+      expect(response).to have_http_status(:success)
+      expect(game.pieces.count).to eq 32
+      
+    end
+  end
+
+  describe "games#show action" do
+    it "should successfully show the page" do
+
+      user = FactoryBot.create(:user)
+      sign_in user
+
+      game = FactoryBot.create(:game, user: user, white_player_id: user, current_status: "inactive", current_user: user)
+
+      get :show, params: { id: game.id }
+
   describe "games#show action" do
     it "should successfully show the page" do
       user = FactoryBot.create(:user, id: 1)
       sign_in user
 
       get :show, params: { id: 1 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> a6396816c798e4955980840ebdc59aca2528a829
       expect(response).to have_http_status(:success)
     end
   end
