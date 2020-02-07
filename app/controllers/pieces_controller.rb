@@ -18,8 +18,8 @@ class PiecesController < ApplicationController
     #if the opponent's king is stuck, the game is over, right now noted by the 401 error
     #will need to do a proper game end
 
-    king_opp = @game.pieces.where(:piece_type =>"King").where.not(:user_id => @game.turn_user_id)[0]
-    king_current = @game.pieces.where(:piece_type =>"King").where(:user_id => @game.turn_user_id)[0]
+    king_opp = @game.pieces.where(:piece_type =>"King").where.not(:player_id => @game.turn_user_id)[0]
+    king_current = @game.pieces.where(:piece_type =>"King").where(:player_id => @game.turn_user_id)[0]
     game_end = false
     if king_opp.check?(king_opp.x_position, king_opp.y_position).present?
       if king_opp.find_threat_and_determine_checkmate
@@ -83,7 +83,6 @@ class PiecesController < ApplicationController
     ((@piece.game.white_player_id == @piece.player_id && @piece.white?) ||
     (@piece.game.black_player_id == @piece.player_id && @piece.black?))
     respond_to do |format|
-        #format.any { render :json => {:response => 'Unable to authenticate' },:status => 401  }
       format.any {render :json => { :response => "Not yet your turn!", class: "alert alert-warning"}, :status => 422}
     end
   end
@@ -132,6 +131,6 @@ class PiecesController < ApplicationController
   end
 
   def update_moves
-    Move.create(piece_user_id: @piece.user_id, piece_type: @piece.piece_type, x_position: @piece.x_position, y_position: @piece.y_position, game_id:@game.id)
+    #Move.create(piece_user_id: @piece.user_id, piece_type: @piece.piece_type, x_position: @piece.x_position, y_position: @piece.y_position, game_id:@game.id)
   end
 end
