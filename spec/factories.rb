@@ -6,8 +6,9 @@ FactoryBot.define do
     
   end
   factory :pawn do
-
+   
   end
+
   factory :king do
 
   end
@@ -36,7 +37,10 @@ FactoryBot.define do
     password_confirmation { "Password" }
   end
 
+
   factory :game do
+    name { "Test" }
+    association :user
   end
 end
 
