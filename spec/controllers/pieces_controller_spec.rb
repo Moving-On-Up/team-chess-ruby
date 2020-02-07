@@ -64,7 +64,7 @@ RSpec.describe PiecesController, type: :controller do
       game = FactoryBot.create(:game)
       bishop = FactoryBot.create(:bishop, x_position: 3, y_position: 3, white:true, game_id: game.id)
       result = bishop.remove_piece(bishop)
-      expect(bishop.x_coord).to eq nil
+      expect(bishop.x_position).to eq nil
     end
   end
 

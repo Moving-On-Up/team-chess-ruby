@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe Pawn, type: :model do
 
   describe "#valid move?" do
-    let(:current_user) { FactoryBot.create(:user, id: 1) }
-    let(:current_user2) { FactoryBot.create(:user, id: 2) }
+    let(:current_user) { FactoryBot.create(:user) }
+    let(:current_user2) { FactoryBot.create(:user) }
     let(:game) { FactoryBot.create(:game, user_id: current_user.id, turn_player_id: current_user.id, white_player_id: current_user.id, black_player_id: current_user2.id) }
 # ------ Opening Move ------------
 

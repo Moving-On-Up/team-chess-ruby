@@ -103,7 +103,7 @@ class Piece < ApplicationRecord
       end
     end
     
-    pieces = self.pieces.to_a
+    pieces = self.game.pieces.to_a
     
     all_pieces_positions = pieces.map { |p| [p.x_position, p.y_position] }
     
