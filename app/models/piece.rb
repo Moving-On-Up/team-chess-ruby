@@ -191,15 +191,15 @@ class Piece < ApplicationRecord
     remove_piece(capture_piece)
   end
 
-def move_to!(new_x,new_y)
-  a_piece = Piece.find_by(x_position: new_x, y_position: new_y)
-  if a_piece != nil
-    remove_piece(a_piece)
+  def move_to!(new_x,new_y)
+    a_piece = Piece.find_by(x_position: new_x, y_position: new_y)
+    if a_piece != nil
+      remove_piece(a_piece)
+    end
+    self.x_position = new_x
+    self.y_position = new_y
+    self.save
   end
-  self.x_position = new_x
-  self.y_position = new_y
-  self.save
-end
 
 
   def remove_piece(dead_piece)
