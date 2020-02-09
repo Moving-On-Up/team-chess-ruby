@@ -38,6 +38,6 @@ FactoryBot.define do
 
   factory :game do
     name { "Test" }
-    association :userr
+    association :user
   end
 end    
