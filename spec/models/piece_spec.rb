@@ -36,7 +36,7 @@ RSpec.describe Piece, type: :model do
       active_user = FactoryBot.create(:user)
       rook = FactoryBot.create(:rook, x_position: 5, y_position: 5, white:true, player_id: current_user.id, game_id: game.id)
       pawn = FactoryBot.create(:pawn, x_position: 6, y_position: 5, white:true, player_id: current_user.id, game_id: game.id)
-      result = rook.is_obstructed(7,5)
+      result = rook.is_obstructed?(7,5)
       expect(result).to eq (true)
     end
 
@@ -46,7 +46,7 @@ RSpec.describe Piece, type: :model do
       game = FactoryBot.create(:game, user: active_user)
       rook = FactoryBot.create(:rook, x_position: 5, y_position: 5, white:true, player_id: current_user.id, game_id: game.id)
       pawn = FactoryBot.create(:pawn, x_position: 5, y_position: 6, white:true, player_id: current_user.id, game_id: game.id)
-      result = rook.is_obstructed(5,7)
+      result = rook.is_obstructed?(5,7)
       expect(result).to eq (true)
     end
 
@@ -55,7 +55,7 @@ RSpec.describe Piece, type: :model do
       game = FactoryBot.create(:game, user: active_user)
       bishop = FactoryBot.create(:bishop, x_position: 3, y_position: 3, white:true, player_id: current_user.id, game_id: game.id)
       pawn = FactoryBot.create(:pawn, x_position: 4, y_position: 4, white:false, player_id: current_user.id, game_id: game.id)
-      result = bishop.is_obstructed(5,5)
+      result = bishop.is_obstructed?(5,5)
       expect(result).to eq (true)
     end
   end
