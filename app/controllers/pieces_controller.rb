@@ -1,5 +1,5 @@
 class PiecesController < ApplicationController
-  before_action :find_piece,:verify_two_players, :verify_player_turn, :verify_valid_move
+  before_action :find_piece, :verify_two_players, :verify_player_turn, :verify_valid_move
 
   def update
     @game = @piece.game
@@ -16,7 +16,6 @@ class PiecesController < ApplicationController
     #we'd like to know if the opponent king is in check, and if in check, does
     #the opponent's king have any way to get out of check (see check_mate in king.rb)
     #if the opponent's king is stuck, the game is over, right now noted by the 401 error
-    #will need to do a proper game end
 
     king_opp = @game.pieces.where(:piece_type =>"King").where.not(:player_id => @game.turn_player_id)[0]
     king_current = @game.pieces.where(:piece_type =>"King").where(:player_id => @game.turn_player_id)[0]
@@ -39,8 +38,6 @@ class PiecesController < ApplicationController
       render json: {}, status: 200
     else
       render json: {}, status: 201
-      #somehow will need the code below to pass so we can have a message. Right now below is failing tests and saying the http code is 200 :(
-      #render json: {status: "Not modified (standing in for success)", code: 304, message: "Game over!"}
     end
   end
 
