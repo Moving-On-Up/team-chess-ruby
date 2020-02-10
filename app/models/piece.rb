@@ -3,15 +3,15 @@ class Piece < ApplicationRecord
   belongs_to :user, required: false
   belongs_to :game
 
-  self.inheritance_column = :type
+  self.inheritance_column = :piece_type
     
   def self.types
     %w(Pawn Rook Knight Bishop Queen King)
   end
 
-  def valid_move?(new_x_position, new_y_position, id = nil, color = nil)
-    
-  end
+  #def valid_move?(new_x_position, new_y_position, id = nil, color = nil)
+  #
+  #end
 
   def contains_own_piece?(x_end, y_end)
     piece = game.pieces.where("x_position = ? AND y_position = ?", x_end, y_end).first
@@ -170,9 +170,9 @@ class Piece < ApplicationRecord
   #end
 
   def find_capture_piece(x_end, y_end)
-    if self.type == "Pawn"
+    if self.piece_type == "Pawn"
       if en_passant?(x_end, y_end)
-        game.pieces.where(y_position: y_position, x_position: x_end, type: "Pawn").first
+        game.pieces.where(y_position: y_position, x_position: x_end, piece_type: "Pawn").first
       else
         game.pieces.find_by(x_position: x_end, y_position: y_end)
       end

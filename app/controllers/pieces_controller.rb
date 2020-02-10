@@ -18,8 +18,8 @@ class PiecesController < ApplicationController
     #if the opponent's king is stuck, the game is over, right now noted by the 401 error
     #will need to do a proper game end
 
-    king_opp = @game.pieces.where(:piece_type =>"King").where.not(:player_id => @game.turn_user_id)[0]
-    king_current = @game.pieces.where(:piece_type =>"King").where(:player_id => @game.turn_user_id)[0]
+    king_opp = @game.pieces.where(:piece_type =>"King").where.not(:player_id => @game.turn_player_id)[0]
+    king_current = @game.pieces.where(:piece_type =>"King").where(:player_id => @game.turn_player_id)[0]
     game_end = false
     if king_opp.check?(king_opp.x_position, king_opp.y_position).present?
       if king_opp.find_threat_and_determine_checkmate
@@ -36,9 +36,9 @@ class PiecesController < ApplicationController
     if game_end == false && !(@piece.piece_type == "Pawn" && @piece.pawn_promotion?)
       update_moves
       switch_turns
-      format.any { render :json => {:response => "Need to wait for second player!", class: "alert alert-warning"}, :status => 200}
+      render json: {}, status: 200
     else
-      format.any {render :json => { :response => "Need to wait for second player!", class: "alert alert-warning"}, :status => 201}
+      render json: {}, status: 201
       #somehow will need the code below to pass so we can have a message. Right now below is failing tests and saying the http code is 200 :(
       #render json: {status: "Not modified (standing in for success)", code: 304, message: "Game over!"}
     end
@@ -68,10 +68,10 @@ class PiecesController < ApplicationController
 
   def verify_valid_move
     return if @piece.valid_move?(piece_params[:x_position].to_i, piece_params[:y_position].to_i, @piece.id, @piece.white == true) &&
-    (@piece.is_obstructed(piece_params[:x_position].to_i, piece_params[:y_position].to_i) == false) &&
-    (@piece.contains_own_piece?(piece_params[:x_position].to_i, piece_params[:y_position].to_i) == false) #&&
-    #(king_not_moved_to_check_or_king_not_kept_in_check? == true) ||
-    #@piece.piece_type == "Pawn" && @piece.pawn_promotion?
+    (@piece.is_obstructed?(piece_params[:x_position].to_i, piece_params[:y_position].to_i) == false) &&
+    (@piece.contains_own_piece?(piece_params[:x_position].to_i, piece_params[:y_position].to_i) == false) &&
+    (king_not_moved_to_check_or_king_not_kept_in_check? == true) ||
+    @piece.piece_type == "Pawn" && @piece.pawn_promotion?
 
     respond_to do |format|
       format.any {render :json => { :response => "Invalid move!", class: "alert alert-warning"}, :status => 422}
@@ -83,7 +83,7 @@ class PiecesController < ApplicationController
     ((@piece.game.white_player_id == @piece.player_id && @piece.white?) ||
     (@piece.game.black_player_id == @piece.player_id && @piece.black?))
     respond_to do |format|
-      format.any {render :json => { :response => "Not yet your turn!", class: "alert alert-warning"}, :status => 422}
+     format.any {render :json => { :response => "Not yet your turn!", class: "alert alert-warning"}, :status => 422}
     end
   end
 
@@ -107,7 +107,7 @@ class PiecesController < ApplicationController
     #and also checking that if king is in check, player must move king out of check,
     #this function restricts any other random move if king is in check.
 
-    king = @game.pieces.where(:piece_type =>"King").where(:user_id => @game.turn_user_id)[0]
+    king = @game.pieces.where(:piece_type =>"King").where(:player_id => @game.turn_player_id)[0]
     if @piece.piece_type == "King"
       if @piece.check?(piece_params[:x_position].to_i, piece_params[:y_position].to_i, @piece.id, @piece.white == true).blank?
         king.update_attributes(king_check: 0)
@@ -131,6 +131,6 @@ class PiecesController < ApplicationController
   end
 
   def update_moves
-    #Move.create(piece_user_id: @piece.user_id, piece_type: @piece.piece_type, x_position: @piece.x_position, y_position: @piece.y_position, game_id:@game.id)
+    #Move.create(piece_player_id: @piece.player_id, piece_type: @piece.piece_type, x_position: @piece.x_position, y_position: @piece.y_position, game_id:@game.id)
   end
 end
