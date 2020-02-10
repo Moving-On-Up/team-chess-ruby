@@ -1,5 +1,5 @@
 class GamesController < ApplicationController
- before_action :authenticate_user!, only: [:new, :create, :show, :update]
+ before_action :authenticate_user!, only: [:new, :create, :show, :move, :update]
   
     def new
         @game = Game.new
@@ -24,7 +24,7 @@ class GamesController < ApplicationController
     end
     
     def move
-        @game = Game.find(params[:id])
+        @game = Game.find_by_id(params[:id])
         @pieces = @game.pieces
         @piece = Piece.find(params[:piece_type])
         @piece_type = params[:piece_type]
