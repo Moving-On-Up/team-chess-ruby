@@ -11,7 +11,6 @@ RSpec.describe HomeController, type: :controller do
     end
   end
 
-
   #describe "home#index action" do
   #  it "should successfully show the page" do
   #    get :index

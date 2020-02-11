@@ -13,7 +13,7 @@ class King < Piece
   def check?(x_position, y_position, id = nil, color = nil)
     game.pieces.each do | f |
       if f.player_id != self.player_id && f.x_position != nil
-        if f.valid_move?(x_position, y_position, id, color) == true && f.is_obstructed(x_position, y_position) == false
+        if f.valid_move?(x_position, y_position, id, color) == true && f.is_obstructed?(x_position, y_position) == false
           return f
           break
         end
@@ -53,14 +53,14 @@ class King < Piece
     return false unless self.move_number == 0
     return false unless x_distance(new_x_position) == 2 && y_distance(new_y_position) == 0
     if new_x_position > x_position
-      @rook_for_castling = self.game.pieces.where(piece_type: "Rook", user_id: self.user.id, x_position: 8).first
+      @rook_for_castling = self.game.pieces.where(piece_type: "Rook", player_id: self.player_id, x_position: 8).first
     else
-      @rook_for_castling = self.game.pieces.where(piece_type: "Rook", user_id: self.user.id, x_position: 1).first
+      @rook_for_castling = self.game.pieces.where(piece_type: "Rook", player_id: self.player_id, x_position: 1).first
     end
     return false if @rook_for_castling.nil?
     if !@rook_for_castling.nil?
       return false unless @rook_for_castling.move_number == 0
-      return false if is_obstructed(@rook_for_castling.x_position, @rook_for_castling.y_position)
+      return false if is_obstructed?(@rook_for_castling.x_position, @rook_for_castling.y_position)
     end
     return true
   end
@@ -106,14 +106,14 @@ class King < Piece
       if f.player_id == self.player_id && f.x_position != nil && f != self
         if (f.valid_move?(threat.x_position, threat.y_position) == true &&
         f.contains_own_piece?(threat.x_position, threat.y_position) == false &&
-        f.is_obstructed(threat.x_position, threat.y_position) == false)
+        f.is_obstructed?(threat.x_position, threat.y_position) == false)
           return true
           break
         elsif !obstruction_array.empty?
           obstruction_array.each do |coord|
             return true if (f.valid_move?(coord[0],coord[1]) == true &&
             f.contains_own_piece?(coord[0],coord[1]) == false &&
-            f.is_obstructed(coord[0],coord[1]) == false)
+            f.is_obstructed?(coord[0],coord[1]) == false)
             break
           end
         end
