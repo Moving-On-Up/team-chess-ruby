@@ -9,42 +9,42 @@ RSpec.describe Rook, type: :model do
 
 
     it "should return false to move one square forward" do
-      rook = FactoryBot.create(:rook, x_position:5, y_position: 5, player_id: current_user.id, game_id: game.id, white:false)
+      rook = FactoryBot.create(:rook, x_position: 1, y_position: 8, player_id: current_user.id, game_id: game.id, white:false)
       expect(rook.valid_move?(5, 6)).to eq(false)
     end 
 
     it "should return false to move two squares forward" do
-      rook = FactoryBot.create(:rook, x_position:5, y_position: 5, player_id: current_user.id, game_id: game.id, white:false)
+      rook = FactoryBot.create(:rook, x_position: 1, y_position: 8, player_id: current_user.id, game_id: game.id, white:false)
       expect(rook.valid_move?(5, 6)).to eq(false)
     end 
     
     it "should return false to move three squares forward" do
-      rook = FactoryBot.create(:rook, x_position:5, y_position: 5, player_id: current_user.id, game_id: game.id, white:false)
+      rook = FactoryBot.create(:rook, x_position: 1, y_position: 8, player_id: current_user.id, game_id: game.id, white:false)
       expect(rook.valid_move?(5, 6)).to eq(false)
     end
 
     it "should return false to move four squares forward" do
-      rook = FactoryBot.create(:rook, x_position:5, y_position: 5, player_id: current_user.id, game_id: game.id, white:false)
+      rook = FactoryBot.create(:rook, x_position: 1, y_position: 8, player_id: current_user.id, game_id: game.id, white:false)
       expect(rook.valid_move?(5, 6)).to eq(false)
     end
 
     it "should return false to move five squares forward" do
-      rook = FactoryBot.create(:rook, x_position:5, y_position: 5, player_id: current_user.id, game_id: game.id, white:false)
+      rook = FactoryBot.create(:rook, x_position: 1, y_position: 8, player_id: current_user.id, game_id: game.id, white:false)
       expect(rook.valid_move?(5, 6)).to eq(false)
     end
 
     it "should return false to move six squares forward" do
-      rook = FactoryBot.create(:rook, x_position:5, y_position: 5, player_id: current_user.id, game_id: game.id, white:false)
+      rook = FactoryBot.create(:rook, x_position: 1, y_position: 8, player_id: current_user.id, game_id: game.id, white:false)
       expect(rook.valid_move?(5, 6)).to eq(false)
     end
 
     it "should return false to move seven squares forward" do
-      rook = FactoryBot.create(:rook, x_position:5, y_position: 5, player_id: current_user.id, game_id: game.id, white:false)
+      rook = FactoryBot.create(:rook, x_position: 1, y_position: 8, player_id: current_user.id, game_id: game.id, white:false)
       expect(rook.valid_move?(5, 6)).to eq(false)
     end
 
     it "should return false to move one square back" do
-      rook = FactoryBot.create(:rook, x_position:5, y_position: 5, player_id: current_user.id, game_id: game.id, white:false)
+      rook = FactoryBot.create(:rook, x_position: 1, y_position: 5, player_id: current_user.id, game_id: game.id, white:false)
       expect(rook.valid_move?(5, 6)).to eq(false)
     end 
 
