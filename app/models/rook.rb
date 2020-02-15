@@ -6,7 +6,7 @@ class Rook < Piece
 
     (x_distance >= 1 && y_distance == 0) || (y_distance >= 1 && x_distance == 0)
     
-    tiles = [1, 2, 3, 4, 5, 6, 7]
+    tiles = [1, 2, 3, 4, 5, 6, 7, 8]
     moves = []
 
     tiles.each do |x|
