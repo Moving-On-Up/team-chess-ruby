@@ -26,9 +26,9 @@ class Rook < Piece
     moves.delete_if {|moves| !moves.include?([new_x_position, new_y_position])}
     
     if moves == []
-      return false
-    else
       return true
+    else
+      return false
     end
   end
 end
