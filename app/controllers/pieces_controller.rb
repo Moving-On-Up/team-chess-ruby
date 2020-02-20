@@ -68,7 +68,7 @@ class PiecesController < ApplicationController
     (@piece.is_obstructed?(piece_params[:x_position].to_i, piece_params[:y_position].to_i) == false) &&
     (@piece.contains_own_piece?(piece_params[:x_position].to_i, piece_params[:y_position].to_i) == false) &&
     (king_not_moved_to_check_or_king_not_kept_in_check? == true) ||
-    @piece.piece_type == "Pawn" && @piece.pawn_promotion?
+    #@piece.piece_type == "Pawn" && @piece.pawn_promotion?
 
     respond_to do |format|
       format.any {render :json => { :response => "Invalid move!", class: "alert alert-warning"}, :status => 422}
@@ -128,6 +128,7 @@ class PiecesController < ApplicationController
   end
 
   def update_moves
+    @piece.game.reload
     #Move.create(piece_player_id: @piece.player_id, piece_type: @piece.piece_type, x_position: @piece.x_position, y_position: @piece.y_position, game_id:@game.id)
   end
 end

@@ -30,7 +30,7 @@ class Pawn < Piece
     other_piece = game.pieces.where(y_position: y_position, x_position: new_x_position, piece_type: "Pawn").first
     return false if other_piece.nil? || other_piece.move_number != 1
     return true
-   end
+  end
 
   def pawn_promotion?
     pawn = game.pieces.where(:piece_type =>"Pawn").where(:player_id => game.turn_player_id)[0]
