@@ -9,10 +9,6 @@ class Piece < ApplicationRecord
     %w(Pawn Rook Knight Bishop Queen King)
   end
 
-  #def valid_move?(new_x_position, new_y_position, id = nil, color = nil)
-  #
-  #end
-
   def contains_own_piece?(x_end, y_end)
     piece = game.pieces.where("x_position = ? AND y_position = ?", x_end, y_end).first
     piece.present? && piece.white == white
