@@ -10,6 +10,11 @@ RSpec.describe Game, type: :model do
     it "should return true if there is a check condition" do
       rook = FactoryBot.create(:rook, x_position: 4, y_position: 4, white:true, player_id: current_user.id, game_id: game.id)
       king = FactoryBot.create(:king, x_position: 6, y_position: 4, white:false, player_id: current_user2.id, game_id: game.id)
+      
+      black_rook_1 = game.pieces.where(name: "Rook_black").first
+      black_rook_1 = 
+      white_king = game.pieces.where(name: "King_white").first
+      white_king. (x_position: 4, y_position: 4)
       result = game.is_check?()
       expect(result).to eq (true)
     end
