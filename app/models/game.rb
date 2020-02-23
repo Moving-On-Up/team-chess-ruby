@@ -95,4 +95,36 @@ class Game < ApplicationRecord
     User.find_by_id(loser_player_id)
   end
   
+
+  def is_check?
+
+    # Look at all pieces that are the opposite color and see if a move to the current king is valid
+
+    # Check black pieces having white king in check
+    opposite_pieces = self.pieces.where(white: false)
+    current_king = self.pieces.where(name: "King_white").first
+
+    opposite_pieces.each { |p|
+        puts p
+        if p.valid_move?(current_king.x_position, current_king.y_position)
+          puts "Match for White King in Check!"
+          return true
+        end
+    }
+
+    # Check white pieces having black king in check
+    opposite_pieces = self.pieces.where(white: true)
+    current_king = self.pieces.where(white: false, name: "King_black").first
+
+    opposite_pieces.each { |p|
+        puts p
+        if p.valid_move?(current_king.x_position, current_king.y_position)
+          puts "Match for Black King in Check!"
+          return true
+        end
+    }
+
+    return false
+
+  end
 end
