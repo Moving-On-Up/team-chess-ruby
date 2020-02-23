@@ -1,5 +1,5 @@
 class GamesController < ApplicationController
- before_action :authenticate_user!, only: [:new, :create, :show, :move, :update]
+ before_action :authenticate_user!, only: [:new, :create, :show, :move, :update, :forfeit]
   
     def new
         @game = Game.new
@@ -15,6 +15,7 @@ class GamesController < ApplicationController
     def update
         @game = Game.find_by_id(params[:id])
         @game.update_attributes(black_player_id: current_user.id)
+        @game.update_attributes(turn_player_id: @game.white_player_id)
         @game.update_attributes(current_status: "active")
         redirect_to game_path(@game)
     end
@@ -32,6 +33,19 @@ class GamesController < ApplicationController
         @y_position = params[:y_position]
         @piece.update_attributes({:x_position => @x_position, :y_position => @y_position})
         redirect_to game_path(@game)
+    end
+
+    def forfeit
+        @game = Game.find_by_id(params[:game_id])
+        @game.update_attributes(loser_player_id: current_user.id)
+        #@game.update_attributes(winner_player_id: current_user.id)
+        if @game.loser_player_id == @game.white_player_id
+            @game.winner_player_id = @game.black_player_id
+        else
+            @game.winner_player_id = @game.white_player_id
+        end
+        @game.update_attributes(current_status: "inactive")
+        redirect_to root_path
     end
 
 
