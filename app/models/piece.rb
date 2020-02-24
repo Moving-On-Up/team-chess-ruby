@@ -9,10 +9,6 @@ class Piece < ApplicationRecord
     %w(Pawn Rook Knight Bishop Queen King)
   end
 
-  #def valid_move?(new_x_position, new_y_position, id = nil, color = nil)
-  #
-  #end
-
   def contains_own_piece?(x_end, y_end)
     piece = game.pieces.where("x_position = ? AND y_position = ?", x_end, y_end).first
     piece.present? && piece.white == white
@@ -66,10 +62,10 @@ class Piece < ApplicationRecord
    current_piece = self
     @game = self.game
     
-    x_diff = current_piece.x_position - new_x
-    y_diff = current_piece.y_position - new_y
+    x_distance = current_piece.x_position - new_x
+    y_distance = current_piece.y_position - new_y
 
-    if !(((x_diff == y_diff) || (x_diff == 0) || (y_diff == 0)))
+    if !(((x_distance == y_distance) || (x_distance == 0) || (y_distance == 0)))
       return nil
     end
 
@@ -93,9 +89,9 @@ class Piece < ApplicationRecord
       if current_position == [new_x, new_y]
         back_to_start = true
       else
-        if x_diff == y_diff
+        if x_distance == y_distance
           places_between << [new_x, new_y]
-        elsif x_diff == 0
+        elsif x_distance == 0
           places_between << [current_piece.x_position, new_y]
         else
           places_between << [new_x, current_piece.y_position]
@@ -112,7 +108,7 @@ class Piece < ApplicationRecord
       is_current_piece = current_position == piece_position
       is_destination_piece = piece_position == [new_x, new_y]  
 
-      if x_diff == 0 && y_diff == 0
+      if x_distance == 0 && y_distance == 0
         obstruction = true
       end
 
@@ -179,6 +175,16 @@ class Piece < ApplicationRecord
     else
       game.pieces.where(x_position: x_end, y_position: y_end).first
     end
+  end
+
+  def move_to!(new_x,new_y)
+    a_piece = Piece.find_by(x_position: new_x, y_position: new_y)
+    if a_piece != nil
+      remove_piece(a_piece)
+    end
+    self.x_position = new_x
+    self.y_position = new_y
+    self.save
   end
 
   def move_to_capture_piece_and_capture(dead_piece, x_end, y_end)

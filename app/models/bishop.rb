@@ -5,7 +5,7 @@ class Bishop < Piece
     y_distance = y_distance(new_y_position)
 
     if self.diagonal?(x_distance, y_distance)  
-      move_to!(new_x_position, new_y_position)
+      self.move_to!(new_x_position, new_y_position)
       self.save
     elsif self.is_obstructed?(x_distance, y_distance)
      return false
