@@ -9,7 +9,7 @@ class Bishop < Piece
     if self.diagonal?(x_distance, y_distance) 
       self.save
     elsif 
-      self.up?(new_y_position) || self.down?(new_y_position) || self.horizontal?(new_x_position) || self.is_obstructed?(x_distance, y_distance)
+      self.vertical?(new_y_position) || self.horizontal?(new_x_position) || self.is_obstructed?(x_distance, y_distance)
     return false
     end 
   end

@@ -147,15 +147,11 @@ class Piece < ApplicationRecord
     y_distance = (new_y_position - y_position).abs
   end
 
-  # returns true if piece is moving from bottom to top
-  def up?(new_y_position)
-    (y_position - new_y_position) > 0
+  # returns true if piece is moving from bottom to top or returns true if piece is moving from top to bottom
+  def vertical?(new_y_position)
+    (y_position - new_y_position) > 0 || (y_position - new_y_position) < 0
   end
 
-  # returns true if piece is moving from top to bottom
-  def down?(new_y_position)
-    (y_position - new_y_position) < 0
-  end
 
   def diagonal?(x_distance, y_distance)
     x_distance == y_distance
