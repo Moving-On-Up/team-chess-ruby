@@ -12,19 +12,20 @@
         <% for i in 1..8 do %>
             <% if j % 2 == 1 %>
                 <% if i % 2 == 1 %>
-                    <div class = "square whiteSquare" %>
+                    <div id="<%= i.to_s + j.to_s %>" class = "square whiteSquare droppable">
                 <% else %>
-                    <div class = "square brownSquare" %>
+                    <div id="<%= i.to_s + j.to_s %>" class = "square brownSquare droppable">
                 <% end %>
             <% else %>
                 <% if i % 2 == 1 %>
-                    <div class="square brownSquare">
+                    <div id="<%= i.to_s + j.to_s %>" class="square brownSquare droppable">
                 <% else %>
-                    <div class="square whiteSquare">
+                    <div id="<%= i.to_s + j.to_s %>" class="square whiteSquare droppable">
                 <% end %>
             <% end %>
             <% if @game.contains_piece?(i, j) %>
-                <%= image_tag @game.pieces.find_by(x_position: i, y_position: j).name + ".png" %>
+                <%= image_tag(@game.pieces.find_by(x_position: i, y_position: j).name + ".png", 
+                    :class => "draggable", :id => @game.pieces.find_by(x_position: i, y_position: j).id) %>
             <% end %>
             </div>
         <% end %>
@@ -37,14 +38,14 @@
 
 <script>
 $(function() {
-    $(".moveable").draggable();
-    $("td.space").droppable({
+    $(".draggable").draggable();
+    $(".droppable").droppable({
         drop: function( event, ui ) {
             var drop_target_id = event.target.id;
             var target_x = drop_target_id[0];
             var target_y = drop_target_id[1];
             var piece_id = ui.draggable.prop('id');
-            var path = "/games/<%= @game.user_id.to_s %>/" + piece_id + "/" + target_x + "/" + target_y;
+            var path = "/games/<%= @game.id.to_s %>/" + piece_id + "/" + target_x + "/" + target_y;
             var $form =  $('#move');
             $form.attr('action', path); 
             console.log(path);
