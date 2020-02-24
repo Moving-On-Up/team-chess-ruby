@@ -161,6 +161,10 @@ class Piece < ApplicationRecord
     x_distance == y_distance
   end
 
+  def horizontal?(new_x_position)
+    (x_position - new_x_position) > 0 || (x_position - new_x_position) < 0
+  end
+
   #def capturable(capture_piece)
   #  (capture_piece.present? && capture_piece.color != color)
   #end
