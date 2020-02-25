@@ -27,8 +27,7 @@ class GamesController < ApplicationController
     def move
         @game = Game.find_by_id(params[:id])
         @pieces = @game.pieces
-        @piece = Piece.find(params[:piece_type])
-        @piece_type = params[:piece_type]
+        @piece = Piece.find_by_id(params[:piece_id])
         @x_position = params[:x_position]
         @y_position = params[:y_position]
         @piece.update_attributes({:x_position => @x_position, :y_position => @y_position})
