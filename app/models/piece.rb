@@ -154,7 +154,7 @@ class Piece < ApplicationRecord
 
 
   def diagonal?(x_distance, y_distance)
-    x_distance == y_distance
+     x_distance == y_distance 
   end
 
   def horizontal?(new_x_position)

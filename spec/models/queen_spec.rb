@@ -20,9 +20,9 @@ RSpec.describe Queen, type: :model do
     expect(queen.valid_move?(7, 5)).to eq(true)
   end
 
-  # it "should return false to move one square forward, two squares up" do
-  #   queen = FactoryBot.create(:queen, x_position:5, y_position: 5, player_id: current_user.id, game_id: game.id, white:false)
-  #   expect(queen.valid_move?(6, 7)).to eq(false)
-  # end   
+  it "should return false to move one square forward, two squares up" do
+    queen = FactoryBot.create(:queen, x_position:5, y_position: 5, player_id: current_user.id, game_id: game.id, white:false)
+     expect(queen.valid_move?(6, 7)).to eq(false)
+  end   
 
 end

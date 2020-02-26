@@ -4,10 +4,19 @@ class Queen < Piece
     x_distance = x_distance(new_x_position)
     y_distance = y_distance(new_y_position)
 
-    (x_distance >= 1 && y_distance == 0) || (y_distance >= 1 && x_distance == 0) || ((x_distance >= 1 && y_distance >= 1) && diagonal?(x_distance, y_distance))
-  
+    if self.diagonal?(x_distance, y_distance) || self.vertical?(new_y_position) || self.horizontal?(new_x_position)
+      return true
+    elsif self.is_obstructed?(x_distance, y_distance) || (x_distance + 1 == new_x_position && y_distance - 2 == y) ||
+      (x_distance + 2 == new_x_position && y_distance - 1 == new_y_position) ||
+      (x_distance + 2 == new_x_position && y_distance + 1 == new_y_position) || 
+      (x_distance + 1 == new_x_position && y_distance + 2 == new_y_position) ||
+      (x_distance - 2 == new_x_position && y_distance - 1 == new_y_position) ||
+      (x_distance - 1 == new_x_position && y_distance - 2 == new_y_position) || 
+      (x_distance - 1 == new_x_position && y_distance + 2 == new_y_position) || 
+      (x_distance - 2 == new_x_position && y_distance + 1 == new_y_position)
+    return false
+   
+    end
 
-   return true if self.diagonal?(x_distance, y_distance) || self.vertical?(new_y_position) || self.horizontal?(new_x_position)
-   return false if self.is_obstructed?(x_distance, y_distance)
   end
 end
