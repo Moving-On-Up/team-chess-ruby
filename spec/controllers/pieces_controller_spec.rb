@@ -30,6 +30,7 @@ RSpec.describe PiecesController, type: :controller do
 
     it 'should return true when a piece is obstructed vertically' do
       game = FactoryBot.create(:game)
+<<<<<<< HEAD
       white_rook = FactoryBot.create(:rook, x_position: 1, y_position: 8, white: true, game_id: game.id)
       white_rook = FactoryBot.create(:rook, x_position: 8, y_position: 8, white: true, game_id: game.id)
       black_rook = FactoryBot.create(:rook, x_position: 1, y_position: 1, white: false, game_id: game.id)
@@ -42,6 +43,20 @@ RSpec.describe PiecesController, type: :controller do
       expect(black_rook.is_obstructed?(8, 2)).to eq true
       expect(white_queen.is_obstructed?(4, 4)).to eq true
       expect(black_queen.is_obstructed?(4, 4)).to eq true
+=======
+      white_rook = FactoryBot.create(:rook, x_position: 1, y_position: 8, white:true, game_id: game.id)
+      white_rook = FactoryBot.create(:rook, x_position: 8, y_position: 8, white:true, game_id: game.id)
+      black_rook = FactoryBot.create(:rook, x_position: 1, y_position: 1, white:false, game_id: game.id)
+      black_rook = FactoryBot.create(:rook, x_position: 8, y_position: 1, white:false, game_id: game.id)
+      white_queen = FactoryBot.create(:queen, x_position: 4, y_position: 8, white:true, game_id: game.id)
+      black_queen = FactoryBot.create(:queen, x_position: 4, y_position: 1, white:false, game_id: game.id)
+      white_pawn = FactoryBot.create(:pawn, x_position: 1..8, y_position: 7, white:true, game_id: game.id)
+      black_pawn = FactoryBot.create(:pawn, x_position: 1..8, y_position: 2, white:false, game_id: game.id)
+      expect(white_rook.is_obstructed?(8,7)).to eq true
+      expect(black_rook.is_obstructed?(8,2)).to eq true
+      expect(white_queen.is_obstructed?(4,4)).to eq true
+      expect(black_queen.is_obstructed?(4,4)).to eq true
+>>>>>>> c6b7240cdc1b5eef4d583ca346c029cead1eabcf
     end
 
     it 'should return true when a piece is obstructing diagonally' do
@@ -70,10 +85,19 @@ RSpec.describe PiecesController, type: :controller do
     let(:current_user) { FactoryBot.create(:user) }
     let(:current_user2) { FactoryBot.create(:user) }
     let(:game) { FactoryBot.create(:game, user_id: current_user.id, turn_player_id: current_user.id, white_player_id: current_user.id, black_player_id: current_user2.id) }
+<<<<<<< HEAD
     let(:black_king) { FactoryBot.create(:king, x_position: 5, y_position: 1, player_id: current_user2.id, game_id: game.id, white: false) }
     let(:white_king) { FactoryBot.create(:king, x_position: 5, y_position: 8, player_id: current_user.id, game_id: game.id, white: true) }
 
     it 'should update coordinates if successful move' do
+=======
+    let(:black_king) { FactoryBot.create(:king, x_position: 5, y_position: 1, player_id: current_user2.id, game_id: game.id, white: false)}
+    let(:white_king) { FactoryBot.create(:king, x_position: 5, y_position: 8, player_id: current_user.id, game_id: game.id, white:true)}
+
+
+
+    it "should update coordinates if successful move" do
+>>>>>>> c6b7240cdc1b5eef4d583ca346c029cead1eabcf
       pawn = FactoryBot.create(:pawn, x_position: 1, y_position: 6, player_id: current_user.id, game_id: game.id, white: true)
       patch :update, params: { id: pawn.id, piece: { x_position: 1, y_position: 5 } }, format: :json
       expect(response).to have_http_status(200)
@@ -81,7 +105,11 @@ RSpec.describe PiecesController, type: :controller do
       expect(pawn.y_position).to eq 5
     end
 
+<<<<<<< HEAD
     it 'should switch player turns if successful move' do
+=======
+    it "should switch player turns if successful move" do
+>>>>>>> c6b7240cdc1b5eef4d583ca346c029cead1eabcf
       pawn = FactoryBot.create(:pawn, x_position: 1, y_position: 6, player_id: current_user.id, game_id: game.id, white: true)
       post :update, params: { id: pawn.id, piece: { x_position: 1, y_position: 5 } }, format: :json
       expect(response).to have_http_status(200)
@@ -115,7 +143,11 @@ RSpec.describe PiecesController, type: :controller do
       expect(response).to have_http_status(422)
     end
 
+<<<<<<< HEAD
     # it "should return true if a rook tries to capture opponent" do
+=======
+    #it "should return true if a rook tries to capture opponent" do
+>>>>>>> c6b7240cdc1b5eef4d583ca346c029cead1eabcf
     #  white_rook = FactoryBot.create(:rook, x_position:3, y_position: 3, player_id: current_user.id, game_id: game.id, white:true)
     #  black_bishop = FactoryBot.create(:bishop, x_position:5, y_position: 3, player_id: current_user2.id, game_id: game.id, white:false)
     #  post :update, params: {id:white_rook.id, piece:{x_position: 5, y_position: 3}}, :format => :json
@@ -132,7 +164,11 @@ RSpec.describe PiecesController, type: :controller do
       expect(response).to have_http_status(422)
     end
 
+<<<<<<< HEAD
     # it "should return true if a pawn tries to capture opponent diagonally" do
+=======
+    #it "should return true if a pawn tries to capture opponent diagonally" do
+>>>>>>> c6b7240cdc1b5eef4d583ca346c029cead1eabcf
     #  pawn = FactoryBot.create(:pawn, x_position:2, y_position: 7, player_id: current_user.id, game_id: game.id, white:true)
     #  bishop = FactoryBot.create(:bishop, x_position:3, y_position: 6, player_id: current_user2.id, game_id: game.id, white:false)
     #  post :update, params: {id:pawn.id, piece:{x_position: 3, y_position:6}}, :format => :json
@@ -196,7 +232,11 @@ RSpec.describe PiecesController, type: :controller do
     #  expect(response).to have_http_status(422)
     # end
 
+<<<<<<< HEAD
     # it "should return 201 if the queen checks king" do
+=======
+    #it "should return 201 if the queen checks king" do
+>>>>>>> c6b7240cdc1b5eef4d583ca346c029cead1eabcf
     #  black_pawn = FactoryBot.create(:pawn, x_position: 4, y_position: 2, game_id: game.id, white:false, player_id: current_user2.id)
     #  black_pawn2 = FactoryBot.create(:pawn, x_position: 5, y_position: 2, game_id: game.id, white:false, player_id: current_user2.id)
     #  black_bishop = FactoryBot.create(:bishop, x_position: 6, y_position: 1, game_id: game.id, white:false, player_id: current_user2.id)
@@ -205,6 +245,11 @@ RSpec.describe PiecesController, type: :controller do
     #  white_bishop = FactoryBot.create(:bishop, player_id: current_user.id, x_position:3, y_position: 5, game_id: game.id, white:true)
     #  post :update, params: {id: white_queen.id, piece: {x_position:6, y_position:2 }}, :format => :json
     #  expect(response).to have_http_status(201)
+<<<<<<< HEAD
     # end
+=======
+    #end
+
+>>>>>>> c6b7240cdc1b5eef4d583ca346c029cead1eabcf
   end
 end

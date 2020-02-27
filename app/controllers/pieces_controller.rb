@@ -68,6 +68,7 @@ class PiecesController < ApplicationController
 
   def verify_valid_move
     return if @piece.valid_move?(piece_params[:x_position].to_i, piece_params[:y_position].to_i, @piece.id, @piece.white == true) &&
+<<<<<<< HEAD
               (@piece.is_obstructed?(piece_params[:x_position].to_i, piece_params[:y_position].to_i) == false) &&
               (@piece.contains_own_piece?(piece_params[:x_position].to_i, piece_params[:y_position].to_i) == false) &&
               (king_not_moved_to_check_or_king_not_kept_in_check? == true) ||
@@ -76,6 +77,16 @@ class PiecesController < ApplicationController
               respond_to do |format|
                 format.any { render json: { response: 'Invalid move!', class: 'alert alert-warning' }, status: 422 }
               end
+=======
+    (@piece.is_obstructed?(piece_params[:x_position].to_i, piece_params[:y_position].to_i) == false) &&
+    (@piece.contains_own_piece?(piece_params[:x_position].to_i, piece_params[:y_position].to_i) == false) &&
+    (king_not_moved_to_check_or_king_not_kept_in_check? == true) ||
+    #@piece.piece_type == "Pawn" && @piece.pawn_promotion?
+
+    respond_to do |format|
+      format.any {render :json => { :response => "Invalid move!", class: "alert alert-warning"}, :status => 422}
+    end
+>>>>>>> c6b7240cdc1b5eef4d583ca346c029cead1eabcf
   end
 
   def verify_player_turn
@@ -131,6 +142,10 @@ class PiecesController < ApplicationController
 
   def update_moves
     @piece.game.reload
+<<<<<<< HEAD
     # Move.create(piece_player_id: @piece.player_id, piece_type: @piece.piece_type, x_position: @piece.x_position, y_position: @piece.y_position, game_id:@game.id)
+=======
+    #Move.create(piece_player_id: @piece.player_id, piece_type: @piece.piece_type, x_position: @piece.x_position, y_position: @piece.y_position, game_id:@game.id)
+>>>>>>> c6b7240cdc1b5eef4d583ca346c029cead1eabcf
   end
 end

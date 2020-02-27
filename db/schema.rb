@@ -12,10 +12,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 20_200_223_221_140) do
+=======
+ActiveRecord::Schema.define(version: 2020_02_23_221140) do
+
+>>>>>>> c6b7240cdc1b5eef4d583ca346c029cead1eabcf
   # These are extensions that must be enabled in order to support this database
   enable_extension 'plpgsql'
 
+<<<<<<< HEAD
   create_table 'games', force: :cascade do |t|
     t.string 'name'
     t.datetime 'created_at', null: false
@@ -29,6 +35,21 @@ ActiveRecord::Schema.define(version: 20_200_223_221_140) do
     t.integer 'winner_player_id'
     t.integer 'loser_player_id'
     t.index ['user_id'], name: 'index_games_on_user_id'
+=======
+  create_table "games", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.integer "white_player_id"
+    t.integer "black_player_id"
+    t.string "current_status"
+    t.string "current_user"
+    t.integer "turn_player_id"
+    t.integer "winner_player_id"
+    t.integer "loser_player_id"
+    t.index ["user_id"], name: "index_games_on_user_id"
+>>>>>>> c6b7240cdc1b5eef4d583ca346c029cead1eabcf
   end
 
   create_table 'pieces', force: :cascade do |t|
