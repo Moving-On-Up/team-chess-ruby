@@ -1,13 +1,14 @@
-class Pawn < Piece
+# frozen_string_literal: true
 
+class Pawn < Piece
   def valid_move?(new_x_position, new_y_position, id = nil, color = nil)
     x_distance = x_distance(new_x_position)
     y_distance = y_distance(new_y_position)
-# ----- lines 9-12 Diagonal capture -----
-# ----- lines 13-20 Vertical opening and subsequent moves valid only if there is no opposition piece/no piece at destination coordinate-------
-# ----- Same color piece at destination coordinate is checked in the verify_valid_move in the piece controller -----
+    # ----- lines 9-12 Diagonal capture -----
+    # ----- lines 13-20 Vertical opening and subsequent moves valid only if there is no opposition piece/no piece at destination coordinate-------
+    # ----- Same color piece at destination coordinate is checked in the verify_valid_move in the piece controller -----
     if en_passant?(new_x_position, new_y_position)
-      return true
+      true
     elsif (x_distance == y_distance) && !white? && opposition_piece?(new_x_position, new_y_position, id, color)
       new_y_position == y_position + 1
     elsif (x_distance == y_distance) && white? && opposition_piece?(new_x_position, new_y_position, id, color)
@@ -26,15 +27,18 @@ class Pawn < Piece
   end
 
   def en_passant?(new_x_position, new_y_position)
-    return false unless ((new_y_position == y_position + 1 && !white?) || (new_y_position == y_position - 1 && white?)) && ((new_x_position == x_position + 1) || (new_x_position == x_position - 1)) && ((new_y_position == 3 && white?) || (new_y_position == 6 && !white?))
-    other_piece = game.pieces.where(y_position: y_position, x_position: new_x_position, piece_type: "Pawn").first
+    unless ((new_y_position == y_position + 1 && !white?) || (new_y_position == y_position - 1 && white?)) && ((new_x_position == x_position + 1) || (new_x_position == x_position - 1)) && ((new_y_position == 3 && white?) || (new_y_position == 6 && !white?))
+      return false
+    end
+
+    other_piece = game.pieces.where(y_position: y_position, x_position: new_x_position, piece_type: 'Pawn').first
     return false if other_piece.nil? || other_piece.move_number != 1
-    return true
+
+    true
   end
 
   def pawn_promotion?
-    pawn = game.pieces.where(:piece_type =>"Pawn").where(:player_id => game.turn_player_id)[0]
-    (y_position == 8 && !white?) || (y_position == 1 && white?) #black pawn white baseline or white pawn black baseline
+    pawn = game.pieces.where(piece_type: 'Pawn').where(player_id: game.turn_player_id)[0]
+    (y_position == 8 && !white?) || (y_position == 1 && white?) # black pawn white baseline or white pawn black baseline
   end
-  
 end

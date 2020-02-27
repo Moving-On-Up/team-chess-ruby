@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Rails.application.routes.draw do
   devise_for :users
   root 'home#index'
@@ -6,5 +8,5 @@ Rails.application.routes.draw do
   end
   resources :pieces
 
-  get 'games/:id/:piece_id/:x_position/:y_position', :to => 'games#show', :as => 'show'
+  get 'games/:id/:piece_id/:x_position/:y_position', to: 'games#show', as: 'show'
 end

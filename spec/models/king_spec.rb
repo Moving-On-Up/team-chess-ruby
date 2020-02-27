@@ -1,45 +1,45 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe King, type: :model do
+  describe '#valid move?' do
+    let(:current_user) { FactoryBot.create(:user, id: 1) }
+    let(:current_user2) { FactoryBot.create(:user, id: 2) }
+    let(:game) { FactoryBot.create(:game, user_id: current_user.id, turn_player_id: current_user.id, white_player_id: current_user.id, black_player_id: current_user2.id) }
 
-  describe "#valid move?" do
-   let(:current_user) { FactoryBot.create(:user, id: 1) }
-   let(:current_user2) { FactoryBot.create(:user, id: 2) }
-   let(:game) { FactoryBot.create(:game, user_id: current_user.id, turn_player_id: current_user.id, white_player_id: current_user.id, black_player_id: current_user2.id) }
-   
-   it "should return true to move one square forward" do
-    king = FactoryBot.create(:king, x_position:5, y_position: 5, player_id: current_user2.id, game_id: game.id, white: false)
-    expect(king.valid_move?(6, 5)).to eq(true)
-   end
+    it 'should return true to move one square forward' do
+      king = FactoryBot.create(:king, x_position: 5, y_position: 5, player_id: current_user2.id, game_id: game.id, white: false)
+      expect(king.valid_move?(6, 5)).to eq(true)
+    end
 
-   it "should return true to move one square backward" do
-    king = FactoryBot.create(:king, x_position:5, y_position: 5, player_id: current_user2.id, game_id: game.id, white: false)
-    expect(king.valid_move?(4, 5)).to eq(true)
-   end
+    it 'should return true to move one square backward' do
+      king = FactoryBot.create(:king, x_position: 5, y_position: 5, player_id: current_user2.id, game_id: game.id, white: false)
+      expect(king.valid_move?(4, 5)).to eq(true)
+    end
 
-   it "should return true to move one square up" do
-    king = FactoryBot.create(:king, x_position:5, y_position: 5, player_id: current_user2.id, game_id: game.id, white: false)
-    expect(king.valid_move?(5, 4)).to eq(true)
-   end
+    it 'should return true to move one square up' do
+      king = FactoryBot.create(:king, x_position: 5, y_position: 5, player_id: current_user2.id, game_id: game.id, white: false)
+      expect(king.valid_move?(5, 4)).to eq(true)
+    end
 
-   it "should return true to move one square down" do
-    king = FactoryBot.create(:king, x_position:5, y_position: 5, player_id: current_user2.id, game_id: game.id, white: false)
-    expect(king.valid_move?(5, 6)).to eq(true)
-   end
+    it 'should return true to move one square down' do
+      king = FactoryBot.create(:king, x_position: 5, y_position: 5, player_id: current_user2.id, game_id: game.id, white: false)
+      expect(king.valid_move?(5, 6)).to eq(true)
+    end
 
-   it "should return true to move one square diagonally" do
-    king = FactoryBot.create(:king, x_position:5, y_position: 5, player_id: current_user2.id, game_id: game.id, white: false)
-    expect(king.valid_move?(6, 6)).to eq(true)
-   end
+    it 'should return true to move one square diagonally' do
+      king = FactoryBot.create(:king, x_position: 5, y_position: 5, player_id: current_user2.id, game_id: game.id, white: false)
+      expect(king.valid_move?(6, 6)).to eq(true)
+    end
 
-   it "should return false to move two squares forward" do
-    king = FactoryBot.create(:king, x_position:5, y_position: 5, player_id: current_user.id, game_id: game.id, white: true)
-    expect(king.valid_move?(7, 5)).to eq(false)
-   end
-
+    it 'should return false to move two squares forward' do
+      king = FactoryBot.create(:king, x_position: 5, y_position: 5, player_id: current_user.id, game_id: game.id, white: true)
+      expect(king.valid_move?(7, 5)).to eq(false)
+    end
   end
 
-  #describe "#check?" do
+  # describe "#check?" do
   # let(:current_user) { FactoryBot.create(:user, id: 1) }
   # let(:current_user2) { FactoryBot.create(:user, id: 2) }
   # let(:game) { FactoryBot.create(:game, user_id: current_user.id, turn_player_id: current_user.id, white_player_id: current_user.id, black_player_id: current_user2.id) }
@@ -64,13 +64,13 @@ RSpec.describe King, type: :model do
   #   threat = king.check?(king.x_position, king.y_position)
   #   expect(threat.present?).to eq(true)
   #  end
-  #end
+  # end
 
-  #describe "#find_threat_and_determine_checkmate" do
+  # describe "#find_threat_and_determine_checkmate" do
   # let(:current_user) { FactoryBot.create(:user, id: 1) }
   # let(:current_user2) { FactoryBot.create(:user, id: 2) }
   # let(:game) { FactoryBot.create(:game, user_id: current_user.id, turn_player_id: current_user.id, white_player_id: current_user.id, black_player_id: current_user2.id) }
-   
+
   # it "should return true if checkmate is true" do
   #   black_king = game.pieces.find_by(name:"King_black")
   #   black_king.update_attributes(x_position:1, y_position: 4, user_id: 1)
@@ -86,9 +86,9 @@ RSpec.describe King, type: :model do
   #   black_pawn4 = FactoryBot.create(:pawn,player_id: 1,x_position:2, y_position: 5, game_id: game.id, white:false)
   #   expect(black_king.find_threat_and_determine_checkmate).to eq true
   # end
-  #end
+  # end
 
-  #describe "#check_mate?" do
+  # describe "#check_mate?" do
   #  let(:current_user) { FactoryBot.create(:user, id: 1) }
   #  let(:current_user2) { FactoryBot.create(:user, id: 2) }
   #  let(:game) { FactoryBot.create(:game, user_id: current_user.id, turn_player_id: current_user.id, white_player_id: current_user.id, black_player_id: current_user2.id) }
@@ -128,6 +128,5 @@ RSpec.describe King, type: :model do
   #     black_pawn4 = FactoryBot.create(:pawn,player_id: current_user.id,x_position:2, y_position: 5, game_id: game.id, white:false)
   #     expect(black_king.check_mate?(rook)).to eq true
   #   end
-  #end
-
+  # end
 end
