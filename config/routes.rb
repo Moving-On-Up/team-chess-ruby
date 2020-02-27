@@ -8,10 +8,8 @@ Rails.application.routes.draw do
   end
   resources :pieces
 
-<<<<<<< HEAD
-  get 'games/:id/:piece_id/:x_position/:y_position', to: 'games#show', as: 'show'
-=======
+
 
   post 'games/:id/:piece_id/:x_position/:y_position', :to => 'games#move', :as => 'move'
->>>>>>> c6b7240cdc1b5eef4d583ca346c029cead1eabcf
+
 end

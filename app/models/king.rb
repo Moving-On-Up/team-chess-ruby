@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 class King < Piece
   def valid_move?(new_x_position, new_y_position, _id = nil, _color = nil)
     x_distance = x_distance(new_x_position)

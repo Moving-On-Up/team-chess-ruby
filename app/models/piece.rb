@@ -60,15 +60,6 @@ class Piece < ApplicationRecord
   end
 
   def is_obstructed?(new_x, new_y)
-<<<<<<< HEAD
-    current_piece = self
-    @game = game
-
-    x_distance = current_piece.x_position - new_x
-    y_distance = current_piece.y_position - new_y
-
-    unless (x_distance == y_distance) || (x_distance == 0) || (y_distance == 0)
-=======
    current_piece = self
     @game = self.game
     
@@ -76,7 +67,6 @@ class Piece < ApplicationRecord
     y_distance = current_piece.y_position - new_y
 
     if !(((x_distance == y_distance) || (x_distance == 0) || (y_distance == 0)))
->>>>>>> c6b7240cdc1b5eef4d583ca346c029cead1eabcf
       return nil
     end
 
@@ -100,7 +90,7 @@ class Piece < ApplicationRecord
       if current_position == [new_x, new_y]
         back_to_start = true
       else
-<<<<<<< HEAD
+
         places_between << if x_distance == y_distance
                             [new_x, new_y]
                           elsif x_distance == 0
@@ -108,7 +98,7 @@ class Piece < ApplicationRecord
                           else
                             [new_x, current_piece.y_position]
                           end
-=======
+
         if x_distance == y_distance
           places_between << [new_x, new_y]
         elsif x_distance == 0
@@ -116,7 +106,6 @@ class Piece < ApplicationRecord
         else
           places_between << [new_x, current_piece.y_position]
         end
->>>>>>> c6b7240cdc1b5eef4d583ca346c029cead1eabcf
       end
     end
 
@@ -129,13 +118,13 @@ class Piece < ApplicationRecord
       is_current_piece = current_position == piece_position
       is_destination_piece = piece_position == [new_x, new_y]
 
-<<<<<<< HEAD
+
       obstruction = true if x_distance == 0 && y_distance == 0
-=======
+
       if x_distance == 0 && y_distance == 0
         obstruction = true
       end
->>>>>>> c6b7240cdc1b5eef4d583ca346c029cead1eabcf
+
 
       if places_between.include?(piece_position) && !is_current_piece && !is_destination_piece
         obstruction = true
@@ -200,14 +189,7 @@ class Piece < ApplicationRecord
     end
   end
 
-<<<<<<< HEAD
-  def move_to!(new_x, new_y)
-    a_piece = Piece.find_by(x_position: new_x, y_position: new_y)
-    remove_piece(a_piece) unless a_piece.nil?
-    self.x_position = new_x
-    self.y_position = new_y
-    save
-=======
+
   def move_to!(new_x,new_y)
     a_piece = Piece.find_by(x_position: new_x, y_position: new_y)
     if a_piece != nil
@@ -216,7 +198,6 @@ class Piece < ApplicationRecord
     self.x_position = new_x
     self.y_position = new_y
     self.save
->>>>>>> c6b7240cdc1b5eef4d583ca346c029cead1eabcf
   end
 
   def move_to_capture_piece_and_capture(dead_piece, x_end, y_end)
