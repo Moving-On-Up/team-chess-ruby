@@ -270,26 +270,21 @@ class Piece < ApplicationRecord
     if game_end == false && !(self.piece_type == "Pawn" && self.pawn_promotion?)
       update_moves
       switch_turns
-      #render json: {}, status: 200
-      respond_to  do |format|
-        format.any {render :json => { :response => "Valid move",}, :status => 200}
-      end
+      self.status = 200
     else
-      respond_to  do |format|
-        format.any {render :json => { :response => "Invalid move",}, :status => 201}
-      end
-      #render json: {}, status: 201
+      self.status = 201
     end
+    self.save
   end
 
   #private
 
   def verify_two_players
     return if @game.black_player_id && @game.white_player_id
-    
-    respond_to do |format|
-      format.any {render :json => { :response => "Need to wait for second player!", class: "alert alert-warning"}, :status => 422}
-    end
+    self.status = 422
+    #respond_to do |format|
+    #  format.any {render :json => { :response => "Need to wait for second player!", class: "alert alert-warning"}, :status => 422}
+    #end
   end
 
   def switch_turns
@@ -311,20 +306,20 @@ class Piece < ApplicationRecord
     (self.contains_own_piece?(self.x_position.to_i, self.y_position.to_i) == false) &&
     (king_not_moved_to_check_or_king_not_kept_in_check? == true) ||
     self.piece_type == "Pawn" && self.pawn_promotion?
-    
-    respond_to do |format|
-      format.any {render :json => { :response => "Invalid move!", class: "alert alert-warning"}, :status => 422}
-    end
+    self.status = 422
+    #respond_to do |format|
+    #  format.any {render :json => { :response => "Invalid move!", class: "alert alert-warning"}, :status => 422}
+    #end
   end
 
   def verify_player_turn
     return if correct_turn? &&
     ((self.game.white_player_id == self.player_id && self.white?) ||
     (self.game.black_player_id == self.player_id && self.black?))
-    
-    respond_to do |format|
-     format.any {render :json => { :response => "Not yet your turn!", class: "alert alert-warning"}, :status => 422}
-    end
+    self.status = 422
+    #respond_to do |format|
+    # format.any {render :json => { :response => "Not yet your turn!", class: "alert alert-warning"}, :status => 422}
+    #end
   end
 
   def correct_turn?

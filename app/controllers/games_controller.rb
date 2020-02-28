@@ -30,7 +30,8 @@ class GamesController < ApplicationController
         @piece = Piece.find_by_id(params[:piece_id])
         @x_position = params[:x_position]
         @y_position = params[:y_position]
-        @piece.update_attributes({:x_position => @x_position, :y_position => @y_position})
+        #@piece.update_attributes({:x_position => @x_position, :y_position => @y_position})
+        @piece.move_to!(@x_position,@y_position)
         redirect_to game_path(@game)
     end
 

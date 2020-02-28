@@ -81,4 +81,3 @@ gem 'rubocop', require: false
 gem 'travis'
 gem "jquery-ui-rails"
 
-
