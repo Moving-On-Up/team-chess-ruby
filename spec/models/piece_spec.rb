@@ -88,7 +88,7 @@ RSpec.describe Piece, type: :model do
      it "should return error if invalid piece move" do
       pawn = FactoryBot.create(:pawn, x_position: 1, y_position: 6, game_id: game.id, white: true)
       pawn.update{pawn.id, pawn.x_position = 3, pawn.y_position = 4}
-      expect(response).to have_http_status(422)
+      expect(pawn.status).to eq 422
      end
 
      it "should return error if the piece's move path is obstructed" do
@@ -108,7 +108,7 @@ RSpec.describe Piece, type: :model do
     it "should return true if a rook tries to capture opponent" do
       white_rook = FactoryBot.create(:rook, x_position:3, y_position: 3, player_id: current_user.id, game_id: game.id, white:true)
       black_bishop = FactoryBot.create(:bishop, x_position:5, y_position: 3, player_id: current_user2.id, game_id: game.id, white:false)
-      rook.update{white_rook.id, white_rook.x_position = 5, white_rook.y_position = 3}
+      white_rook.update{white_rook.id, white_rook.x_position = 5, white_rook.y_position = 3}
       expect(white_rook.status).to eq 200
       game.reload
       expect(bishop.x_position).to eq nil

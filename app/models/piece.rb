@@ -232,9 +232,9 @@ class Piece < ApplicationRecord
 
   def update
     @game = self.game
+    #binding.pry
     current_piece = self
     is_captured
-    #if piece_params[:piece][:piece_type] == "Queen" || 
     if self.piece_params[:piece_type] == "Queen" || 
        self.piece_params[:piece_type] == "Bishop" || 
        self.piece_params[:piece_type] == "Knight" || 
@@ -282,9 +282,7 @@ class Piece < ApplicationRecord
   def verify_two_players
     return if @game.black_player_id && @game.white_player_id
     self.status = 422
-    #respond_to do |format|
-    #  format.any {render :json => { :response => "Need to wait for second player!", class: "alert alert-warning"}, :status => 422}
-    #end
+    self.save
   end
 
   def switch_turns
@@ -307,9 +305,7 @@ class Piece < ApplicationRecord
     (king_not_moved_to_check_or_king_not_kept_in_check? == true) ||
     self.piece_type == "Pawn" && self.pawn_promotion?
     self.status = 422
-    #respond_to do |format|
-    #  format.any {render :json => { :response => "Invalid move!", class: "alert alert-warning"}, :status => 422}
-    #end
+    self.save
   end
 
   def verify_player_turn
@@ -317,9 +313,7 @@ class Piece < ApplicationRecord
     ((self.game.white_player_id == self.player_id && self.white?) ||
     (self.game.black_player_id == self.player_id && self.black?))
     self.status = 422
-    #respond_to do |format|
-    # format.any {render :json => { :response => "Not yet your turn!", class: "alert alert-warning"}, :status => 422}
-    #end
+    self.save
   end
 
   def correct_turn?
@@ -328,7 +322,6 @@ class Piece < ApplicationRecord
 
   def piece_params
     piece = self
-    #params.require(:piece).permit(:x_position, :y_position, :captured, :white, :id, :piece_type)
     return params = {piece: "piece", x_position: "self.x_position", y_position: "self.y_position", captured: "self.captured", white: "self.white", id: "self.id", piece_type: "self.piece_type"}
   end
 
@@ -368,7 +361,7 @@ class Piece < ApplicationRecord
   end
 
   def update_moves
-    self.game.reload
-    #Move.create(piece_player_id: self.player_id, piece_type: self.piece_type, x_position: self.x_position, y_position: self.y_position, game_id:@game.id)
+    binding.pry
+    self.update_attributes(self.piece_params[:x_position].to_i, self.piece_params[:y_position].to_i)
   end
 end
