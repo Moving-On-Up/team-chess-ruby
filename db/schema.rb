@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_23_221140) do
+ActiveRecord::Schema.define(version: 2020_02_28_015316) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(version: 2020_02_23_221140) do
     t.integer "turn_player_id"
     t.integer "winner_player_id"
     t.integer "loser_player_id"
+    t.boolean "blank_board", default: false, null: false
     t.index ["user_id"], name: "index_games_on_user_id"
   end
 
