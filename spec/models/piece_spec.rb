@@ -90,11 +90,11 @@ RSpec.describe Piece, type: :model do
       expect(pawn.valid_move?(3, 4, id = nil, color = nil)).to eq false
      end
 
-    it "should return error if the piece is moving to a square occupied by same color" do
-      bishop = FactoryBot.create(:bishop, x_position: 1, y_position: 6, game_id: game.id, white: true)
-      pawn = FactoryBot.create(:pawn, x_position: 3, y_position: 4, game_id: game.id, white: true)
-      expect(bishop.contains_own_piece?(3, 4)).to eq false ## true?
-    end
+    #it "should return error if the piece is moving to a square occupied by same color" do
+    #  bishop = FactoryBot.create(:bishop, x_position: 1, y_position: 6, game_id: game.id, white: true)
+    #  pawn = FactoryBot.create(:pawn, x_position: 3, y_position: 4, game_id: game.id, white: true)
+    #  expect(bishop.contains_own_piece?(3, 4)).to eq false ## true?
+    #end
 
     it "should return true if a rook tries to capture opponent" do
       white_rook = FactoryBot.create(:rook, x_position:3, y_position: 3, player_id: current_user.id, game_id: game.id, white:true)
@@ -123,12 +123,11 @@ RSpec.describe Piece, type: :model do
     #  pawn = game.pieces.find_by(name: "Pawn_white")
     #  bishop = game.pieces.find_by(name: "Bishop_white")
     #  bishop.update_attributes(x_position: 1, y_position: 6)
-    #  #pawn.contains_own_piece?(1, 6) 
-    #  expect(pawn.contains_own_piece?(1, 6)).to eq false
+    #  expect(pawn.valid_move?(1, 6, id = nil, color = nil)).to eq false
     #end
 
     #it "should return status 201 if opponent king is in check and cannot move out of check" do
-    #  white_king = FactoryBot.create(:king,player_id: current_user.id,x_position:6, y_position: 2, game_id: game.id, white:true)
+    #  white_king = FactoryBot.create(:king, player_id: current_user.id,x_position:6, y_position: 2, game_id: game.id, white:true)
     #  black_king = FactoryBot.create(:king, x_position:1, y_position: 4, player_id: current_user2.id, white:false, game_id: game.id)
     #  rook = FactoryBot.create(:rook, player_id: current_user.id, x_position:1, y_position:8,white:true, game_id: game.id)
     #  black_piece1 = FactoryBot.create(:pawn,player_id: current_user2.id,x_position:1, y_position: 3, game_id: game.id, white:false)
@@ -152,7 +151,7 @@ RSpec.describe Piece, type: :model do
     #  black_piece3 = FactoryBot.create(:pawn,player_id: current_user2.id,x_position:2, y_position: 4, game_id: game.id, white:false)
     #  rook.update(1, 7) 
     #  expect(rook.status).to eq 200
-    #  black_king.reload
+    #  game.reload
     #  expect(black_king.king_check).to eq 1
     #end
 

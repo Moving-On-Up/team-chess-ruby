@@ -12,7 +12,7 @@ class Piece < ApplicationRecord
 
   def contains_own_piece?(x_end, y_end)
     piece = game.pieces.where("x_position = ? AND y_position = ?", x_end, y_end).first
-    piece.present? && piece.white == white
+    piece.present? && piece.white == self.white
   end
 
   def opposition_piece?(x_end, y_end, id = nil, color = nil)
@@ -210,7 +210,7 @@ class Piece < ApplicationRecord
   end
 
   def update_winner
-    game.update_attributes(state: "end")
+    game.update_attributes(current_status: "end")
     if white?
       game.update_attributes(winner_user_id: game.black_player_id)
     else
@@ -219,7 +219,7 @@ class Piece < ApplicationRecord
   end
 
   def update_loser
-    game.update_attributes(state: "end")
+    game.update_attributes(current_status: "end")
     if white?
       game.update_attributes(loser_user_id: game.black_player_id)
     else
@@ -235,12 +235,7 @@ class Piece < ApplicationRecord
 
   def update(new_x, new_y)
     @game = self.game
-    #binding.pry
     current_piece = self
-    #self.find_piece
-    #self.verify_two_players 
-    #self.verify_player_turn 
-    #self.verify_valid_move
     is_captured
     if self.piece_params[:piece_type] == "Queen" || 
        self.piece_params[:piece_type] == "Bishop" || 
@@ -271,7 +266,7 @@ class Piece < ApplicationRecord
         king_opp.update_attributes(king_check: 1)
       end
     elsif king_opp.stalemate?
-      @game.update_attributes(state: "end")
+      @game.update_attributes(current_status: "end")
       game_end = true
     end
     if game_end == false && !(self.piece_type == "Pawn" && self.pawn_promotion?)
@@ -316,7 +311,6 @@ class Piece < ApplicationRecord
   end
 
   def verify_player_turn
-    #binding.pry
     return if correct_turn? &&
     ((self.game.white_player_id == self.player_id && self.white?) ||
     (self.game.black_player_id == self.player_id && self.black?))
