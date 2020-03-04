@@ -90,14 +90,6 @@ RSpec.describe Piece, type: :model do
       expect(pawn.valid_move?(3, 4, id = nil, color = nil)).to eq false
      end
 
-     it "should return error if the piece's move path is obstructed" do
-      bishop = FactoryBot.create(:bishop, x_position: 1, y_position: 6, game_id: game.id, white: true)
-      pawn = FactoryBot.create(:pawn, x_position: 2, y_position: 5, game_id: game.id, white: true)
-      #bishop.update(3, 4)
-      #bishop.is_obstructed?(3, 4) 
-      expect(bishop.is_obstructed?(3, 4)).to eq true
-     end
-
     it "should return error if the piece is moving to a square occupied by same color" do
       bishop = FactoryBot.create(:bishop, x_position: 1, y_position: 6, game_id: game.id, white: true)
       pawn = FactoryBot.create(:pawn, x_position: 3, y_position: 4, game_id: game.id, white: true)
@@ -109,7 +101,7 @@ RSpec.describe Piece, type: :model do
       black_bishop = FactoryBot.create(:bishop, x_position:5, y_position: 3, player_id: current_user2.id, game_id: game.id, white:false)
       expect(white_rook.move_to_capture_piece_and_capture(black_bishop, 5, 3)).to eq true
       game.reload
-      #expect(bishop.x_position).to eq nil
+      expect(black_bishop.x_position).to eq nil
     end
 
     it "should return false if a pawn tries to capture opponent vertically" do
@@ -121,10 +113,10 @@ RSpec.describe Piece, type: :model do
 
     it "should return true if a pawn tries to capture opponent diagonally" do
       pawn = FactoryBot.create(:pawn, x_position:2, y_position: 7, player_id: current_user.id, game_id: game.id, white:true)
-      bishop = FactoryBot.create(:bishop, x_position:3, y_position: 6, player_id: current_user2.id, game_id: game.id, white:false)
-      expect(pawn.diagonal?(1, 1)).to eq true
-      bishop.reload
-      #expect(bishop.x_position).to eq nil
+      black_bishop = FactoryBot.create(:bishop, x_position:3, y_position: 6, player_id: current_user2.id, game_id: game.id, white:false)
+      expect(pawn.move_to_capture_piece_and_capture(black_bishop, 3, 6)).to eq true
+      game.reload
+      expect(black_bishop.x_position).to eq nil
     end
 
     #it "should return false if a pawn tries to move vertically into a square that contains the same color piece" do

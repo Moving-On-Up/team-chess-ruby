@@ -66,9 +66,9 @@ class Piece < ApplicationRecord
     x_distance = current_piece.x_position - new_x
     y_distance = current_piece.y_position - new_y
 
-    if !(((x_distance == y_distance) || (x_distance == 0) || (y_distance == 0)))
-      return nil
-    end
+    #if !(((x_distance == y_distance) || (x_distance == 0) || (y_distance == 0)))
+    #  return nil
+    #end
 
     places_between = [ [new_x, new_y] ]
     back_to_start = false
@@ -189,6 +189,7 @@ class Piece < ApplicationRecord
   end
 
   def move_to_capture_piece_and_capture(dead_piece, x_end, y_end)
+    self.valid_move?(x_end, y_end, id = self.id, color = nil)
     update_attributes(x_position: x_end, y_position: y_end)
     self.status = 200
     self.save

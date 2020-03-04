@@ -14,7 +14,7 @@ class King < Piece
     game.pieces.each do | f |
       if f.player_id != self.player_id && f.x_position != nil
         if f.valid_move?(x_position, y_position, id, color) == true && f.is_obstructed?(x_position, y_position) == false
-           binding.pry
+          # binding.pry
           return f
           break
         end
