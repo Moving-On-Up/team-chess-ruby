@@ -14,12 +14,14 @@ class King < Piece
     game.pieces.each do | f |
       if f.player_id != self.player_id && f.x_position != nil
         if f.valid_move?(x_position, y_position, id, color) == true && f.is_obstructed?(x_position, y_position) == false
+           binding.pry
           return f
           break
         end
       end
     end
     return false
+    binding.pry
   end
 
   def find_threat_and_determine_checkmate

@@ -190,6 +190,8 @@ class Piece < ApplicationRecord
 
   def move_to_capture_piece_and_capture(dead_piece, x_end, y_end)
     update_attributes(x_position: x_end, y_position: y_end)
+    self.status = 200
+    self.save
     remove_piece(dead_piece)
   end
 
@@ -230,10 +232,14 @@ class Piece < ApplicationRecord
 
 ## code from controller.
 
-  def update
+  def update(new_x, new_y)
     @game = self.game
     #binding.pry
     current_piece = self
+    #self.find_piece
+    #self.verify_two_players 
+    #self.verify_player_turn 
+    #self.verify_valid_move
     is_captured
     if self.piece_params[:piece_type] == "Queen" || 
        self.piece_params[:piece_type] == "Bishop" || 
@@ -268,7 +274,7 @@ class Piece < ApplicationRecord
       game_end = true
     end
     if game_end == false && !(self.piece_type == "Pawn" && self.pawn_promotion?)
-      update_moves
+      update_moves(new_x, new_y)
       switch_turns
       self.status = 200
     else
@@ -309,6 +315,7 @@ class Piece < ApplicationRecord
   end
 
   def verify_player_turn
+    #binding.pry
     return if correct_turn? &&
     ((self.game.white_player_id == self.player_id && self.white?) ||
     (self.game.black_player_id == self.player_id && self.black?))
@@ -360,8 +367,11 @@ class Piece < ApplicationRecord
     end
   end
 
-  def update_moves
-    binding.pry
-    self.update_attributes(self.piece_params[:x_position].to_i, self.piece_params[:y_position].to_i)
+  def update_moves(new_x, new_y)
+    #binding.pry
+    self.x_position = new_x
+    self.y_position = new_y
+    self.save
+    #self.update_attributes(self.x_position = new_x, self.y_position = new_y)
   end
 end
