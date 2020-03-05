@@ -8,7 +8,7 @@
     <% if game.user.present? %>
       <small><%= game.user.email %></small>
     <% end %>
-    <%= simple_form_for game do |f| %>
+    <%= simple_form_for game, :url => game_path(game.id), :method => :get do |f| %>
       <%= f.submit 'Play', class: 'btn btn-danger' %>
     <% end %>
  </div>
