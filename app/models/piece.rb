@@ -156,9 +156,37 @@ class Piece < ApplicationRecord
   def horizontal?(new_x_position)
     (x_position - new_x_position) > 0 || (x_position - new_x_position) < 0
   end
-  
+
   def diagonal?(x_distance, y_distance)
-    x_distance == y_distance
+     new_x_position = self.x_position 
+     new_y_position = self.y_position
+
+     if x_distance > new_x_position
+          x_increment = 1
+     else
+          x_increment = -1
+     end
+
+     if y_distance > new_y_position
+         y_increment = 1
+     else
+         y_increment = -1
+     end 
+
+
+      new_x_position += x_increment
+      new_y_position += y_increment
+
+      diagonal_array = []
+
+
+     until (new_x_position -  x_distance).abs == 0 && (new_y_position - y_distance) == 0
+      diagonal_array << [new_x_position, new_y_position]
+      new_x_position += x_increment
+      new_y_position += y_increment
+     end
+
+     return diagonal_array
   end
 
   #def capturable(capture_piece)
