@@ -9,22 +9,22 @@ RSpec.describe Bishop, type: :model do
 
     it "should return true to move diagonally" do
       bishop = FactoryBot.create(:bishop, x_position:5, y_position: 5, player_id: current_user.id, game_id: game.id, white:false)
-      expect(bishop.valid_move?(7, 7)).to eq(true)
+      expect(bishop.valid_move?(7, 7, id = nil, white = nil)).to eq(true)
     end
 
     it "should return false to move one square forward" do
       bishop = FactoryBot.create(:bishop, x_position:5, y_position: 5, player_id: current_user.id, game_id: game.id, white:false)
-      expect(bishop.valid_move?(5, 6)).to eq(false)
+      expect(bishop.valid_move?(5, 6, id = nil, white = nil)).to eq(false)
     end 
 
     it "should return false to move three squares to the left" do
       bishop = FactoryBot.create(:bishop, x_position:5, y_position: 5, player_id: current_user.id, game_id: game.id, white:false)
-      expect(bishop.valid_move?(2, 5)).to eq(false)
+      expect(bishop.valid_move?(2, 5, id = nil, white = nil)).to eq(false)
     end     
 
     it "should return false to move to a non-same-color square" do
       bishop = FactoryBot.create(:bishop, x_position:5, y_position: 5, player_id: current_user.id, game_id: game.id, white:false)
-      expect(bishop.valid_move?(2, 3)).to eq(false)
+      expect(bishop.valid_move?(2, 3, id = nil, white = nil)).to eq(false)
     end     
   end 
 

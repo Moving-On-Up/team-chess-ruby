@@ -1,6 +1,6 @@
 class King < Piece
 
-  def valid_move?(new_x_position, new_y_position, id = nil, color = nil)
+  def valid_move?(new_x_position, new_y_position, id = nil, white = nil)
     x_distance = x_distance(new_x_position)
     y_distance = y_distance(new_y_position)
 
@@ -10,10 +10,10 @@ class King < Piece
     legal_to_castle?(new_x_position, new_y_position)
   end
 
-  def check?(x_position, y_position, id = nil, color = nil)
+  def check?(x_position, y_position, id = nil, white = nil)
     game.pieces.each do | f |
       if f.player_id != self.player_id && f.x_position != nil
-        if f.valid_move?(x_position, y_position, id, color) == true && f.is_obstructed?(x_position, y_position) == false
+        if f.valid_move?(x_position, y_position, id, white) == true && f.is_obstructed?(x_position, y_position) == false
           # binding.pry
           return f
           break

@@ -27,10 +27,13 @@ class GamesController < ApplicationController
     def move
         @game = Game.find_by_id(params[:id])
         @pieces = @game.pieces
+        #:find_piece, :verify_two_players, :verify_player_turn, :verify_valid_move
         @piece = Piece.find_by_id(params[:piece_id])
+        #:find_piece, :verify_two_players, :verify_player_turn, :verify_valid_move
+        #:find_piece, :verify_two_players, :verify_player_turn, :verify_valid_move
+        #:find_piece, :verify_two_players, :verify_player_turn, :verify_valid_move
         @x_position = params[:x_position]
         @y_position = params[:y_position]
-        #@piece.update_attributes({:x_position => @x_position, :y_position => @y_position})
         @piece.move_to!(@x_position,@y_position)
         redirect_to game_path(@game)
     end
