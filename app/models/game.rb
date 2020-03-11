@@ -98,42 +98,19 @@ class Game < ApplicationRecord
 
   def check
     pieces.reload
-    black_king = pieces.find_by(type: 'King', color: 'black')
-    white_king = pieces.find_by(type: 'King', color: 'white')
+    black_king = pieces.find_by(piece_type: 'King', player_id: black_player_id)
+    white_king = pieces.find_by(piece_type: 'King',player_id: white_player_id)
     pieces.each do |piece|
-      return 'black' if piece.valid_move?(black_king.x_position, black_king.y_position) && piece.color == 'white' && piece.captured == false
-      return 'white' if piece.valid_move?(white_king.x_position, white_king.y_position) && piece.color == 'black' && piece.captured == false
+      return 'black' if piece.valid_move?(black_king.x_position, black_king.y_position) && piece.color == 'white' && piece.is_captured == false
+      return 'white' if piece.valid_move?(white_king.x_position, white_king.y_position) && piece.color == 'black' && piece.is_captured == false
     end
     nil
   end
 
+
+
   def no_legal_next_move?
-    friendly_pieces = pieces.where(color: player_turn, captured: false)
-    friendly_pieces.each do |piece|
-      (1..8).each do |x|
-        (1..8).each do |y|
-          if piece.valid_move?(x, y)
-            original_x = piece.x_position
-            original_y = piece.y_position
-            captured_piece = pieces.find_by(x_position: x, y_position: y)
-            begin
-              captured_piece.update(x_position: -1, y_position: -1) if captured_piece
-              piece.update(x_position: x, y_position: y)
-              reload
-              check_state = check
-            ensure
-              piece.update(x_position: original_x, y_position: original_y)
-              captured_piece.update(x_position: x, y_position: y) if captured_piece
-              reload
-            end
-            if check_state.nil?
-              return false
-            end
-          end
-        end
-      end
-    end
-    true
+     
   end
 
   def checkmate
@@ -149,26 +126,31 @@ class Game < ApplicationRecord
     end
     false
   end
-
-  def end_game_checkmate
-    puts "player turn #{player_turn}"
-    winning_player_color = player_turn == 'white' ? 'black' : 'white'
-    puts "winning player color #{winning_player_color}"
-    winning_id = winning_player_color == 'white' ? white_player_id : black_player_id
-    puts "winning id #{winning_id}"
-    update(winning_player_id: winning_id)
-    update(outcome: 'checkmate')
-    update(finished: Time.now)
-    game_played!
-    update_elo!(player_turn)
-  end
-
-
-  def end_game_stalemate
-    update(outcome: 'stalemate')
-    update(finished: Time.now)
-    game_played!
-    update_elo!(player_turn)
-  end
   
+  def is_captured
+    capture_piece = self.find_capture_piece(piece_params[:x_position].to_i, piece_params[:y_position].to_i)
+    if !capture_piece.nil?
+      self.remove_piece(capture_piece)
+    end
+  end  
+
+  def find_capture_piece(x_end, y_end)
+    if self.piece_type == "Pawn"
+      if en_passant?(x_end, y_end)
+        pieces.where(y_position: y_position, x_position: x_end, piece_type: "Pawn").first
+      else
+        pieces.find_by(x_position: x_end, y_position: y_end)
+      end
+      else
+       pieces.where(x_position: x_end, y_position: y_end).first
+    end
+  end
+ 
+ 
+  def remove_piece(dead_piece)
+    dead_piece.x_position = nil
+    dead_piece.y_position = nil
+    dead_piece.save
+  end
+
 end

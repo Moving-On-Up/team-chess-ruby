@@ -21,7 +21,11 @@ class GamesController < ApplicationController
     end
     
     def show
-        @game = Game.find_by_id(params[:id])
+        @game = current_game
+        @pieces = current_game.pieces.order(:y_position).order(:x_position).to_a
+
+        flash.now[:notice] = @game.check.upcase + ' IN CHECK' if @game.check
+        flash.now[:notice] = @game.check.upcase + ' IN CHECKMATE' if @game.check && @game.checkmate
     end
     
     def move
@@ -56,5 +60,9 @@ class GamesController < ApplicationController
     
     def game_params
         params.require(:game).permit(:name)
+    end
+
+    def current_game
+      @game ||= Game.find(params[:id])
     end
 end
