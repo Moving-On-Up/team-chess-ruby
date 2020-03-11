@@ -94,5 +94,60 @@ class Game < ApplicationRecord
   def loser
     User.find_by_id(loser_player_id)
   end
+
+  
+  def check
+    pieces.reload
+    black_king = pieces.find_by(type: 'King', color: 'black')
+    white_king = pieces.find_by(type: 'King', color: 'white')
+    pieces.each do |piece|
+      return 'black' if piece.valid_move?(black_king.x_position, black_king.y_position) && piece.color == 'white' && piece.captured == false
+      return 'white' if piece.valid_move?(white_king.x_position, white_king.y_position) && piece.color == 'black' && piece.captured == false
+    end
+    nil
+  end
+
+  def no_legal_next_move?
+    friendly_pieces = pieces.where(color: player_turn, captured: false)
+    friendly_pieces.each do |piece|
+      (1..8).each do |x|
+        (1..8).each do |y|
+          if piece.valid_move?(x, y)
+            original_x = piece.x_position
+            original_y = piece.y_position
+            captured_piece = pieces.find_by(x_position: x, y_position: y)
+            begin
+              captured_piece.update(x_position: -1, y_position: -1) if captured_piece
+              piece.update(x_position: x, y_position: y)
+              reload
+              check_state = check
+            ensure
+              piece.update(x_position: original_x, y_position: original_y)
+              captured_piece.update(x_position: x, y_position: y) if captured_piece
+              reload
+            end
+            if check_state.nil?
+              return false
+            end
+          end
+        end
+      end
+    end
+    true
+  end
+
+  def checkmate
+    if !check.nil?
+      return true if no_legal_next_move?
+    end
+    false
+  end
+
+  def stalemate
+    if check.nil?
+      return true if no_legal_next_move?
+    end
+    false
+  end
   
 end
