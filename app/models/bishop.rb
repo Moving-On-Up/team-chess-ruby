@@ -7,15 +7,5 @@ class Bishop < Piece
     (x_distance >= 1 && y_distance >= 1) && diagonal?(x_distance, y_distance)
   end
 
-  def check_move?()
-    games.pieces.each do |b|
-      if b.diagonal?(x_distance, y_distance) && b.is_obstructed?
-        move_to! #new location
-      else
-        false #alert invalid move!
-      end
-    end
-  end
-
 
 end
