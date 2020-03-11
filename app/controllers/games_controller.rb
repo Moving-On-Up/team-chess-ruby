@@ -18,27 +18,36 @@ class GamesController < ApplicationController
 
     def update
         @game = Game.find_by_id(params[:id])
-        @game.update_attributes(black_player_id: current_user.id)
+        @game.update_attributes(black_player_id: current_user.id.to_i)     
+        @pieces = @game.pieces.where(player_id:nil).update_all(player_id: current_user.id)
         @game.update_attributes(turn_player_id: @game.white_player_id)
         @game.update_attributes(current_status: "active")
         redirect_to game_path(@game)
     end
     
     def show
-        @game = Game.find_by_id(params[:id])
+        @game = current_game
+        @pieces = current_game.pieces.order(:y_position).order(:x_position).to_a
+
+        flash.now[:notice] = @game.check.upcase + ' IN CHECK' if @game.check
+        flash.now[:notice] = @game.check.upcase + ' IN CHECKMATE' if @game.check && @game.checkmate
     end
     
     def move
         @game = Game.find_by_id(params[:id])
         @pieces = @game.pieces
-        #:find_piece, :verify_two_players, :verify_player_turn, :verify_valid_move
+        #:find_piece
         @piece = Piece.find_by_id(params[:piece_id])
-        #:find_piece, :verify_two_players, :verify_player_turn, :verify_valid_move
-        #:find_piece, :verify_two_players, :verify_player_turn, :verify_valid_move
-        #:find_piece, :verify_two_players, :verify_player_turn, :verify_valid_move
-        @x_position = params[:x_position]
-        @y_position = params[:y_position]
-        @piece.move_to!(@x_position,@y_position)
+        @current_user = current_user.id
+        #:verify_two_players, :verify_player_turn
+        if @game.turn_player_id == @current_user
+            @x_position = params[:x_position]
+            @y_position = params[:y_position]
+            #:verify_valid_move
+            @piece.move_to!(@x_position,@y_position)
+        else 
+            flash[:alert] = "Not yet your turn!"
+        end
         redirect_to game_path(@game)
     end
 
@@ -60,5 +69,9 @@ class GamesController < ApplicationController
     
     def game_params
         params.require(:game).permit(:name)
+    end
+
+    def current_game
+      @game ||= Game.find(params[:id])
     end
 end

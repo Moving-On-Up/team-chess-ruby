@@ -207,6 +207,7 @@ class Piece < ApplicationRecord
     end
   end
 
+ 
   def remove_piece(dead_piece)
     dead_piece.x_position = nil
     dead_piece.y_position = nil

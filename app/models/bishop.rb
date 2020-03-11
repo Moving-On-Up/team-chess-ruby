@@ -11,14 +11,6 @@ class Bishop < Piece
     end
   end
 
-  def check_move?()
-    games.pieces.each do |b|
-      if b.diagonal?(x_dist, y_dist) && b.is_obstructed?
-        move_to! #new location
-      else
-        false #alert invalid move!
-      end
-    end
-  end
+ 
   
 end
