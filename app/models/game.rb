@@ -95,7 +95,7 @@ class Game < ApplicationRecord
     User.find_by_id(loser_player_id)
   end
 
-  
+
   def check
     pieces.reload
     black_king = pieces.find_by(type: 'King', color: 'black')
@@ -148,6 +148,27 @@ class Game < ApplicationRecord
       return true if no_legal_next_move?
     end
     false
+  end
+
+  def end_game_checkmate
+    puts "player turn #{player_turn}"
+    winning_player_color = player_turn == 'white' ? 'black' : 'white'
+    puts "winning player color #{winning_player_color}"
+    winning_id = winning_player_color == 'white' ? white_player_id : black_player_id
+    puts "winning id #{winning_id}"
+    update(winning_player_id: winning_id)
+    update(outcome: 'checkmate')
+    update(finished: Time.now)
+    game_played!
+    update_elo!(player_turn)
+  end
+
+
+  def end_game_stalemate
+    update(outcome: 'stalemate')
+    update(finished: Time.now)
+    game_played!
+    update_elo!(player_turn)
   end
   
 end
