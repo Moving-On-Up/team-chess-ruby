@@ -110,9 +110,9 @@ class Game < ApplicationRecord
 
 
   def no_legal_next_move?
-    if white_player.piece.valid_move? == false
+    if white_player.pieces.valid_move? == false
       return false
-    elsif black_player.piece.valid_move? == false
+    elsif black_player.pieces.valid_move? == false
       return false
     end   
   end
@@ -124,7 +124,7 @@ class Game < ApplicationRecord
     false
   end
 
-  def stalemate
+  def stalemate(game)
     if check.nil?
       return true if no_legal_next_move?
     end
