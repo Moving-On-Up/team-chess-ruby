@@ -61,7 +61,6 @@ class Piece < ApplicationRecord
 
   def is_obstructed?(new_x, new_y)
    current_piece = self
-    @game = self.game
     
     x_distance = current_piece.x_position - new_x
     y_distance = current_piece.y_position - new_y
@@ -140,22 +139,22 @@ class Piece < ApplicationRecord
 
   # determines horizontal distance travelled by piece
   def x_distance(new_x_position)
-    x_distance = (new_x_position - x_position).abs
+    (new_x_position.to_i - self.x_position).abs 
   end
 
   # determines vertical distance travelled by piece
   def y_distance(new_y_position)
-    y_distance = (new_y_position - y_position).abs
+    (new_y_position.to_i - self.y_position).abs  
   end
 
   # returns true if piece is moving from bottom to top
   def up?(new_y_position)
-    (y_position - new_y_position) > 0
+    (self.y_position - new_y_position.to_i) > 0
   end
 
   # returns true if piece is moving from top to bottom
   def down?(new_y_position)
-    (y_position - new_y_position) < 0
+    (self.y_position - new_y_position.to_i) < 0
   end
 
   def diagonal?(x_distance, y_distance)
@@ -179,51 +178,62 @@ class Piece < ApplicationRecord
   end
 
   def move_to!(new_x,new_y)
-    a_piece = Piece.find_by(x_position: new_x, y_position: new_y)
-    if a_piece != nil
-      remove_piece(a_piece)
+    if !correct_turn?
+      return false
+    else
+      dead_piece = Piece.find_by(x_position: new_x, y_position: new_y)
+      if dead_piece != nil
+        if opposition_piece?(new_x, new_y, id = dead_piece.id, white = dead_piece.white) 
+          move_to_capture_piece_and_capture(dead_piece, new_x, new_y)
+        else
+          return false
+        end
+      else
+        move_to_empty_square(new_x, new_y)
+      end
+      switch_turns
     end
-    self.x_position = new_x
-    self.y_position = new_y
-    self.save
   end
 
   def move_to_capture_piece_and_capture(dead_piece, x_end, y_end)
-    self.valid_move?(x_end, y_end, id = self.id, color = nil)
-    update_attributes(x_position: x_end, y_position: y_end)
-    self.status = 200
-    self.save
-    remove_piece(dead_piece)
-  end
-
-  def capture(capture_piece)
-    move_to_empty_square(capture_piece.x_position, capture_piece.y_position)
-    remove_piece(capture_piece)
+    if self.valid_move?(x_end, y_end, id = self.id, white = self.white)
+      self.x_position = x_end
+      self.y_position = y_end
+      self.status = 200
+      self.save
+      remove_piece(dead_piece)
+    else
+      return false
+    end
   end
 
   def remove_piece(dead_piece)
-      dead_piece.update_attributes(x_position: nil, y_position: nil) ##Should we have a piece status to add to db? Like captured/in play? This would be helpful for stats also
+    dead_piece.x_position = nil
+    dead_piece.y_position = nil
+    dead_piece.save
   end
 
   def move_to_empty_square(x_end, y_end)
-    update_attributes(x_position: x_end, y_position: y_end)
+    self.x_position = x_end
+    self.y_position = y_end
+    self.save
   end
 
   def update_winner
-    game.update_attributes(current_status: "end")
+    self.game.current_status = "end"
     if white?
-      game.update_attributes(winner_user_id: game.black_player_id)
+      self.game.winner_user_id = game.black_player_id
     else
-      game.update_attributes(winner_user_id: game.white_player_id)
+      self.game.winner_user_id = game.white_player_id
     end
   end
 
   def update_loser
-    game.update_attributes(current_status: "end")
+    self.game.current_status = "end"
     if white?
-      game.update_attributes(loser_user_id: game.black_player_id)
+      self.game.loser_user_id = game.black_player_id
     else
-      game.update_attributes(loser_user_id: game.white_player_id)
+      self.game.loser_user_id = game.white_player_id
     end
   end
 
@@ -234,19 +244,18 @@ class Piece < ApplicationRecord
 ## code from controller.
 
   def update(new_x, new_y)
-    @game = self.game
     current_piece = self
     is_captured
     if self.piece_params[:piece_type] == "Queen" || 
        self.piece_params[:piece_type] == "Bishop" || 
        self.piece_params[:piece_type] == "Knight" || 
        self.piece_params[:piece_type] == "Rook"
-      self.update_attributes(piece_type: self.piece_params[:piece_type])
+      self.piece_type = self.piece_params[:piece_type]
     elsif self.piece_type == "King" && 
           self.legal_to_castle?(self.piece_params[:x_position].to_i, self.piece_params[:y_position].to_i)
       self.castle(self.piece_params[:x_position].to_i, self.piece_params[:y_position].to_i)
     else
-      self.update_attributes(move_number: self.move_number + 1)
+      self.move_number = self.move_number + 1
     end
 
     #Below king_opp mean the opponent's player's king. After the player's turn,
@@ -254,8 +263,8 @@ class Piece < ApplicationRecord
     #the opponent's king have any way to get out of check (see check_mate in king.rb)
     #if the opponent's king is stuck, the game is over, right now noted by the 401 error
 
-    king_opp = @game.pieces.where(:piece_type =>"King").where.not(:player_id => @game.turn_player_id)[0]
-    king_current = @game.pieces.where(:piece_type =>"King").where(:player_id => @game.turn_player_id)[0]
+    king_opp = self.game.pieces.where(:piece_type =>"King").where.not(:player_id => self.game.turn_player_id)[0]
+    king_current = self.game.pieces.where(:piece_type =>"King").where(:player_id => self.game.turn_player_id)[0]
     game_end = false
     if king_opp.check?(king_opp.x_position, king_opp.y_position).present?
       if king_opp.find_threat_and_determine_checkmate
@@ -263,10 +272,10 @@ class Piece < ApplicationRecord
         king_current.update_loser
         game_end = true
       else
-        king_opp.update_attributes(king_check: 1)
+        king_opp.king_check = 1
       end
     elsif king_opp.stalemate?
-      @game.update_attributes(current_status: "end")
+      self.game.current_status = "end"
       game_end = true
     end
     if game_end == false && !(self.piece_type == "Pawn" && self.pawn_promotion?)
@@ -279,42 +288,43 @@ class Piece < ApplicationRecord
     self.save
   end
 
-  #private
-
   def verify_two_players
-    return if @game.black_player_id && @game.white_player_id
-    self.status = 422
+    if !(self.game.black_player_id && self.game.white_player_id)
+      self.status = 422
+    else
+      self.status = 200
+    end
     self.save
   end
 
   def switch_turns
-    if @game.white_player_id == @game.turn_player_id
-      @game.update_attributes(turn_player_id:@game.black_player_id)
-    elsif @game.black_player_id == @game.turn_player_id
-      @game.update_attributes(turn_player_id:@game.white_player_id)
+    if self.game.white_player_id == self.game.turn_player_id
+      self.game.turn_player_id = self.game.black_player_id
+    elsif self.game.black_player_id == self.game.turn_player_id
+      self.game.turn_player_id = self.game.white_player_id
     end
-  end
-
-  def find_piece
-    piece = self.id
-    @game = self.game
+    self.game.save
   end
 
   def verify_valid_move
-    return if self.valid_move?(self.x_position.to_i, self.y_position.to_i, self.id, self.white == true) &&
-    (self.is_obstructed?(self.x_position.to_i, self.y_position.to_i) == false) &&
-    (self.contains_own_piece?(self.x_position.to_i, self.y_position.to_i) == false) &&
-    (king_not_moved_to_check_or_king_not_kept_in_check? == true) ||
-    self.piece_type == "Pawn" && self.pawn_promotion?
-    self.status = 422
+    if self.valid_move?(self.x_position.to_i, self.y_position.to_i, self.id, self.white == true) &&
+      (self.is_obstructed?(self.x_position.to_i, self.y_position.to_i) == false) &&
+      (self.contains_own_piece?(self.x_position.to_i, self.y_position.to_i) == false) &&
+      (king_not_moved_to_check_or_king_not_kept_in_check? == true) ||
+      self.piece_type == "Pawn" && self.pawn_promotion?
+    else
+      self.status = 422
+    end
     self.save
   end
 
   def verify_player_turn
-    return if correct_turn? &&
-    ((self.game.white_player_id == self.player_id && self.white?) ||
-    (self.game.black_player_id == self.player_id && self.black?))
-    self.status = 422
+    if correct_turn? &&
+      ((self.game.white_player_id == self.player_id && self.white?) ||
+      (self.game.black_player_id == self.player_id && self.black?))
+    else
+      self.status = 422
+    end
     self.save
   end
 
@@ -339,10 +349,10 @@ class Piece < ApplicationRecord
     #and also checking that if king is in check, player must move king out of check,
     #this function restricts any other random move if king is in check.
 
-    king = @game.pieces.where(:piece_type =>"King").where(:player_id => @game.turn_player_id)[0]
+    king = self.game.pieces.where(:piece_type =>"King").where(:player_id => self.game.turn_player_id)[0]
     if self.piece_type == "King"
       if self.check?(piece_params[:x_position].to_i, piece_params[:y_position].to_i, self.id, self.white == true).blank?
-        king.update_attributes(king_check: 0)
+        king.king_check = 0
         return true
       else
         return false
@@ -352,7 +362,7 @@ class Piece < ApplicationRecord
         (self.valid_move?(piece_params[:x_position].to_i, piece_params[:y_position].to_i, self.id, self.white == true) == true &&
         king.check?(king.x_position, king.y_position).x_position == piece_params[:x_position].to_i &&
         king.check?(king.x_position, king.y_position).y_position == piece_params[:y_position].to_i)
-        king.update_attributes(king_check: 0)
+        king.king_check = 0 
         return true
       else
         return false
@@ -363,10 +373,8 @@ class Piece < ApplicationRecord
   end
 
   def update_moves(new_x, new_y)
-    #binding.pry
     self.x_position = new_x
     self.y_position = new_y
     self.save
-    #self.update_attributes(self.x_position = new_x, self.y_position = new_y)
   end
 end
