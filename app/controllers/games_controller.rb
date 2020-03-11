@@ -1,10 +1,14 @@
 class GamesController < ApplicationController
  before_action :authenticate_user!, only: [:new, :create, :show, :move, :update, :forfeit]
   
+   
     def new
         @game = Game.new
     end
 
+    def index
+    end
+    
     def create
         current_user.games.create(game_params.merge(white_player_id: current_user.id)
             .merge(current_status: "inactive").merge(current_user: current_user.id))
@@ -59,7 +63,7 @@ class GamesController < ApplicationController
         @game.update_attributes(current_status: "inactive")
         redirect_to root_path
     end
-
+   
 
     private
     

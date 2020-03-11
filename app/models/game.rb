@@ -95,6 +95,25 @@ class Game < ApplicationRecord
     User.find_by_id(loser_player_id)
   end
 
+  def checkmate?(white)
+    return false unless check?(white)
+    return false if valid_move(white) 
+    true
+  end
+
+  def valid_move(white)
+    valid_move = []
+    playable_pieces(white).each do |piece|
+      (0..7).each do |y|
+        (0..7).each do |x|
+          next if !piece.valid_move?(x,y)
+          next if piece.puts_self_in_check?(x,y)
+          valid_move << piece
+        end
+      end
+    end
+    return valid_move.present?
+  end
 
   def check
     pieces.reload
