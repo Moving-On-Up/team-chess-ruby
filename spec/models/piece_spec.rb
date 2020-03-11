@@ -7,8 +7,7 @@ RSpec.describe Piece, type: :model do
       game = FactoryBot.create(:game)
       pawn1 = FactoryBot.create(:pawn, x_position: 5, y_position: 5, white:true, game_id: game.id)
       pawn2 = FactoryBot.create(:pawn, x_position: 5, y_position: 4, white:true, game_id: game.id)
-      result = pawn1.contains_own_piece?(5,4)
-      expect(result).to eq (true)
+      expect(pawn1.contains_own_piece?(5,4)).to eq (true)
     end
   end
 
@@ -50,8 +49,9 @@ RSpec.describe Piece, type: :model do
   describe "#remove_piece" do
     it "should update captured pieces attributes to nil" do
       game = FactoryBot.create(:game)
+      black_pawn = FactoryBot.create(:pawn, x_position: 4, y_position: 2, white:false, game_id: game.id)
       bishop = FactoryBot.create(:bishop, x_position: 3, y_position: 3, white:true, game_id: game.id)
-      result = bishop.remove_piece(bishop)
+      result = black_pawn.remove_piece(bishop)
       expect(bishop.x_position).to eq nil
     end
   end
@@ -65,16 +65,14 @@ RSpec.describe Piece, type: :model do
 
     it "should update coordinates if successful move" do
       pawn = FactoryBot.create(:pawn, x_position: 1, y_position: 6, player_id: current_user.id, game_id: game.id, white: true)
-      pawn.update(1, 5)
-      expect(pawn.status).to eq 200
+      expect(pawn.move_to!(1, 5)).to eq true
       game.reload
       expect(pawn.y_position).to eq 5
     end
 
     it "should switch player turns if successful move" do
       pawn = FactoryBot.create(:pawn, x_position: 1, y_position: 6, player_id: current_user.id, game_id: game.id, white: true)
-      pawn.update(1, 5) 
-      expect(pawn.status).to eq 200
+      expect(pawn.move_to!(1, 5)).to eq true
       game.reload
       expect(game.turn_player_id).to eq current_user2.id
     end
@@ -87,14 +85,14 @@ RSpec.describe Piece, type: :model do
 
      it "should return error if invalid piece move" do
       pawn = FactoryBot.create(:pawn, x_position: 1, y_position: 6, game_id: game.id, white: true)
-      expect(pawn.valid_move?(3, 4, id = nil, color = nil)).to eq false
+      expect(pawn.valid_move?(3, 4, id = nil, white = nil)).to eq false
      end
 
-    #it "should return error if the piece is moving to a square occupied by same color" do
-    #  bishop = FactoryBot.create(:bishop, x_position: 1, y_position: 6, game_id: game.id, white: true)
-    #  pawn = FactoryBot.create(:pawn, x_position: 3, y_position: 4, game_id: game.id, white: true)
-    #  expect(bishop.contains_own_piece?(3, 4)).to eq false ## true?
-    #end
+    it "should return error if the piece is moving to a square occupied by same color" do
+      bishop = FactoryBot.create(:bishop, x_position: 1, y_position: 6, game_id: game.id, white: true)
+      pawn = FactoryBot.create(:pawn, x_position: 3, y_position: 4, game_id: game.id, white: true)
+      expect(bishop.move_to!(3, 4)).to eq false ## true?
+    end
 
     it "should return true if a rook tries to capture opponent" do
       white_rook = FactoryBot.create(:rook, x_position:3, y_position: 3, player_id: current_user.id, game_id: game.id, white:true)
@@ -112,18 +110,18 @@ RSpec.describe Piece, type: :model do
     end
 
     it "should return true if a pawn tries to capture opponent diagonally" do
-      pawn = FactoryBot.create(:pawn, x_position:2, y_position: 7, player_id: current_user.id, game_id: game.id, white:true)
+      pawn = FactoryBot.create(:pawn, x_position:2, y_position: 5, player_id: current_user.id, game_id: game.id, white:true)
       black_bishop = FactoryBot.create(:bishop, x_position:3, y_position: 6, player_id: current_user2.id, game_id: game.id, white:false)
-      expect(pawn.move_to_capture_piece_and_capture(black_bishop, 3, 6)).to eq true
+      expect(pawn.move_to!(3, 6)).to eq true
       game.reload
-      expect(black_bishop.x_position).to eq nil
+      #expect(black_bishop.x_position).to eq nil
     end
 
     #it "should return false if a pawn tries to move vertically into a square that contains the same color piece" do
     #  pawn = game.pieces.find_by(name: "Pawn_white")
     #  bishop = game.pieces.find_by(name: "Bishop_white")
-    #  bishop.update_attributes(x_position: 1, y_position: 6)
-    #  expect(pawn.valid_move?(1, 6, id = nil, color = nil)).to eq false
+    #  #bishop.update_attributes(x_position: 1, y_position: 6)
+    #  expect(pawn.move_to!(1, 6)).to eq false
     #end
 
     #it "should return status 201 if opponent king is in check and cannot move out of check" do
@@ -182,7 +180,7 @@ RSpec.describe Piece, type: :model do
     #  white_queen = FactoryBot.create(:queen, player_id: current_user.id, x_position:7, y_position: 3, game_id: game.id, white:true)
     #  white_bishop = FactoryBot.create(:bishop, player_id: current_user.id, x_position:3, y_position: 5, game_id: game.id, white:true)
     #  #white_queen.update(6, 2) 
-    #  black_king.check?(5, 3, id = white_queen.id, color = nil)
+    #  black_king.check?(5, 3, id = white_queen.id, white = nil)
     #  expect(white_queen.status).to eq 201
     #end
 
