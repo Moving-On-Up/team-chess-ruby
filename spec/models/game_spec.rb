@@ -19,7 +19,7 @@ RSpec.describe Game, type: :model do
   #    king = FactoryBot.create(:king, x_position: 7, y_position: 3, player_id: current_user.id, game_id: game.id, white:false)
   #    king = FactoryBot.create(:king, x_position: 3, y_position: 7, player_id: current_user.id, game_id: game.id, white:true)
   #    bishop = FactoryBot.create(:bishop, x_position: 5, y_position: 5, player_id: current_user.id, game_id: game.id, white:true)
-  #    expect(game.check).to eq true
+  #    expect(game.no_legal_next_move?).to eq true
   #   end
   # end
 
