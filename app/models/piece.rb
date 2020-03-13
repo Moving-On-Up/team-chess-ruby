@@ -206,7 +206,6 @@ class Piece < ApplicationRecord
       return false
     end
   end
-
  
   def remove_piece(dead_piece)
     dead_piece.x_position = nil
@@ -344,8 +343,6 @@ class Piece < ApplicationRecord
       self.remove_piece(capture_piece)
     end
   end
-
-
 
   def king_not_moved_to_check_or_king_not_kept_in_check?
     #function checks if player is not moving king into a check position

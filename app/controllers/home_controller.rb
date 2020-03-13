@@ -5,4 +5,8 @@ class HomeController < ApplicationController
     @games = Game.all
     @current_user = current_user
   end
+
+  def about
+  end
+  
 end
