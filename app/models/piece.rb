@@ -345,6 +345,8 @@ class Piece < ApplicationRecord
     end
   end
 
+
+
   def king_not_moved_to_check_or_king_not_kept_in_check?
     #function checks if player is not moving king into a check position
     #and also checking that if king is in check, player must move king out of check,
@@ -378,4 +380,6 @@ class Piece < ApplicationRecord
     self.y_position = new_y
     self.save
   end
+
+  
 end

@@ -13,6 +13,7 @@ RSpec.describe Game, type: :model do
   #   end
   # end
 
+
   # describe "#is_in_check" do
   #   it 'should determine that the game is in check' do
   #    game = FactoryBot.create(:game)
@@ -23,6 +24,7 @@ RSpec.describe Game, type: :model do
   #   end
   # end
 
+
   # describe "#is_not_in_check" do
   #   it 'should determine that the game is not in check' do
   #    game = FactoryBot.create(:game)
@@ -32,6 +34,7 @@ RSpec.describe Game, type: :model do
   #    expect(game.check).to_not eq true
   #   end
   # end
+
 
   # describe "#stalemate" do
   #   it 'should detect stalemate' do
