@@ -9,6 +9,9 @@ class Pawn < Piece
     new_x_position = new_x_position.to_i
     new_y_position = new_y_position.to_i
 
+    # puts "new x position is " + new_x_position
+    # puts "new y position is " + new_y_position
+
     if en_passant?(new_x_position, new_y_position)
       return true
     elsif (x_distance == y_distance) && !white? && opposition_piece?(new_x_position, new_y_position, id, color)
