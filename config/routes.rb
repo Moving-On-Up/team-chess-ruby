@@ -8,5 +8,8 @@ Rails.application.routes.draw do
   resources :pieces , only: :update
   resources :users, only: :show
 
-  post 'games/:id/:piece_id/:x_position/:y_position', :to => 'games#move', :as => 'move'
+  #post 'games/:id/:piece_id/:x_position/:y_position', :to => 'games#move', :as => 'move'
+
+  post 'games/:game_id/:piece_id/:x_position/:y_position', :to => 'games#move', :as => 'move'
+
 end
