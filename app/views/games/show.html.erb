@@ -6,8 +6,6 @@
     <%= simple_form_for @game, :url => game_forfeit_path(@game.id) do |f| %>
         <p style="text-align:center"><%= f.submit 'Forfeit', class: 'btn btn-danger' %></p>
     <% end %>
-<% else %>
-    <p style="text-align:center"><b>It is other players turn to move</b></p>
 <% end %>
 
 <div class="flex-container">
@@ -36,8 +34,14 @@
     <% end %>
     </div>
 </div>
-
+<br />
 <p style="text-align:center"><b>White Player: <%= User.find_by_id(@game.white_player_id).email %></b></p>
+<% if current_user.id != @game.turn_player_id %>
+    <p style="text-align:center"><b>It is your turn to move</b></p>
+    <%= simple_form_for @game, :url => game_forfeit_path(@game.id) do |f| %>
+        <p style="text-align:center"><%= f.submit 'Forfeit', class: 'btn btn-danger' %></p>
+    <% end %>
+<% end %>
 
 <%= form_tag "#", :id => 'move'%>
 
