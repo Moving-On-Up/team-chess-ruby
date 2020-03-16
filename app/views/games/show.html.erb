@@ -1,17 +1,19 @@
 <p style="text-align:center"><b>Game Name: <%= @game.name %></b></p>
 <p style="text-align:center"><b>Black Player: <%= User.find_by_id(@game.black_player_id).email %></b></p>
 
-<% if current_user.id == @game.turn_player_id %>
-    <p style="text-align:center"><b>It is your turn to move</b></p>
-    <%= simple_form_for @game, :url => game_forfeit_path(@game.id) do |f| %>
-        <p style="text-align:center"><%= f.submit 'Forfeit', class: 'btn btn-danger' %></p>
+<div id="current_player">
+    <% if current_user.id == @game.turn_player_id %>
+        <p style="text-align:center"><b>It is your turn to move</b></p>
+        <%= simple_form_for @game, :url => game_forfeit_path(@game.id) do |f| %>
+            <p style="text-align:center"><%= f.submit 'Forfeit', class: 'btn btn-danger' %></p>
+        <% end %>
+    <% else %>
+        <p style="text-align:center"><b>It is other players turn to move</b></p>
     <% end %>
-<% else %>
-    <p style="text-align:center"><b>It is other players turn to move</b></p>
-<% end %>
+</div>
 
 <div class="flex-container">
-    <div class="container">
+    <div id="board" class="container">
     <% for j in 1..8 %>
         <% for i in 1..8 do %>
             <% if j % 2 == 1 %>
@@ -41,21 +43,61 @@
 
 <%= form_tag "#", :id => 'move'%>
 
+<script src="https://cdn.firebase.com/js/client/1.0.18/firebase.js"></script>
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.11.0/firebase-app.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-database.js"></script>
+
 <script>
-$(function() {
-    $(".draggable").draggable();
-    $(".droppable").droppable({
-        drop: function( event, ui ) {
-            var drop_target_id = event.target.id;
-            var target_x = drop_target_id[0];
-            var target_y = drop_target_id[1];
-            var piece_id = ui.draggable.prop('id');
-            var path = "/games/<%= @game.user_id.to_s %>/" + piece_id + "/" + target_x + "/" + target_y;
-            var $form =  $('#move');
-            $form.attr('action', path); 
-            console.log(path);
-            $form.submit();         
-        }     
+    $(function() {
+
+        $(".draggable").draggable();
+        $(".droppable").droppable({
+            drop: function( event, ui ) {
+                var drop_target_id = event.target.id;
+                var target_x = drop_target_id[0];
+                var target_y = drop_target_id[1];
+                var piece_id = ui.draggable.prop('id');
+                var path = "/games/<%= @game.user_id.to_s %>/" + piece_id + "/" + target_x + "/" + target_y;
+                var $form =  $('#move');
+                $form.attr('action', path); 
+                console.log(path);
+                $form.submit();         
+            }     
+        });
+
+        //Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyCa0OdzNtqg2CRUQibJT8ZxYjocMs8M3lQ",
+            authDomain: "fir-chess-270721.firebaseapp.com",
+            databaseURL: "https://fir-chess-270721.firebaseio.com",
+            projectId: "firebase-chess-270721",
+            storageBucket: "firebase-chess-270721.appspot.com",
+            messagingSenderId: "883177546382",
+            appId: "1:883177546382:web:60cc4e9cb5d519c386dfdf",
+            measurementId: "G-WWMKRY87V7"
+        };
+        //Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        var gamesRef = firebase.database().ref('games/' + '<%= @game.firebase_id %>');
+
+        gamesRef.on('child_changed', function(snapshot) {
+
+            console.log("child changed");
+            //console.log("snapshot value is " + snapshot.val());
+            //myFirebaseRef.child("games").on("child_added", function(snapshot) {
+
+            //firebase.child("games").on("child_added", function(snapshot) {
+            $('#board').load(location.href+" #board>*","");
+            $('#current_player').load(location.href+" #current_player>*","");
+                //console.log(snapshot.val());  // Alerts "San Francisco"
+        }, function(error) {
+            console.error(error);
+        });
+
     });
-  });
 </script>
