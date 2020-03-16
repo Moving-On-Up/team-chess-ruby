@@ -181,6 +181,7 @@ class Piece < ApplicationRecord
     if !correct_turn?
       return false
     else
+      #king_not_moved_to_check_or_king_not_kept_in_check?
       dead_piece = Piece.find_by(x_position: new_x, y_position: new_y)
       if dead_piece != nil
         if opposition_piece?(new_x, new_y, id = dead_piece.id, white = dead_piece.white) 
