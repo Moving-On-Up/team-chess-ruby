@@ -59,7 +59,7 @@ class GamesController < ApplicationController
     end
     
     def move
-        @game = Game.find_by_id(params[:id])
+        @game = Game.find_by_id(params[:game_id])
         @pieces = @game.pieces
         #:find_piece
         @piece = Piece.find_by_id(params[:piece_id])
