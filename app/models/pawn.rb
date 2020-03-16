@@ -6,6 +6,9 @@ class Pawn < Piece
 # ----- lines 9-12 Diagonal capture -----
 # ----- lines 13-20 Vertical opening and subsequent moves valid only if there is no opposition piece/no piece at destination coordinate-------
 # ----- Same color piece at destination coordinate is checked in the verify_valid_move in the piece controller -----
+    new_x_position = new_x_position.to_i
+    new_y_position = new_y_position.to_i
+
     if en_passant?(new_x_position, new_y_position)
       return true
     elsif (x_distance == y_distance) && !white? && opposition_piece?(new_x_position, new_y_position, id, color)
@@ -13,14 +16,17 @@ class Pawn < Piece
     elsif (x_distance == y_distance) && white? && opposition_piece?(new_x_position, new_y_position, id, color)
       new_y_position == y_position - 1
     elsif y_position == 2 && black? && !opposition_piece?(new_x_position, new_y_position, id, color)
+      puts "Allowing a black pawn to move one or two spaces initially.."
       x_distance == 0 && (new_y_position == 3 || new_y_position == 4)
     elsif y_position == 7 && white? && !opposition_piece?(new_x_position, new_y_position, id, color)
+      puts "Allowing a white pawn to move one or two spaces initially.."
       x_distance == 0 && (new_y_position == 6 || new_y_position == 5)
     elsif !white? && !opposition_piece?(new_x_position, new_y_position, id, color)
       (x_distance == 0) && (new_y_position == (y_position + 1))
     elsif white? && !opposition_piece?(new_x_position, new_y_position, id, color)
       (x_distance == 0) && (new_y_position == (y_position - 1))
     else
+      puts "valid_move? returns false"
       false
     end
   end

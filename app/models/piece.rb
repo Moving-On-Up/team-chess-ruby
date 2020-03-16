@@ -179,19 +179,23 @@ class Piece < ApplicationRecord
 
   def move_to!(new_x,new_y)
     if !correct_turn?
+      puts "Not Correct Turn"
       return false
     else
       dead_piece = Piece.find_by(x_position: new_x, y_position: new_y)
       if dead_piece != nil
+        puts "New square is occupied"
         if opposition_piece?(new_x, new_y, id = dead_piece.id, white = dead_piece.white) 
+          puts "Occupied by opposite color"
           move_to_capture_piece_and_capture(dead_piece, new_x, new_y)
         else
+          puts "Occupied by same color, returning false"
           return false
         end
       else
+        puts "Moving to empty square"
         move_to_empty_square(new_x, new_y)
       end
-      switch_turns
     end
   end
 
@@ -202,6 +206,7 @@ class Piece < ApplicationRecord
       self.status = 200
       self.save
       remove_piece(dead_piece)
+      switch_turns
     else
       return false
     end
@@ -215,9 +220,15 @@ class Piece < ApplicationRecord
   end
 
   def move_to_empty_square(x_end, y_end)
-    self.x_position = x_end
-    self.y_position = y_end
-    self.save
+    if self.valid_move?(x_end, y_end, id = self.id, white = self.white)
+      self.x_position = x_end
+      self.y_position = y_end
+      self.save
+      switch_turns
+    else
+      puts "Not a valid move to empty square, returning false"
+      false
+    end
   end
 
   def update_winner
