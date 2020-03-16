@@ -66,20 +66,21 @@ class GamesController < ApplicationController
         @current_user = current_user.id
         #:verify_two_players, :verify_player_turn
         if @game.turn_player_id == @current_user
-            @x_position = params[:x_position]
-            @y_position = params[:y_position]
-            #:verify_valid_move
-            @piece.move_to!(@x_position,@y_position)
-            firebase_id = @game.name
-            data = {
-                refresh: true
-            }
-
             firebase_url    = 'https://fir-chess-270721.firebaseio.com/';
             firebase_secret = '8g8o1V0UsNy7O1I4kcRXlClM8vo4V4Yi44pQOLqt';
             firebase = Firebase::Client.new(firebase_url, firebase_secret)
 
             path = "games/" + @game.firebase_id;
+
+            
+            @x_position = params[:x_position]
+            @y_position = params[:y_position]
+            #:verify_valid_move
+            @piece.move_to!(@x_position,@y_position)
+
+            response = firebase.update(path, {
+                :refresh => false
+              })
 
             response = firebase.update(path, {
                 :refresh => true
