@@ -116,12 +116,6 @@ RSpec.describe Piece, type: :model do
       game.reload
       #expect(black_bishop.x_position).to eq nil
     end
-
-    #it "should return false if a pawn tries to move vertically into a square that contains the same color piece" do
-    #  pawn = game.pieces.find_by(name: "Pawn_white")
-    #  bishop = game.pieces.find_by(name: "Bishop_white")
-    #  expect(pawn.move_to!(1, 6)).to eq false
-    #end
   end
 
 end

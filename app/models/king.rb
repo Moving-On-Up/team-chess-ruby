@@ -11,22 +11,15 @@ class King < Piece
   end
 
   def check?(x_position, y_position, id = nil, white = nil)
-    possible_moves_king = []
     game.pieces.each do | f |
       if f.player_id != self.player_id && f.x_position != nil
         if f.valid_move?(x_position, y_position, id, white) == true && f.is_obstructed?(x_position, y_position) == false
-          possible_moves_king << f
-          #return f
+          return f
           break
         end
       end
     end
-    #binding.pry
-    if possible_moves_king = !nil
-      return false
-    else
-      return true
-    end
+    return false
     
   end
 
