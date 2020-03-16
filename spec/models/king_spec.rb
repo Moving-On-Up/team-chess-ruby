@@ -40,20 +40,20 @@ RSpec.describe King, type: :model do
    let(:game) { FactoryBot.create(:game, user_id: current_user.id, turn_player_id: current_user.id, white_player_id: current_user.id, black_player_id: current_user2.id) }
    let(:king) { FactoryBot.create(:king, x_position: 3, y_position: 3, player_id: current_user.id, game_id: game.id, white: true) }
 
-   #it "should return true for pawn to put king in check" do
-   #  pawn = FactoryBot.create(:pawn, x_position: 2, y_position: 4, player_id: current_user2.id, game_id: game.id, white: false)
-   #  expect(king.check?(king.x_position, king.y_position)).to eq(true)
-   #end
+   it "should return true for pawn to put king in check" do
+     pawn = FactoryBot.create(:pawn, x_position: 2, y_position: 4, player_id: current_user2.id, game_id: game.id, white: false)
+     expect(king.check?(king.x_position, king.y_position)).to eq(true)
+   end
 
-   #it "should return false to put king in check" do
-   #  rook = FactoryBot.create(:rook, x_position: 7, y_position: 4, player_id: current_user2.id, game_id: game.id, white: false)
-   #  expect(king.check?(king.x_position, king.y_position)).to eq(false)
-   # end
+   it "should return false to put king in check" do
+     rook = FactoryBot.create(:rook, x_position: 7, y_position: 4, player_id: current_user2.id, game_id: game.id, white: false)
+     expect(king.check?(king.x_position, king.y_position)).to eq(false)
+    end
 
-   #it "should return true for rook to put king in check" do
-   # rook = FactoryBot.create(:rook, x_position: 7, y_position: 3, player_id: current_user2.id, game_id: game.id, white: false)
-   # expect(king.check?(king.x_position, king.y_position)).to eq(true)
-   #end
+   it "should return true for rook to put king in check" do
+    rook = FactoryBot.create(:rook, x_position: 7, y_position: 3, player_id: current_user2.id, game_id: game.id, white: false)
+    expect(king.check?(king.x_position, king.y_position)).to eq(true)
+   end
   end
 
   describe "#find_threat_and_determine_checkmate" do
