@@ -7,22 +7,22 @@ RSpec.describe Game, type: :model do
   let(:black_king) { FactoryBot.create(:king, x_position: 5, y_position: 1, player_id: current_user2.id, game_id: game.id, white: false)}
   let(:white_king) { FactoryBot.create(:king, x_position: 5, y_position: 8, player_id: current_user.id, game_id: game.id, white:true)}
 
-  # describe "#contains_piece?" do
-  #   it "should return true if the end coordinates contains a piece" do
-  #   expect(game.contains_piece?(2, 7)).to eq true
-  #   end
-  # end
+  describe "#contains_piece?" do
+    it "should return true if the end coordinates contains a piece" do
+    expect(game.contains_piece?(2, 7)).to eq true
+    end
+  end
 
 
-  # describe "#is_in_check" do
-  #   it 'should determine that the game is in check' do
-  #    game = FactoryBot.create(:game)
-  #    king = FactoryBot.create(:king, x_position: 7, y_position: 3, player_id: current_user.id, game_id: game.id, white:false)
-  #    king = FactoryBot.create(:king, x_position: 3, y_position: 7, player_id: current_user.id, game_id: game.id, white:true)
-  #    bishop = FactoryBot.create(:bishop, x_position: 5, y_position: 5, player_id: current_user.id, game_id: game.id, white:true)
-  #    expect(game.no_legal_next_move?).to eq true
-  #   end
-  # end
+  describe "#is_in_check" do
+    it 'should determine that the game is in check' do
+     game = FactoryBot.create(:game)
+     king1 = FactoryBot.create(:king, x_position: 1, y_position: 1, player_id: current_user.id, game_id: game.id, white:false)
+     king = FactoryBot.create(:king, x_position: 3, y_position: 7, player_id: current_user.id, game_id: game.id, white:true)
+     bishop = FactoryBot.create(:bishop, x_position: 3, y_position: 3, player_id: current_user.id, game_id: game.id, white:true)
+     expect(king1.check?(7, 3)).to eql true
+    end
+  end
 
 
   # describe "#is_not_in_check" do
