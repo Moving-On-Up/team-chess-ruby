@@ -2,12 +2,6 @@
 <h3>Member Since: <%= @user.created_at.strftime("%B %d, %Y") %></h3>
 <h4><%= @user.games.count %> total games</h4>
 
- <% @user.games.each do |game| %>
-  <% if current_user && current_user.id == game.white_player_id || current_user && current_user.id == game.black_player_id %>
-    <h1>Your player:  <%= link_to game.name, game_path(game) %></h1><br />
-    <h2>Game status:  in progress!</h2>
-  <% end %>
- <% end %>
 
   <% @user.games.each do |game| %>
    <% if current_user && current_user.id == game.white_player_id && game.result != nil || current_user && current_user.id == game.black_player_id && game.result != nil %>

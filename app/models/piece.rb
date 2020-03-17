@@ -60,10 +60,16 @@ class Piece < ApplicationRecord
   end
 
   def is_obstructed?(new_x, new_y)
-   current_piece = self
+    if self.game.pieces.where(x_position: self.x_position, y_position: self.y_position).first.piece_type == "Knight"
+      return false
+    end
+    current_piece = self
+
+    new_x = new_x.to_i
+    new_y = new_y.to_i
     
-    x_distance = current_piece.x_position - new_x
-    y_distance = current_piece.y_position - new_y
+    x_distance = current_piece.x_position.to_i - new_x
+    y_distance = current_piece.y_position.to_i - new_y
 
   
     #if !(((x_distance == y_distance) || (x_distance == 0) || (y_distance == 0)))
@@ -179,8 +185,8 @@ class Piece < ApplicationRecord
   end
 
   def move_to!(new_x,new_y)
-    if !correct_turn?
-      puts "Not Correct Turn"
+    puts "is_obstructed? returns " + is_obstructed?(new_x, new_y).to_s
+    if !correct_turn? || is_obstructed?(new_x, new_y)
       return false
     else
       dead_piece = Piece.find_by(x_position: new_x, y_position: new_y)

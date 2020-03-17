@@ -115,16 +115,16 @@ class Game < ApplicationRecord
     return valid_move.present?
   end
 
-  # def check
-  #   pieces.reload
-  #   black_king = pieces.find_by(piece_type: 'King', player_id: black_player_id)
-  #   white_king = pieces.find_by(piece_type: 'King',player_id: white_player_id)
-  #   pieces.each do |piece|
-  #     return 'black' if piece.valid_move?(black_king.x_position, black_king.y_position) && piece.color == 'white' && piece.is_captured == false
-  #     return 'white' if piece.valid_move?(white_king.x_position, white_king.y_position) && piece.color == 'black' && piece.is_captured == false
-  #   end
-  #   nil
-  # end
+  def check
+    pieces.reload
+    black_king = pieces.find_by(piece_type: 'King', player_id: black_player_id)
+    white_king = pieces.find_by(piece_type: 'King',player_id: white_player_id)
+    pieces.each do |piece|
+      return 'black' if piece.valid_move?(black_king.x_position, black_king.y_position) && piece.color == 'white' && piece.is_captured == false
+      return 'white' if piece.valid_move?(white_king.x_position, white_king.y_position) && piece.color == 'black' && piece.is_captured == false
+    end
+    nil
+  end
 
 
 
