@@ -1,33 +1,38 @@
-<h1>Hello</h1>
+<div class="background">
 
-<h2>Active games:</h2>
+  <h1>Hello</h1>
 
-<% @games.active.each do |game| %>
-  <div class="booyah-box col-10 offset-1">
-    <h1><%= game.name %></h1>
-    <% if game.user.present? %>
-      <small><%= game.user.email %></small>
-    <% end %>
-    <%= simple_form_for game, :url => game_path(game.id), :method => :get do |f| %>
-      <%= f.submit 'Play', class: 'btn btn-danger' %>
-    <% end %>
- </div>
-<% end %>
+  <h2>Active games:</h2>
 
-<h2>Available games:</h2>
-
-<% @games.available.each do |game| %>
+  <% @games.active.each do |game| %>
     <div class="booyah-box col-10 offset-1">
       <h1><%= game.name %></h1>
       <% if game.user.present? %>
         <small><%= game.user.email %></small>
       <% end %>
-      <%= simple_form_for game do |f| %>
-        <% if game.user.present? %>
-            <% if game.user.id != @current_user.id %>
-                <%= f.submit 'Join', class: 'btn btn-danger' %>
-            <% end %>
-        <% end %>
+      <%= simple_form_for game, :url => game_path(game.id), :method => :get do |f| %>
+        <%= f.submit 'Play', class: 'btn btn-danger' %>
       <% end %>
    </div>
   <% end %>
+
+  <h2>Available games:</h2>
+
+  <% @games.available.each do |game| %>
+      <div class="booyah-box col-10 offset-1">
+        <h1><%= game.name %></h1>
+        <% if game.user.present? %>
+          <small><%= game.user.email %></small>
+        <% end %>
+        <%= simple_form_for game do |f| %>
+          <% if game.user.present? %>
+              <% if game.user.id != @current_user.id %>
+                  <%= f.submit 'Join', class: 'btn btn-danger' %>
+              <% end %>
+          <% end %>
+        <% end %>
+     </div>
+    <% end %>
+
+   <br />
+</div>

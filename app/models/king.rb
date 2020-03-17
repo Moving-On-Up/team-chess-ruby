@@ -13,18 +13,21 @@ class King < Piece
   def check?(x_position, y_position, id = nil, white = nil)
     game.pieces.each do | f |
       if f.player_id != self.player_id && f.x_position != nil
-        if f.valid_move?(x_position, y_position, id, white) == true && f.is_obstructed?(x_position, y_position) == false
-          # binding.pry
-          return f
-          break
+        if f.valid_move?(x_position, y_position, id, white) == true && 
+           f.is_obstructed?(x_position, y_position) == false 
+            f.king_check = 1
+            f.save
+            return f ##true
+            break
         end
       end
     end
     return false
-    binding.pry
+    
   end
 
-  def find_threat_and_determine_checkmate
+  def find_threat_and_determine_checkmate     ### DOES NOT WORK CORRECTLY
+    #binding.pry
     threat = check?(x_position, y_position)
     if check_mate?(threat)
       return true
@@ -40,8 +43,10 @@ class King < Piece
       can_block_king?(threat, obstruction_array) == true ||
     # check if king has many moves left
       any_moves_left?(threat, obstruction_array) == true
+      #binding.pry
       return false
     else
+      #binding.pry
       return true
     end
   end
