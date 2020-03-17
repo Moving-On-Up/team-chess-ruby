@@ -17,49 +17,49 @@ RSpec.describe Game, type: :model do
   describe "#is_in_check" do
     it 'should determine that the game is in check' do
      game = FactoryBot.create(:game)
-     king1 = FactoryBot.create(:king, x_position: 1, y_position: 1, player_id: current_user.id, game_id: game.id, white:false)
-     king = FactoryBot.create(:king, x_position: 3, y_position: 7, player_id: current_user.id, game_id: game.id, white:true)
-     bishop = FactoryBot.create(:bishop, x_position: 3, y_position: 3, player_id: current_user.id, game_id: game.id, white:true)
-     expect(king1.check?(7, 3)).to eql true
+     king1 = FactoryBot.create(:king, x_position: 1, y_position: 1, player_id: current_user.id, game_id: game.id, white:false, status: 'active')
+     king = FactoryBot.create(:king, x_position: 3, y_position: 7, player_id: current_user.id, game_id: game.id, white:true, status: 'active')
+     bishop = FactoryBot.create(:bishop, x_position: 3, y_position: 3, player_id: current_user.id, game_id: game.id, white:true, status: 'active')
+     expect(game.in_check?).to eq true
     end
   end
 
 
-  # describe "#is_not_in_check" do
-  #   it 'should determine that the game is not in check' do
-  #    game = FactoryBot.create(:game)
-  #    king = FactoryBot.create(:king, x_position: 3, y_position: 3, player_id: current_user.id, game_id: game.id, white:false)
-  #    king = FactoryBot.create(:king, x_position: 5, y_position: 3, player_id: current_user.id, game_id: game.id, white:true)
-  #    bishop = FactoryBot.create(:bishop, x_position: 4, y_position: 2, player_id: current_user.id, game_id: game.id, white:true)
-  #    expect(game.check).to_not eq true
-  #   end
-  # end
+  describe "#is_not_in_check" do
+    it 'should determine that the game is not in check' do
+     game = FactoryBot.create(:game)
+     king = FactoryBot.create(:king, x_position: 3, y_position: 3, player_id: current_user.id, game_id: game.id, white:false)
+     king = FactoryBot.create(:king, x_position: 5, y_position: 3, player_id: current_user.id, game_id: game.id, white:true)
+     bishop = FactoryBot.create(:bishop, x_position: 4, y_position: 2, player_id: current_user.id, game_id: game.id, white:true)
+     expect(game.in_check?).to_not eq true
+    end
+  end
 
 
-  # describe "#stalemate" do
-  #   it 'should detect stalemate' do
-  #   # White is in stalemate (returns true) and Black is not (returns false)
-  #   black_king = FactoryBot.create(:king, x_position: 1, y_position: 1, player_id: current_user.id, game_id: game.id, white:false)
-  #   white_king = FactoryBot.create(:king, x_position: 7, y_position: 0, player_id: current_user.id, game_id: game.id, white:true)
-  #   rook = FactoryBot.create(:rook, x_position: 6, y_position: 2, player_id: current_user.id, game_id: game.id, white:false)
-  #   rook = FactoryBot.create(:rook, x_position: 4, y_position: 1, player_id: current_user.id, game_id: game.id, white:true)
+  describe "#stalemate" do
+    it 'should detect stalemate' do
+    # White is in stalemate (returns true) and Black is not (returns false)
+    black_king = FactoryBot.create(:king, x_position: 1, y_position: 1, player_id: current_user.id, game_id: game.id, white:false)
+    white_king = FactoryBot.create(:king, x_position: 7, y_position: 0, player_id: current_user.id, game_id: game.id, white:true)
+    rook = FactoryBot.create(:rook, x_position: 6, y_position: 2, player_id: current_user.id, game_id: game.id, white:false)
+    rook = FactoryBot.create(:rook, x_position: 4, y_position: 1, player_id: current_user.id, game_id: game.id, white:true)
 
-  #   expect(stalemate(black_king)).to eq true
-  #   expect(stalemate(white_king)).to_not eq true
-  #   end
-  # end
+    expect(stalemate).to eq true
+    expect(stalemate).to_not eq true
+    end
+  end
 
   # describe "#checkmate" do
   #   it 'should detect checkmate' do
   #    game = FactoryBot.create(:game)
-  #    expect(game.is_in_checkmate?).to eq true
+  #    expect(game.checkmate?(white)).to eq true
   #   end
   # end
 
   # describe "#not_in_checkmate" do
   #   it 'should detect state is not checkmate' do
   #     game = FactoryBot.create(:game)
-  #     expect(game.is_in_checkmate?).to_not eq true
+  #     expect(game.checkmate?(white)).to_not eq true
   #   end
   # end
 end
