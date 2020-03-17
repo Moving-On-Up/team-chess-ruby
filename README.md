@@ -1,24 +1,29 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Team MovingOnUp! Chess Application - Agile Team Development
 
-Things you may want to cover:
+Play it for yourself at https://movingonup-chess.herokuapp.com/!
 
-* Ruby version
+This is a fully functional two-player chess application built as a capstone project for The UT Austine Online Bootcamp full-stack development program. Under the guidance of a senior software engineer, we had weekly Agile team meetings for code reviews, sprint planning, and feature assignments. Users are able to create accounts and play games against each other.
 
-* System dependencies
+The following tools were used to create this application:
 
-* Configuration
+Ruby on Rails
+Bootstrap framework
+PostgreSQL database
+Heroku hosting
+RSpec test driven development
+AJAX requests
+jQuery for drag and drop functionality
 
-* Database creation
+Team MovingOnUp! is composed of the following members:
 
-* Database initialization
+Chris Howle
 
-* How to run the test suite
+Carriane Linzer
 
-* Services (job queues, cache servers, search engines, etc.)
+Jacques Wooldridge
 
-* Deployment instructions
+Lorin Jones
 
-* ...
+Team MovingOnUp! was led by Justin Hamilton.

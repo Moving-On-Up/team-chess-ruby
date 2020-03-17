@@ -33,7 +33,7 @@ RSpec.describe GamesController, type: :controller do
       game = FactoryBot.create(:game, user: user, white_player_id: user, current_status: "inactive", current_user: user)
       get :show, params: { id: game.id }
     end
-
   end
+  
 end
  

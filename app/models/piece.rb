@@ -184,7 +184,7 @@ class Piece < ApplicationRecord
   end
 
   def move_to!(new_x,new_y)
-    puts "is_obstructed? returns " + is_obstructed?(new_x, new_y).to_s
+    #puts "is_obstructed? returns " + is_obstructed?(new_x, new_y).to_s
     if !correct_turn? || is_obstructed?(new_x, new_y)
       return false
     else
@@ -201,6 +201,24 @@ class Piece < ApplicationRecord
       else
         puts "Moving to empty square"
         move_to_empty_square(new_x, new_y)
+      #if !verify_valid_move
+      #   return false
+      #else
+      #  if !king_not_moved_to_check_or_king_not_kept_in_check?
+      #     return false
+      #  else
+      #    dead_piece = Piece.find_by(x_position: new_x, y_position: new_y)
+      #    if dead_piece != nil
+      #      if opposition_piece?(new_x, new_y, id = dead_piece.id, white = dead_piece.white) 
+      #        move_to_capture_piece_and_capture(dead_piece, new_x, new_y)
+      #      else
+      #        return false
+      #      end
+      #    else
+      #      move_to_empty_square(new_x, new_y)
+      #    end
+      #  end
+
       end
     end
   end
@@ -217,7 +235,6 @@ class Piece < ApplicationRecord
       return false
     end
   end
-
  
   def remove_piece(dead_piece)
     dead_piece.x_position = nil
@@ -260,51 +277,6 @@ class Piece < ApplicationRecord
   end
 
 ## code from controller.
-
-  def update(new_x, new_y)
-    current_piece = self
-    is_captured
-    if self.piece_params[:piece_type] == "Queen" || 
-       self.piece_params[:piece_type] == "Bishop" || 
-       self.piece_params[:piece_type] == "Knight" || 
-       self.piece_params[:piece_type] == "Rook"
-      self.piece_type = self.piece_params[:piece_type]
-    elsif self.piece_type == "King" && 
-          self.legal_to_castle?(self.piece_params[:x_position].to_i, self.piece_params[:y_position].to_i)
-      self.castle(self.piece_params[:x_position].to_i, self.piece_params[:y_position].to_i)
-    else
-      self.move_number = self.move_number + 1
-    end
-
-    #Below king_opp mean the opponent's player's king. After the player's turn,
-    #we'd like to know if the opponent king is in check, and if in check, does
-    #the opponent's king have any way to get out of check (see check_mate in king.rb)
-    #if the opponent's king is stuck, the game is over, right now noted by the 401 error
-
-    king_opp = self.game.pieces.where(:piece_type =>"King").where.not(:player_id => self.game.turn_player_id)[0]
-    king_current = self.game.pieces.where(:piece_type =>"King").where(:player_id => self.game.turn_player_id)[0]
-    game_end = false
-    if king_opp.check?(king_opp.x_position, king_opp.y_position).present?
-      if king_opp.find_threat_and_determine_checkmate
-        king_opp.update_winner
-        king_current.update_loser
-        game_end = true
-      else
-        king_opp.king_check = 1
-      end
-    elsif king_opp.stalemate?
-      self.game.current_status = "end"
-      game_end = true
-    end
-    if game_end == false && !(self.piece_type == "Pawn" && self.pawn_promotion?)
-      update_moves(new_x, new_y)
-      switch_turns
-      self.status = 200
-    else
-      self.status = 201
-    end
-    self.save
-  end
 
   def verify_two_players
     if !(self.game.black_player_id && self.game.white_player_id)
@@ -362,13 +334,11 @@ class Piece < ApplicationRecord
     end
   end
 
-
-
   def king_not_moved_to_check_or_king_not_kept_in_check?
     #function checks if player is not moving king into a check position
     #and also checking that if king is in check, player must move king out of check,
     #this function restricts any other random move if king is in check.
-
+    #binding.pry
     king = self.game.pieces.where(:piece_type =>"King").where(:player_id => self.game.turn_player_id)[0]
     if self.piece_type == "King"
       if self.check?(piece_params[:x_position].to_i, piece_params[:y_position].to_i, self.id, self.white == true).blank?
