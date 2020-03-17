@@ -184,7 +184,7 @@ class Piece < ApplicationRecord
   end
 
   def move_to!(new_x,new_y)
-    puts "is_obstructed? returns " + is_obstructed?(new_x, new_y).to_s
+    #puts "is_obstructed? returns " + is_obstructed?(new_x, new_y).to_s
     if !correct_turn? || is_obstructed?(new_x, new_y)
       return false
     else
