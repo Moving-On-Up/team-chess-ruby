@@ -1,9 +1,15 @@
-<% @games.each do |game| %>
-  <div class="booyah-box col-10 offset-1">
-    <h1><%= game.name %></h1>
+<div class="backgroundboard">
+  <br />
+  
+    <% @games.each do |game| %>
+      <div class="booyah-box col-10 offset-1">
+        <h1><%= game.name %></h1>
 
-    <% if game.user.present? %>
-      <small><%= game.user.email %></small>
+        <% if game.user.present? %>
+          <small><%= game.user.email %></small>
+        <% end %>
+     </div>
     <% end %>
- </div>
-<% end %>
+
+ <br />
+</div>

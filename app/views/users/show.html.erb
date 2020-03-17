@@ -1,11 +1,18 @@
-<h1>My Dashboard</h1><h1><%= @user.email %></h1>
-<h3>Member Since: <%= @user.created_at.strftime("%B %d, %Y") %></h3>
-<h4><%= @user.games.count %> total games</h4>
+<div class="backgroundboard">
+   <br />
+    <div class="booyah-box col-10 offset-1">
+      <h1>My Dashboard</h1><h2><%= @user.email %></h2>
 
+      <h3>Member Since: <%= @user.created_at.strftime("%B %d, %Y") %></h3>
 
-  <% @user.games.each do |game| %>
-   <% if current_user && current_user.id == game.white_player_id && game.result != nil || current_user && current_user.id == game.black_player_id && game.result != nil %>
-    <h1>Your player:  <%= link_to game.name, game_path(game) %></h1><br />
-    <h2>Game status:  <%= game.result %></h2>  
-   <% end %>
-  <% end %>
+      <h4><%= @user.games.count %> total games</h4>
+
+        <% @user.games.each do |game| %>
+             <% if current_user && current_user.id == game.white_player_id && game.result != nil || current_user && current_user.id == game.black_player_id && game.result != nil %>
+              <h1>Your player:  <%= link_to game.name, game_path(game) %></h1><br />
+              <h2>Game status:  <%= game.result %></h2>  
+             <% end %>
+        <% end %>
+    </div>
+  <br />
+</div>

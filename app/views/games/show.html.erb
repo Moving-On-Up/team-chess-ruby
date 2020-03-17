@@ -1,46 +1,53 @@
-<p style="text-align:center"><b>Game Name: <%= @game.name %></b></p>
-<p style="text-align:center"><b>Logged In As: <%= User.find_by_id(current_user.id).email %></b></p>
-<p style="text-align:center"><b>Black Player: <%= User.find_by_id(@game.black_player_id).email %></b></p>
+<div class="backgroundboard">
+   <br />
+      <p style="text-align:center"><b>Game Name: <%= @game.name %></b></p>
+      <p style="text-align:center"><b>Logged In As: <%= User.find_by_id(current_user.id).email %></b></p>
+      <p style="text-align:center"><b>Black Player: <%= User.find_by_id(@game.black_player_id).email %></b></p>
 
-<div id="current_player">
     <% if current_user.id == @game.turn_player_id %>
         <p style="text-align:center"><b>It is your turn to move</b></p>
         <%= simple_form_for @game, :url => game_forfeit_path(@game.id) do |f| %>
             <p style="text-align:center"><%= f.submit 'Forfeit', class: 'btn btn-danger' %></p>
         <% end %>
-    <% else %>
-        <p style="text-align:center"><b>It is the other player's turn to move</b></p>
     <% end %>
-</div>
 
-<div class="flex-container">
-    <div id="board" class="container">
-    <% for j in 1..8 %>
-        <% for i in 1..8 do %>
-            <% if j % 2 == 1 %>
-                <% if i % 2 == 1 %>
-                    <div id="<%= i.to_s + j.to_s %>" class = "square whiteSquare droppable">
+    <div class="flex-container">
+        <div class="container">
+        <% for j in 1..8 %>
+            <% for i in 1..8 do %>
+                <% if j % 2 == 1 %>
+                    <% if i % 2 == 1 %>
+                        <div id="<%= i.to_s + j.to_s %>" class = "square whiteSquare droppable">
+                    <% else %>
+                        <div id="<%= i.to_s + j.to_s %>" class = "square brownSquare droppable">
+                    <% end %>
                 <% else %>
-                    <div id="<%= i.to_s + j.to_s %>" class = "square brownSquare droppable">
+                    <% if i % 2 == 1 %>
+                        <div id="<%= i.to_s + j.to_s %>" class="square brownSquare droppable">
+                    <% else %>
+                        <div id="<%= i.to_s + j.to_s %>" class="square whiteSquare droppable">
+                    <% end %>
                 <% end %>
-            <% else %>
-                <% if i % 2 == 1 %>
-                    <div id="<%= i.to_s + j.to_s %>" class="square brownSquare droppable">
-                <% else %>
-                    <div id="<%= i.to_s + j.to_s %>" class="square whiteSquare droppable">
+                <% if @game.contains_piece?(i, j) %>
+                    <%= image_tag(@game.pieces.find_by(x_position: i, y_position: j).name + ".png", 
+                        :class => "draggable", :id => @game.pieces.find_by(x_position: i, y_position: j).id) %>
                 <% end %>
+                </div>
             <% end %>
-            <% if @game.contains_piece?(i, j) %>
-                <%= image_tag(@game.pieces.find_by(x_position: i, y_position: j).name + ".png", 
-                    :class => "draggable", :id => @game.pieces.find_by(x_position: i, y_position: j).id) %>
-            <% end %>
-            </div>
+        <% end %>
+        </div>
+    </div>
+    <br />
+    <p style="text-align:center"><b>White Player: <%= User.find_by_id(@game.white_player_id).email %></b></p>
+    <% if current_user.id != @game.turn_player_id %>
+        <p style="text-align:center"><b>It is your turn to move</b></p>
+        <%= simple_form_for @game, :url => game_forfeit_path(@game.id) do |f| %>
+            <p style="text-align:center"><%= f.submit 'Forfeit', class: 'btn btn-danger' %></p>
         <% end %>
     <% end %>
-    </div>
-</div>
 
-<p style="text-align:center"><b>White Player: <%= User.find_by_id(@game.white_player_id).email %></b></p>
+ <br />
+</div>
 
 <%= form_tag "#", :id => 'move'%>
 
