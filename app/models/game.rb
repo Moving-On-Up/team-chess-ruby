@@ -95,6 +95,12 @@ class Game < ApplicationRecord
     User.find_by_id(loser_player_id)
   end
 
+  def in_check?
+    game = self
+    king = game.pieces.find_by(game_id: id, piece_type: "King")
+    return king.check?(king.x_position, king.y_position, id = nil, white = nil)
+  end
+
   def checkmate?(white)
     return false unless in_check
     return false if valid_move(white) 
@@ -116,6 +122,20 @@ class Game < ApplicationRecord
     return valid_move.present?
   end
 
+  def stalemate
+   game = self
+    return true if !no_legal_next_move
+  end
+
+
+
+  def no_legal_next_move?
+    if white_player.pieces.valid_move? == false
+      return false
+    elsif black_player.pieces.valid_move? == false
+      return false
+    end   
+  end  
   # def check
   #   pieces.reload
   #   black_king = pieces.find_by(piece_type: 'King', player_id: black_player_id)
@@ -129,19 +149,9 @@ class Game < ApplicationRecord
 
 
 
-  def no_legal_next_move?
-    if white_player.pieces.valid_move? == false
-      return false
-    elsif black_player.pieces.valid_move? == false
-      return false
-    end   
-  end
+ 
 
-  def in_check?
-    game = self
-    king = game.pieces.find_by(game_id: id, piece_type: "King")
-    return king.check?(king.x_position, king.y_position, id = nil, white = nil)
-  end
+  
 
   # def is_in_checkmate?
   #   game = self
@@ -149,10 +159,5 @@ class Game < ApplicationRecord
   #   return king.check_mate?(threat)
   # end
 
-  def stalemate
-   game = self
-    return true if !no_legal_next_move
-  end
-  
  
 end
