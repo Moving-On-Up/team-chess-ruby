@@ -78,6 +78,11 @@ class GamesController < ApplicationController
             #:verify_valid_move
             @piece.move_to!(@x_position,@y_position)
 
+            if @piece.pawn_promotion?
+                redirect_to promote_path()
+                return
+            end
+
             response = firebase.update(path, {
                 :refresh => false
               })
@@ -104,6 +109,26 @@ class GamesController < ApplicationController
         redirect_to root_path
     end
    
+    def promote
+        @game = Game.find_by_id(params[:game_id])
+        @white = @game.current_user == @game.white_player_id ? false: true
+        @piece_id = params[:piece_id]
+        @x = params[:x_position]
+        @y = params[:y_position]
+        #redirect_to game_path(@game)
+    end
+
+    def promoted
+        @game = Game.find_by_id(params[:game_id])
+        @piece_id = params[:piece_id]
+        @x = params[:x_position]
+        @y = params[:y_position]
+
+        piece = @game.pieces.find_by_id(@piece_id)
+        piece.update_attributes(x_position: @x, y_position: @y, captured: false)
+
+        redirect_to game_path(@game)
+    end
 
     private
     

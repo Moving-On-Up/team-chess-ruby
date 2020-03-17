@@ -1,4 +1,5 @@
 <p style="text-align:center"><b>Game Name: <%= @game.name %></b></p>
+<p style="text-align:center"><b>Logged In As: <%= User.find_by_id(current_user.id).email %></b></p>
 <p style="text-align:center"><b>Black Player: <%= User.find_by_id(@game.black_player_id).email %></b></p>
 
 <div id="current_player">
@@ -8,7 +9,7 @@
             <p style="text-align:center"><%= f.submit 'Forfeit', class: 'btn btn-danger' %></p>
         <% end %>
     <% else %>
-        <p style="text-align:center"><b>It is other players turn to move</b></p>
+        <p style="text-align:center"><b>It is the other player's turn to move</b></p>
     <% end %>
 </div>
 
