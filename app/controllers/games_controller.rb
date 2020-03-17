@@ -78,7 +78,7 @@ class GamesController < ApplicationController
             #:verify_valid_move
             @piece.move_to!(@x_position,@y_position)
 
-            if @piece.pawn_promotion?
+            if @piece.piece_type == "Pawn" && @piece.pawn_promotion?
                 redirect_to promote_path()
                 return
             end

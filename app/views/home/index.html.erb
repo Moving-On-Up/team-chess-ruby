@@ -1,8 +1,12 @@
 <div class="background">
 
-  <h1>Hello</h1>
+  <div class="col-10 offset-1">
+
+  <h1>Welcome, <%= User.find_by_id(current_user.id).email %></h1>
 
   <h2>Active games:</h2>
+
+  </div>
 
   <% @games.active.each do |game| %>
     <div class="booyah-box col-10 offset-1">
@@ -16,10 +20,14 @@
    </div>
   <% end %>
 
+  <div class="col-10 offset-1">
+
   <h2>Available games:</h2>
 
+  </div>
+
   <% @games.available.each do |game| %>
-      <div class="booyah-box col-10 offset-1">
+    
         <h1><%= game.name %></h1>
         <% if game.user.present? %>
           <small><%= game.user.email %></small>
