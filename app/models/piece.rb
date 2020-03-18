@@ -278,9 +278,9 @@ class Piece < ApplicationRecord
   end
 
   def verify_valid_move
-    if self.valid_move?(self.x_position.to_i, self.y_position.to_i, self.id, self.white == true) &&
-      (self.is_obstructed?(self.x_position.to_i, self.y_position.to_i) == false) &&
-      (self.contains_own_piece?(self.x_position.to_i, self.y_position.to_i) == false) &&
+    if self.valid_move?(self.x_position, self.y_position, self.id, self.white == true) &&
+      (self.is_obstructed?(self.x_position, self.y_position) == false) &&
+      (self.contains_own_piece?(self.x_position, self.y_position) == false) &&
       (king_not_moved_to_check_or_king_not_kept_in_check? == true) ||
       self.piece_type == "Pawn" && self.pawn_promotion?
     else

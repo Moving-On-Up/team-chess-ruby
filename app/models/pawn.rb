@@ -2,9 +2,6 @@ class Pawn < Piece
 
   def valid_move?(new_x_position, new_y_position, id = nil, white = nil)
 
-    new_x_position = new_x_position.to_i
-    new_y_position = new_y_position.to_i
-
     x_distance = x_distance(new_x_position)
     y_distance = y_distance(new_y_position)
 
