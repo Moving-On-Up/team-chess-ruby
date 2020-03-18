@@ -48,6 +48,15 @@ background-color: white;
   border-color: #e4e4e4 #bebebd #bebebd #e4e4e4;
 }
 
+.booyah-box-login {
+  -moz-box-shadow: 1px 1px 2px 0 #d0d0d0;
+  -webkit-box-shadow: 1px 1px 2px 0 #d0d0d0;
+  box-shadow: 1px 1px 2px 0 #d0d0d0;
+  opacity:1;
+  border: 2px solid #ccc;
+  border-color: #e4e4e4 #bebebd #bebebd #e4e4e4;
+}
+
 .about-intro {
   margin-left: auto;
   margin-right: auto;
@@ -81,9 +90,7 @@ background-color: white;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  width: 100%;
-  min-height: 600px;
-  height: auto;
+  background-repeat:repeat;
 }
 
 .backgroundboard {
@@ -92,8 +99,6 @@ background-color: white;
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-  width: 100%;
-  height: auto;
 }
 
 .black {
@@ -354,4 +359,10 @@ ul {
 
 .xyz {
   margin: auto;
+}
+
+.wrapper {
+    min-height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
 }
