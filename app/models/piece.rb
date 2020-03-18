@@ -198,15 +198,16 @@ class Piece < ApplicationRecord
           if dead_piece != nil
             if opposition_piece?(new_x, new_y, id = dead_piece.id, white = dead_piece.white) 
               move_to_capture_piece_and_capture(dead_piece, new_x, new_y)
+              switch_turns
             else
               return false
             end
           else
             move_to_empty_square(new_x, new_y)
+            switch_turns
           end
         end
       end
-      switch_turns
     end
   end
 
