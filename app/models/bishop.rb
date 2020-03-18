@@ -9,7 +9,9 @@ class Bishop < Piece
 
     if (x_dist >= 1 && y_dist >= 1) && diagonal?(x_dist, y_dist)
       return true
-    else
+    elsif up?(y_dist) || down?(y_dist)
+      return false
+    else 
       return false
     end
   end

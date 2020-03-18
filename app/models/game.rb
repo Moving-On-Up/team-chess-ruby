@@ -95,9 +95,16 @@ class Game < ApplicationRecord
     User.find_by_id(loser_player_id)
   end
 
+  def in_check?
+    game = self
+    king = game.pieces.find_by(game_id: id, piece_type: "King")
+    return king.check?(king.x_position, king.y_position, id = nil, white = nil)
+  end
+
   def checkmate?(white)
-    return false unless check?(white)
+    return false unless in_check
     return false if valid_move(white) 
+    return false if stalemate
     true
   end
 
@@ -115,32 +122,36 @@ class Game < ApplicationRecord
     return valid_move.present?
   end
 
-  def check
-    pieces.reload
-    black_king = pieces.find_by(piece_type: 'King', player_id: black_player_id)
-    white_king = pieces.find_by(piece_type: 'King',player_id: white_player_id)
-    pieces.each do |piece|
-      return 'black' if piece.valid_move?(black_king.x_position, black_king.y_position) && piece.color == 'white' && piece.is_captured == false
-      return 'white' if piece.valid_move?(white_king.x_position, white_king.y_position) && piece.color == 'black' && piece.is_captured == false
-    end
-    nil
+  def stalemate
+   game = self
+    return true if !no_legal_next_move
   end
 
 
 
-  # def no_legal_next_move?
-  #   if white_player.pieces.valid_move? == false
-  #     return false
-  #   elsif black_player.pieces.valid_move? == false
-  #     return false
-  #   end   
+  def no_legal_next_move?
+    if white_player.pieces.valid_move? == false
+      return false
+    elsif black_player.pieces.valid_move? == false
+      return false
+    end   
+  end  
+  # def check
+  #   pieces.reload
+  #   black_king = pieces.find_by(piece_type: 'King', player_id: black_player_id)
+  #   white_king = pieces.find_by(piece_type: 'King',player_id: white_player_id)
+  #   pieces.each do |piece|
+  #     return 'black' if piece.valid_move?(black_king.x_position, black_king.y_position) && piece.color == 'white' && piece.is_captured == false
+  #     return 'white' if piece.valid_move?(white_king.x_position, white_king.y_position) && piece.color == 'black' && piece.is_captured == false
+  #   end
+  #   nil
   # end
 
-  # def in_check?
-  #   game = self
-  #   king = game.pieces.find_by(game_id: id, piece_type: "King")
-  #   return king.check?(x_position, y_position, id = nil, white = nil)
-  # end
+
+
+ 
+
+  
 
   # def is_in_checkmate?
   #   game = self
@@ -148,36 +159,5 @@ class Game < ApplicationRecord
   #   return king.check_mate?(threat)
   # end
 
-  # def is_stalemate(game)
-  #  game = self
-  #  king = game.pieces.find_by(game_id: id, piece_type: "King")
-  #  return king.stalemate?
-  # end
-  
-  # def is_captured
-  #   capture_piece = self.find_capture_piece(piece_params[:x_position].to_i, piece_params[:y_position].to_i)
-  #   if !capture_piece.nil?
-  #     self.remove_piece(capture_piece)
-  #   end
-  # end  
-
-  # def find_capture_piece(x_end, y_end)
-  #   if self.piece_type == "Pawn"
-  #     if en_passant?(x_end, y_end)
-  #       pieces.where(y_position: y_position, x_position: x_end, piece_type: "Pawn").first
-  #     else
-  #       pieces.find_by(x_position: x_end, y_position: y_end)
-  #     end
-  #     else
-  #      pieces.where(x_position: x_end, y_position: y_end).first
-  #   end
-  # end
  
- 
-  # def remove_piece(dead_piece)
-  #   dead_piece.x_position = nil
-  #   dead_piece.y_position = nil
-  #   dead_piece.save
-  # end
-
 end
