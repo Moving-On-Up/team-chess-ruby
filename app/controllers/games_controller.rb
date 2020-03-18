@@ -54,8 +54,10 @@ class GamesController < ApplicationController
         @game = current_game
         @pieces = current_game.pieces.order(:y_position).order(:x_position).to_a
 
-        flash.now[:notice] = @game.in_check?.upcase + ' IN CHECK' if @game.in_check?
-        flash.now[:notice] = @game.in_check?.upcase + ' IN CHECKMATE' if @game.in_check? && @game.checkmate?(white)
+        flash.now[:notice] = ' IN CHECK' if @game.in_check?
+        #flash.now[:notice] = ' IN CHECKMATE' if @game.in_check? && @game.checkmate?(white)
+        #flash.now[:notice] = @game.in_check?.upcase + ' IN CHECK' if @game.in_check?
+        #flash.now[:notice] = @game.in_check?.upcase + ' IN CHECKMATE' if @game.in_check? && @game.checkmate?(white)
     end
     
     def move
