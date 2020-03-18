@@ -4,8 +4,11 @@
     <p style="text-align:center"><b>Logged In User: <%= User.find_by_id(current_user.id).email %></b></p>
     <p style="text-align:center"><b>Black Player: <%= User.find_by_id(@game.black_player_id).email %></b></p>
 
-    <% if current_user.id != @game.turn_player_id %>
+    <% if @game.black_player_id == @game.turn_player_id %>
         <p style="text-align:center"><b>It is black's turn to move</b></p>
+    <% end %>
+
+    <% if current_user.id == @game.turn_player_id %>
         <%= simple_form_for @game, :url => game_forfeit_path(@game.id) do |f| %>
             <p style="text-align:center"><%= f.submit 'Forfeit', class: 'btn btn-danger' %></p>
         <% end %>
@@ -39,11 +42,8 @@
     </div>
     <br />
     <p style="text-align:center"><b>White Player: <%= User.find_by_id(@game.white_player_id).email %></b></p>
-    <% if current_user.id == @game.turn_player_id %>
+    <% if @game.white_player_id == @game.turn_player_id %>
         <p style="text-align:center"><b>It is white's turn to move</b></p>
-        <%= simple_form_for @game, :url => game_forfeit_path(@game.id) do |f| %>
-            <p style="text-align:center"><%= f.submit 'Forfeit', class: 'btn btn-danger' %></p>
-        <% end %>
     <% end %>
 
  <br />
