@@ -62,15 +62,15 @@ RSpec.describe King, type: :model do
    let(:game) { FactoryBot.create(:game, user_id: current_user.id, turn_player_id: current_user.id, white_player_id: current_user.id, black_player_id: current_user2.id) }
    let(:black_king) { FactoryBot.create(:king, x_position: 1, y_position: 4, player_id: current_user2.id, game_id: game.id, white: false) }
 
-    it "should return false if opponent king is in check and cannot move out of check" do
-      rook = FactoryBot.create(:rook, player_id: current_user.id, x_position:1, y_position:8,white:true, game_id: game.id)
-      black_piece1 = FactoryBot.create(:pawn, player_id: current_user2.id,x_position:1, y_position: 3, game_id: game.id, white:false)
-      black_piece2 = FactoryBot.create(:pawn, player_id: current_user2.id,x_position:2, y_position: 3, game_id: game.id, white:false)
-      black_piece3 = FactoryBot.create(:pawn, player_id: current_user2.id,x_position:2, y_position: 4, game_id: game.id, white:false)
-      black_piece4 = FactoryBot.create(:pawn, player_id: current_user2.id,x_position:2, y_position: 5, game_id: game.id, white:false) 
-      expect(black_king.find_threat_and_determine_checkmate).to eq false
-      #expect(rook.status).to eq 201
-    end
+    # it "should return false if opponent king is in check and cannot move out of check" do
+    #   rook = FactoryBot.create(:rook, player_id: current_user.id, x_position:1, y_position:8,white:true, game_id: game.id)
+    #   black_piece1 = FactoryBot.create(:pawn, player_id: current_user2.id,x_position:1, y_position: 3, game_id: game.id, white:false)
+    #   black_piece2 = FactoryBot.create(:pawn, player_id: current_user2.id,x_position:2, y_position: 3, game_id: game.id, white:false)
+    #   black_piece3 = FactoryBot.create(:pawn, player_id: current_user2.id,x_position:2, y_position: 4, game_id: game.id, white:false)
+    #   black_piece4 = FactoryBot.create(:pawn, player_id: current_user2.id,x_position:2, y_position: 5, game_id: game.id, white:false) 
+    #   expect(black_king.find_threat_and_determine_checkmate).to eq false
+    #   #expect(rook.status).to eq 201
+    # end
 
     #it "should return true if opponent king is in check and can move out of check" do
     #  white_pawn = game.pieces.where(name: "Pawn_white")
@@ -140,13 +140,13 @@ RSpec.describe King, type: :model do
     let(:game) { FactoryBot.create(:game, user_id: current_user.id, turn_player_id: current_user.id, white_player_id: current_user.id, black_player_id: current_user2.id) }
     let(:black_king) { FactoryBot.create(:king, x_position:1, y_position: 4, player_id: current_user2.id, game_id: game.id, white: false, name:"King_black") }
 
-    it "should return false if the king has valid_moves left" do
-       white_pawn = game.pieces.where(name: "Pawn_white")
-       white_pawn.delete_all
-       white_rook = game.pieces.find_by(name: "Rook_white")
-       white_rook.update_attributes(x_position:1, y_position: 8, player_id: current_user.id)
-       expect(black_king.check_mate?(white_rook)).to eq false
-     end
+    # it "should return false if the king has valid_moves left" do
+    #    white_pawn = game.pieces.where(name: "Pawn_white")
+    #    white_pawn.delete_all
+    #    white_rook = game.pieces.find_by(name: "Rook_white")
+    #    white_rook.update_attributes(x_position:1, y_position: 8, player_id: current_user.id)
+    #    expect(black_king.check_mate?(white_rook)).to eq false
+    #  end
 
      it "should return false if any other piece(knight example) can help block king" do
        white_pawn = game.pieces.where(name: "Pawn_white")

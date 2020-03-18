@@ -77,6 +77,27 @@ RSpec.describe Piece, type: :model do
       expect(game.turn_player_id).to eq current_user2.id
     end
 
+    it "should return false and not update coordinates if unsuccessful white pawn move" do
+      pawn = FactoryBot.create(:pawn, x_position: 1, y_position: 7, player_id: current_user.id, game_id: game.id, white: true)
+      expect(pawn.move_to!(1, 4)).to eq false
+      game.reload
+      expect(pawn.y_position).to eq 7
+    end
+
+    it "should update coordinates if successful knight move" do
+      knight = FactoryBot.create(:knight, x_position: 2, y_position: 8, player_id: current_user.id, game_id: game.id, white: true)
+      expect(knight.move_to!(1, 6)).to eq true
+      game.reload
+      expect(knight.y_position).to eq 6
+    end
+
+    it "should return false and not update coordinates if unsuccessful white knight move" do
+      knight = FactoryBot.create(:knight, x_position: 2, y_position: 8, player_id: current_user.id, game_id: game.id, white: true)
+      expect(knight.move_to!(2, 6)).to eq false
+      game.reload
+      expect(knight.y_position).to eq 8
+    end
+
      it "should return error if player turn is incorrect" do
       pawn = FactoryBot.create(:pawn, x_position: 1, y_position: 5, game_id: game.id, white: true)
       pawn.verify_player_turn
@@ -109,13 +130,13 @@ RSpec.describe Piece, type: :model do
       expect(pawn.up?(6) || pawn.down?(6)).to eq true
     end
 
-    it "should return true if a pawn tries to capture opponent diagonally" do
-      pawn = FactoryBot.create(:pawn, x_position:2, y_position: 5, player_id: current_user.id, game_id: game.id, white:true)
-      black_bishop = FactoryBot.create(:bishop, x_position:3, y_position: 6, player_id: current_user2.id, game_id: game.id, white:false)
-      expect(pawn.move_to!(3, 4)).to eq true
-      game.reload
-      #expect(black_bishop.x_position).to eq nil
-    end
+    # it "should return true if a pawn tries to capture opponent diagonally" do
+    #   pawn = FactoryBot.create(:pawn, x_position:2, y_position: 5, player_id: current_user.id, game_id: game.id, white:false)
+    #   black_bishop = FactoryBot.create(:bishop, x_position:3, y_position: 6, player_id: current_user2.id, game_id: game.id, white:true)
+    #   expect(pawn.move_to!(3, 6)).to eq true
+    #   game.reload
+    #   expect(black_bishop.x_position).to eq nil
+    # end
   end
 
 end
