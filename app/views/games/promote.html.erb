@@ -1,15 +1,23 @@
 <!-- Need to pass in the game and the x/y coordinates of the square on the first or last row -->
 
+<% if @game.pieces.where(captured: true, white: @white).where.not(piece_type: "Pawn") != nil %>
+
 <p style="text-align:center"><b>Select a new piece:</p>
 
 <div class="container">
   <select onchange="getSelect(this)">
     <option value="">Select a piece:</option>
-   <% @game.pieces.where(captured: true, white: @white).each do |image| %>
+   <% @game.pieces.where(captured: true, white: @white).where.not(piece_type: "Pawn").each do |image| %>
    <option value=<%= image.id %>><%= image.piece_type %></option>
    <% end %>
    </select>
  </div>
+
+ <% else %>
+
+<p style="text-align:center"><b>No pieces available for pawn promotion</p>
+
+ <% end %>
 
 <%= form_tag "#", :id => 'promoted'%>
 
@@ -21,7 +29,7 @@
   var target_x = <%= @x %>;
     var target_y = <%= @y %>;
     var piece_id = value;
-    var path = "/games/<%= @game.id.to_s %>/promoted/" + piece_id + "/" + target_x + "/" + target_y;
+    var path = "/games/<%= @game.id.to_s %>/promoted/" + "<%= @piece_id %>" + "/" + piece_id + "/" + target_x + "/" + target_y;
     var $form =  $('#promoted');
     $form.attr('action', path); 
     console.log(path);
