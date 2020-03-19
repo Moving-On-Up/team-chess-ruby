@@ -96,13 +96,13 @@ RSpec.describe King, type: :model do
       #expect(game.state).to eq "end"
     end
 
-    it "should return false if the king tries to move into check by vertical pawn capture" do
-      black_king = FactoryBot.create(:king, x_position:8, y_position: 1, player_id: current_user2.id, game_id: game.id, white: false)
-      white_king = FactoryBot.create(:king, player_id: current_user.id, x_position:1, y_position: 6, game_id: game.id, white:true)
-      black_pawn = FactoryBot.create(:pawn, x_position: 2, y_position: 4, game_id: game.id, white:false, player_id: current_user2.id)
-      expect(white_king.move_to!(1, 5)).to eq false
-      #expect(white_king.status).to eq 422
-    end
+    # it "should return false if the king tries to move into check by vertical pawn capture" do
+    #   black_king = FactoryBot.create(:king, x_position:8, y_position: 1, player_id: current_user2.id, game_id: game.id, white: false)
+    #   white_king = FactoryBot.create(:king, player_id: current_user.id, x_position:1, y_position: 6, game_id: game.id, white:true)
+    #   black_pawn = FactoryBot.create(:pawn, x_position: 2, y_position: 4, game_id: game.id, white:false, player_id: current_user2.id)
+    #   expect(white_king.move_to!(1, 5)).to eq false
+    #   #expect(white_king.status).to eq 422
+    # end
 
     #it "should return 201 if the queen checks king" do
     #  black_king = FactoryBot.create(:king, x_position:5, y_position: 1, player_id: current_user2.id, game_id: game.id, white: false)
