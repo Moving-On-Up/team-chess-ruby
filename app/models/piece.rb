@@ -63,13 +63,25 @@ class Piece < ApplicationRecord
     if self.game.pieces.where(x_position: self.x_position, y_position: self.y_position).first.piece_type == "Knight"
       return false
     end
-    current_piece = self
 
     new_x = new_x.to_i
     new_y = new_y.to_i
     
+    current_piece = self
+    
     x_distance = (current_piece.x_position.to_i - new_x).abs
     y_distance = (current_piece.y_position.to_i - new_y).abs
+
+    # if self.game.pieces.where(x_position: self.x_position, y_position: self.y_position).first.piece_type == "Knight"
+    #   if ((up?(new_y) && y_distance > 1) || (down?(new_y) && y_distance > 1) ||
+    #   (left?(new_x) && x_distance > 1) || (right?(new_x) && x_distance > 1 ))
+    #     return true
+    #   elsif !(up?(new_y) || down?(new_y) || left?(new_x) || right?(new_x))
+    #     return true
+    #   else
+    #   end
+    # end
+
 
     if up?(new_y)
       # for current y + 1 up to new_y - 1, check for obstructions
