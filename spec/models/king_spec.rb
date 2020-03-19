@@ -148,15 +148,15 @@ RSpec.describe King, type: :model do
     #    expect(black_king.check_mate?(white_rook)).to eq false
     #  end
 
-     it "should return false if any other piece(knight example) can help block king" do
-       white_pawn = game.pieces.where(name: "Pawn_white")
-       white_pawn.delete_all
-       white_rook = game.pieces.find_by(name: "Rook_white")
-       white_rook.update_attributes(x_position:1, y_position: 8, player_id: current_user.id)
-       black_knight = game.pieces.find_by(name:"Knight_black")
-       black_knight.update_attributes(x_position:2, y_position:6, player_id: current_user2.id)
-       expect(black_king.check_mate?(white_rook)).to eq false
-     end
+    # it "should return false if any other piece(knight example) can help block king" do
+    #   white_pawn = game.pieces.where(name: "Pawn_white")
+    #   white_pawn.delete_all
+    #   white_rook = game.pieces.find_by(name: "Rook_white")
+    #   white_rook.update_attributes(x_position:1, y_position: 8, player_id: current_user.id)
+    #   black_knight = game.pieces.find_by(name:"Knight_black")
+    #   black_knight.update_attributes(x_position:2, y_position:6, player_id: current_user2.id)
+    #   expect(black_king.check_mate?(white_rook)).to eq false
+    # end
 
      #it "should return true if the king has no valid moves, no piece can help block and king cannot capture threat" do
      #  white_rook = FactoryBot.create(:rook, x_position:1, y_position: 8, player_id: current_user.id, game_id: game.id, white: true, name:"Rook_white")
