@@ -68,12 +68,8 @@ class Piece < ApplicationRecord
     new_x = new_x.to_i
     new_y = new_y.to_i
     
-    x_distance = current_piece.x_position.to_i - new_x
-    y_distance = current_piece.y_position.to_i - new_y
-
-    #if !(((x_distance == y_distance) || (x_distance == 0) || (y_distance == 0)))
-    #  return nil
-    #end
+    x_distance = (current_piece.x_position.to_i - new_x).abs
+    y_distance = (current_piece.y_position.to_i - new_y).abs
 
     places_between = [ [new_x, new_y] ]
     back_to_start = false
@@ -184,8 +180,11 @@ class Piece < ApplicationRecord
   end
 
   def move_to!(new_x,new_y)
-    #puts "is_obstructed? returns " + is_obstructed?(new_x, new_y).to_s
-    if !correct_turn? || is_obstructed?(new_x, new_y)
+    new_x = new_x.to_i
+    new_y = new_y.to_i
+    if !correct_turn?
+      return false
+    elsif is_obstructed?(new_x, new_y)
       return false
     else
       if !verify_valid_move(new_x, new_y)
@@ -194,7 +193,7 @@ class Piece < ApplicationRecord
         if !king_not_moved_to_check_or_king_not_kept_in_check?
            return false
         else
-          dead_piece = Piece.find_by(x_position: new_x, y_position: new_y)
+          dead_piece = game.pieces.find_by(x_position: new_x, y_position: new_y)
           if dead_piece != nil
             if opposition_piece?(new_x, new_y, id = dead_piece.id, white = dead_piece.white) 
               move_to_capture_piece_and_capture(dead_piece, new_x, new_y)
@@ -212,20 +211,17 @@ class Piece < ApplicationRecord
   end
 
   def move_to_capture_piece_and_capture(dead_piece, x_end, y_end)
-    if self.valid_move?(x_end, y_end, id = self.id, white = self.white)
       self.x_position = x_end
       self.y_position = y_end
       self.status = 200
       self.save
       remove_piece(dead_piece)
-    else
-      return false
-    end
   end
  
   def remove_piece(dead_piece)
     dead_piece.x_position = nil
     dead_piece.y_position = nil
+    dead_piece.captured = true
     dead_piece.save
   end
 
@@ -282,7 +278,7 @@ class Piece < ApplicationRecord
       (self.is_obstructed?(new_x, new_y) == false) &&
       (self.contains_own_piece?(new_x, new_y) == false) &&
       (king_not_moved_to_check_or_king_not_kept_in_check? == true) ||
-      self.piece_type == "Pawn" && self.pawn_promotion?
+      (self.piece_type == "Pawn" && self.pawn_promotion?)
       return true
     else
       self.status = 422
