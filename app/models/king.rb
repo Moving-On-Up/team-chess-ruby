@@ -26,21 +26,20 @@ class King < Piece
   end
 
 
-  def in_check?
-    # king = pieces.find_by(type: 'King', user_id: current_user.id)
-    king = self
-    x_king = king.x_position
-    y_king = king.y_position
+  # def in_check?
+  #   king = self
+  #   x_king = king.x_position
+  #   y_king = king.y_position
  
-    if !user
-      self.game.pieces.each do |piece|
-        if piece.valid_move?(x_king, y_king)
-          return true
-        end
-      end
-    end 
-    return false
-  end
+  #   if !user
+  #     self.game.pieces.each do |piece|
+  #       if piece.valid_move?(x_king, y_king)
+  #         return true
+  #       end
+  #     end
+  #   end 
+  #   return false
+  # end
 
   def find_threat_and_determine_checkmate     ### DOES NOT WORK CORRECTLY
     #binding.pry
@@ -68,7 +67,7 @@ class King < Piece
   # end
 
   def checkmate?(threat)
-    return false unless in_check?
+    return false unless check?(x_position, y_position)
     return false if valid_move?(x_position, y_position) 
     return false if stalemate?
     true
@@ -76,7 +75,8 @@ class King < Piece
 
 
   def stalemate?
-    return true if !any_moves_left?
+    return true if !check?(x_position, y_position)
+    return true if no_legal_next_move?
     return false
   end
 
@@ -153,4 +153,34 @@ class King < Piece
     return false
   end
   
+
+  def no_legal_next_move?
+    myPieces = game.pieces.where(piece_type: "King")
+    myPieces.each do |piece|
+      (1..8).each do |x|
+        (1..8).each do |y|
+          if piece.valid_move?(x_position, y_position)
+            original_x = piece.x_position
+            original_y = piece.y_position
+            captured_piece = pieces.find_by(x_position: x, y_position: y)
+            begin
+              captured_piece.update(x_position: -1, y_position: -1) if captured_piece
+              piece.update(x_position: x, y_position: y)
+              reload
+              check_state = check?(x_position, y_position)
+            ensure
+              piece.update(x_position: original_x, y_position: original_y)
+              captured_piece.update(x_position: x, y_position: y) if captured_piece
+              reload
+            end
+            if check_state.nil?
+              return false
+            end
+          end
+        end
+      end
+    end
+    true
+  end
+
 end
