@@ -63,67 +63,148 @@ class Piece < ApplicationRecord
     if self.game.pieces.where(x_position: self.x_position, y_position: self.y_position).first.piece_type == "Knight"
       return false
     end
-    current_piece = self
 
     new_x = new_x.to_i
     new_y = new_y.to_i
     
-    x_distance = current_piece.x_position.to_i - new_x
-    y_distance = current_piece.y_position.to_i - new_y
+    current_piece = self
+    
+    x_distance = (current_piece.x_position.to_i - new_x).abs
+    y_distance = (current_piece.y_position.to_i - new_y).abs
 
-    #if !(((x_distance == y_distance) || (x_distance == 0) || (y_distance == 0)))
-    #  return nil
-    #end
+    # if self.game.pieces.where(x_position: self.x_position, y_position: self.y_position).first.piece_type == "Knight"
+    #   if ((up?(new_y) && y_distance > 1) || (down?(new_y) && y_distance > 1) ||
+    #   (left?(new_x) && x_distance > 1) || (right?(new_x) && x_distance > 1 ))
+    #     return true
+    #   elsif !(up?(new_y) || down?(new_y) || left?(new_x) || right?(new_x))
+    #     return true
+    #   else
+    #   end
+    # end
 
-    places_between = [ [new_x, new_y] ]
-    back_to_start = false
-    current_position = [current_piece.x_position, current_piece.y_position]
 
-    until back_to_start
-      if new_x > current_piece.x_position
-        new_x = new_x - 1
-      elsif new_x < current_piece.x_position
-        new_x = new_x + 1
-      end
-
-      if new_y > current_piece.y_position
-        new_y = new_y -  1
-      elsif new_y < current_piece.y_position
-        new_y = new_y + 1
-      end
-
-      if current_position == [new_x, new_y]
-        back_to_start = true
-      else
-        if x_distance == y_distance
-          places_between << [new_x, new_y]
-        elsif x_distance == 0
-          places_between << [current_piece.x_position, new_y]
-        else
-          places_between << [new_x, current_piece.y_position]
+    if up?(new_y)
+      # for current y + 1 up to new_y - 1, check for obstructions
+      for i in current_piece.y_position+1..new_y-1 do 
+        if game.pieces.where(x_position: new_x, y_position: i) != nil
+          return true
         end
       end
-    end
-    
-    pieces = self.game.pieces.to_a
-    
-    all_pieces_positions = pieces.map { |p| [p.x_position, p.y_position] }
-    
-    obstruction = false
-    all_pieces_positions.each do |piece_position|
-      is_current_piece = current_position == piece_position
-      is_destination_piece = piece_position == [new_x, new_y]  
-
-      if x_distance == 0 && y_distance == 0
-        obstruction = true
+    elsif down?(new_y)
+      for i in new_y+1..current_piece.y_position-1 do 
+        if game.pieces.where(x_position: new_x, y_position: i) != nil
+          return true
+        end
       end
+    elsif left?(new_x)
+      for i in new_x+1..current_piece.x_position-1 do 
+        if game.pieces.where(x_position: i, y_position: new_y) != nil
+          return true
+        end
+      end
+    elsif right?(new_x)
+      for i in current_piece.x_position+1..new_x-1 do 
+        if game.pieces.where(x_position: i, y_position: new_y) != nil
+          return true
+        end
+      end
+    elsif diagonal?(x_distance, y_distance)
+      if new_x > current_piece.x_position && new_y < current_piece.y_position
+        # Northeast move
+        for j in new_y+1..current_piece.y_position-1 do 
+          for i in current_piece.x_position+1..new_x-1 do
+            if game.pieces.where(x_position: i, y_position: j) != nil
+              return true
+            end
+          end
+        end
+      elsif new_x > current_piece.x_position && new_y > current_piece.y_position
+        # Southeast move
+        for j in current_piece.y_position+1..new_y-1 do 
+          for i in current_piece.x_position+1..new_x-1 do
+            if game.pieces.where(x_position: i, y_position: j) != nil
+              return true
+            end
+          end
+        end
 
-      if places_between.include?(piece_position) && !is_current_piece && !is_destination_piece       
-        obstruction = true
-        break
-      end   
+      elsif new_x < current_piece.x_position && new_y < current_piece.y_position
+        # Northwest move
+        for j in new_y+1..current_piece.y_position-1 do 
+          for i in new_x+1..current_piece.x_position-1 do
+            if game.pieces.where(x_position: i, y_position: j) != nil
+              return true
+            end
+          end
+        end
+      else
+        # Southwest move
+        for j in current_piece.y_position+1..new_y-1 do
+          for i in new_x+1..current_piece.x_position-1 do
+            if game.pieces.where(x_position: i, y_position: j) != nil
+              return true
+            end
+          end
+        end
+
+      end
+    else
+      # If not a knight and not a N/S/E/W move, it's not valid so return true for now
+      return true
     end
-    return obstruction
+
+    return false
+
+    # places_between = [ [new_x, new_y] ]
+    # back_to_start = false
+    # current_position = [current_piece.x_position, current_piece.y_position]
+
+    # until back_to_start
+    #   if new_x > current_piece.x_position
+    #     new_x = new_x - 1
+    #   elsif new_x < current_piece.x_position
+    #     new_x = new_x + 1
+    #   end
+
+    #   if new_y > current_piece.y_position
+    #     new_y = new_y -  1
+    #   elsif new_y < current_piece.y_position
+    #     new_y = new_y + 1
+    #   end
+
+    #   if current_position == [new_x, new_y]
+    #     back_to_start = true
+    #   else
+    #     if x_distance == y_distance
+    #       places_between << [new_x, new_y]
+    #     elsif x_distance == 0
+    #       places_between << [current_piece.x_position, new_y]
+    #     else
+    #       places_between << [new_x, current_piece.y_position]
+    #     end
+    #   end
+    # end
+    
+    # pieces = self.game.pieces.to_a
+    
+    # all_pieces_positions = pieces.map { |p| [p.x_position, p.y_position] }
+    
+    # obstruction = false
+    # all_pieces_positions.each do |piece_position|
+    #   is_current_piece = current_position == piece_position
+    #   is_destination_piece = piece_position == [new_x, new_y]  
+
+    #   if x_distance == 0 && y_distance == 0
+    #     obstruction = true
+    #   end
+
+    #   if places_between.include?(piece_position) && !is_current_piece && !is_destination_piece       
+    #     obstruction = true
+    #     break
+    #   end   
+    # end
+    # return obstruction
+
   end
 
 
@@ -163,6 +244,16 @@ class Piece < ApplicationRecord
     (self.y_position - new_y_position.to_i) < 0
   end
 
+  # returns true if piece is moving from right to left
+  def left?(new_x_position)
+    (self.x_position - new_x_position.to_i) > 0
+  end
+
+  # returns true if piece is moving from left to right
+  def right?(new_x_position)
+    (self.x_position - new_x_position.to_i) < 0
+  end
+
   def diagonal?(x_distance, y_distance)
     x_distance == y_distance
   end
@@ -184,25 +275,34 @@ class Piece < ApplicationRecord
   end
 
   def move_to!(new_x,new_y)
-    #puts "is_obstructed? returns " + is_obstructed?(new_x, new_y).to_s
-    if !correct_turn? || is_obstructed?(new_x, new_y)
+    new_x = new_x.to_i
+    new_y = new_y.to_i
+    if !correct_turn?
+      puts "*********** INCORRECT TURN **************"
+      return false
+    elsif is_obstructed?(new_x, new_y)
+      puts "*********** IS OBSTRUCTED **************"
       return false
     else
       if !verify_valid_move(new_x, new_y)
+        puts "*********** NOT A VALID MOVE **************"
          return false
       else
         if !king_not_moved_to_check_or_king_not_kept_in_check?
+          puts "*********** KING MOVED OR KEPT IN CHECK **************"
            return false
         else
-          dead_piece = Piece.find_by(x_position: new_x, y_position: new_y)
+          dead_piece = game.pieces.find_by(x_position: new_x, y_position: new_y)
           if dead_piece != nil
-            if opposition_piece?(new_x, new_y, id = dead_piece.id, white = dead_piece.white) 
+            if opposition_piece?(new_x, new_y, id = dead_piece.id, white = dead_piece.white)
+              puts "*********** MOVE TO AND CAPTURE **************" 
               move_to_capture_piece_and_capture(dead_piece, new_x, new_y)
               switch_turns
             else
               return false
             end
           else
+            puts "*********** MOVE TO EMPTY SQUARE **************"
             move_to_empty_square(new_x, new_y)
             switch_turns
           end
@@ -212,20 +312,17 @@ class Piece < ApplicationRecord
   end
 
   def move_to_capture_piece_and_capture(dead_piece, x_end, y_end)
-    if self.valid_move?(x_end, y_end, id = self.id, white = self.white)
       self.x_position = x_end
       self.y_position = y_end
       self.status = 200
       self.save
       remove_piece(dead_piece)
-    else
-      return false
-    end
   end
  
   def remove_piece(dead_piece)
     dead_piece.x_position = nil
     dead_piece.y_position = nil
+    dead_piece.captured = true
     dead_piece.save
   end
 
@@ -282,7 +379,7 @@ class Piece < ApplicationRecord
       (self.is_obstructed?(new_x, new_y) == false) &&
       (self.contains_own_piece?(new_x, new_y) == false) &&
       (king_not_moved_to_check_or_king_not_kept_in_check? == true) ||
-      self.piece_type == "Pawn" && self.pawn_promotion?
+      (self.piece_type == "Pawn" && self.pawn_promotion?)
       return true
     else
       self.status = 422
