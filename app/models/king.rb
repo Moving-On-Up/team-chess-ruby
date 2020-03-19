@@ -91,9 +91,9 @@ class King < Piece
     return false unless legal_to_castle?(new_x_position, new_y_position)
     self.update_attributes(x_position: new_x_position, y_position: new_y_position, move_number: self.move_number + 1)
     if new_x_position == 3
-      @rook_for_castling.update_attributes(x_position: 4, move_number: 1)
+      @rook_for_castling.update_attributes(x_position: 4, move_number: move_number+1)
     else new_x_position == 7
-      @rook_for_castling.update_attributes(x_position: 6, move_number: 1)
+      @rook_for_castling.update_attributes(x_position: 6, move_number: move_number+1)
     end
   end
 
