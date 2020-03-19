@@ -7,7 +7,7 @@ class King < Piece
     (x_distance == 1 && y_distance == 0) ||
     (y_distance == 1 && x_distance == 0) ||
     (y_distance == 1 && y_distance == x_distance) ||
-    legal_to_castle?(new_x_position, new_y_position)
+    (legal_to_castle?(new_x_position, new_y_position) && (left?(new_x_position) || right?(new_x_position)) && x_distance == 2)
   end
 
   # def check?(x_position, y_position, id = nil, white = nil)
