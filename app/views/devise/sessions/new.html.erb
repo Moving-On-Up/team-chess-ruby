@@ -12,7 +12,7 @@
           <%= f.input :password,
                       required: false,
                       input_html: { autocomplete: "current-password" } %>
-          <%= f.input :remember_me, wrapper: :vertical_boolean, as: :boolean if devise_mapping.rememberable? %>
+          <%= f.input :remember_me, :wrapper => :inline_checkbox, as: :boolean if devise_mapping.rememberable? %>
         </div>
 
         <div class="form-actions">

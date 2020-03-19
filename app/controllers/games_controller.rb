@@ -1,7 +1,7 @@
 require "firebase"
 
 class GamesController < ApplicationController
- before_action :authenticate_user!, only: [:new, :create, :show, :move, :update, :forfeit]
+  before_action :authenticate_user!, only: [:new, :create, :show, :move, :update, :forfeit]
 
     def new
         @game = Game.new
