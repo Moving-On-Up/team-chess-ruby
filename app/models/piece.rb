@@ -188,7 +188,7 @@ class Piece < ApplicationRecord
     if !correct_turn? || is_obstructed?(new_x, new_y)
       return false
     else
-      if !verify_valid_move
+      if !verify_valid_move(new_x, new_y)
          return false
       else
         if !king_not_moved_to_check_or_king_not_kept_in_check?
@@ -277,14 +277,16 @@ class Piece < ApplicationRecord
     self.game.save
   end
 
-  def verify_valid_move
-    if self.valid_move?(self.x_position, self.y_position, self.id, self.white == true) &&
-      (self.is_obstructed?(self.x_position, self.y_position) == false) &&
-      (self.contains_own_piece?(self.x_position, self.y_position) == false) &&
+  def verify_valid_move(new_x, new_y)
+    if self.valid_move?(new_x, new_y, self.id, self.white == true) &&
+      (self.is_obstructed?(new_x, new_y) == false) &&
+      (self.contains_own_piece?(new_x, new_y) == false) &&
       (king_not_moved_to_check_or_king_not_kept_in_check? == true) ||
       self.piece_type == "Pawn" && self.pawn_promotion?
+      return true
     else
       self.status = 422
+      return false
     end
     self.save
   end
