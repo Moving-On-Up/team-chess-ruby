@@ -167,5 +167,4 @@ RSpec.describe King, type: :model do
      #  expect(black_king.check_mate?(white_rook)).to eq true
      #end
   end
-
 end

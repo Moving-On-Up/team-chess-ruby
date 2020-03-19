@@ -22,34 +22,58 @@ class King < Piece
         end
       end
     end
+    return false   
+  end
+
+
+  def in_check?
+    # king = pieces.find_by(type: 'King', user_id: current_user.id)
+    king = self
+    x_king = king.x_position
+    y_king = king.y_position
+ 
+    if !user
+      self.game.pieces.each do |piece|
+        if piece.valid_move?(x_king, y_king)
+          return true
+        end
+      end
+    end 
     return false
-    
   end
 
   def find_threat_and_determine_checkmate     ### DOES NOT WORK CORRECTLY
     #binding.pry
     threat = check?(x_position, y_position)
-    if check_mate?(threat)
+    if checkmate?(threat)
       return true
     end
     return false
   end
 
-  def check_mate?(threat)
-    obstruction_array = threat.build_obstruction_array(x_position, y_position)
-    # check if king can capture the threat
-    if valid_move?(threat.x_position, threat.y_position) == true && check?(threat.x_position, threat.y_position).blank? ||
-    # check if any other piece can move to block the king, or capture the threat
-      can_block_king?(threat, obstruction_array) == true ||
-    # check if king has many moves left
-      any_moves_left?(threat, obstruction_array) == true
-      #binding.pry
-      return false
-    else
-      #binding.pry
-      return true
-    end
+  # def check_mate?(threat)
+  #   obstruction_array = threat.build_obstruction_array(x_position, y_position)
+  #   # check if king can capture the threat
+  #   if valid_move?(threat.x_position, threat.y_position) == true && check?(threat.x_position, threat.y_position).blank? ||
+  #   # check if any other piece can move to block the king, or capture the threat
+  #     can_block_king?(threat, obstruction_array) == true ||
+  #   # check if king has many moves left
+  #     any_moves_left?(threat, obstruction_array) == true
+  #     #binding.pry
+  #     return false
+  #   else
+  #     #binding.pry
+  #     return true
+  #   end
+  # end
+
+  def checkmate?(threat)
+    return false unless in_check?
+    return false if valid_move?(x_position, y_position) 
+    return false if stalemate?
+    true
   end
+
 
   def stalemate?
     return true if !any_moves_left?
