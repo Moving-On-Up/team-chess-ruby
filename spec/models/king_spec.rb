@@ -165,7 +165,7 @@ RSpec.describe King, type: :model do
        black_knight.update_attributes(x_position:2, y_position:6, player_id: current_user2.id)
        expect(black_king.checkmate?(white_rook)).to eq false
      end
-     # 5
+     
      # it "should return true if the king has no valid moves, no piece can help block and king cannot capture threat" do
      #  white_rook = FactoryBot.create(:rook, x_position:1, y_position: 8, player_id: current_user.id, game_id: game.id, white: true, name:"Rook_white")
      #  black_pawn1 = FactoryBot.create(:pawn, player_id: current_user2.id,x_position:2, y_position: 2, game_id: game.id, white:false)
@@ -175,4 +175,3 @@ RSpec.describe King, type: :model do
      #  expect(black_king.checkmate?(white_rook)).to eq true
      # end
   end
-end
