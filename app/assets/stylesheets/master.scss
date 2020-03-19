@@ -186,6 +186,14 @@ background-color: white;
   margin-top: 50px;
 }
 
+label.checkbox {
+text-align: left !important;
+}
+
+input[type=checkbox] {
+margin-right: 10px !important;
+}
+
 #flex-content-container {
    width: 100%;
  }
