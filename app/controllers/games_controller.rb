@@ -55,8 +55,8 @@ class GamesController < ApplicationController
         @pieces = current_game.pieces.order(:y_position).order(:x_position).to_a
         @king = current_game.pieces.find_by(piece_type: "King")
 
-        flash.now[:notice] = ' IN CHECK' if @king.check?(:x_position, :y_position)
-        flash.now[:notice] = ' IN CHECKMATE' if @king.check?(:x_position, :y_position) && @king.checkmate?(" ")
+        flash.now[:notice] = ' IN CHECK' if @king.check?
+        flash.now[:notice] = ' IN CHECKMATE' if @king.check? && @king.checkmate?
        
     end
     

@@ -10,45 +10,36 @@ class King < Piece
     legal_to_castle?(new_x_position, new_y_position)
   end
 
-  def check?(x_position, y_position, id = nil, white = nil)
-    game.pieces.each do | f |
-      if f.player_id != self.player_id && f.x_position != nil
-        if f.valid_move?(x_position, y_position, id, white) == true && 
-           f.is_obstructed?(x_position, y_position) == false 
-            f.king_check = 1
-            f.save
-            return f ##true
-            break
-        end
-      end
-    end
-    return false   
-  end
-
-
-  # def in_check?
-  #   king = self
-  #   x_king = king.x_position
-  #   y_king = king.y_position
- 
-  #   if !user
-  #     self.game.pieces.each do |piece|
-  #       if piece.valid_move?(x_king, y_king)
-  #         return true
+  # def check?(x_position, y_position, id = nil, white = nil)
+  #   game.pieces.each do | f |
+  #     if f.player_id != self.player_id && f.x_position != nil
+  #       if f.valid_move?(x_position, y_position, id, white) == true && 
+  #          f.is_obstructed?(x_position, y_position) == false 
+  #           f.king_check = 1
+  #           f.save
+  #           return f ##true
+  #           break
   #       end
   #     end
-  #   end 
-  #   return false
+  #   end
+  #   return false   
   # end
 
-  def find_threat_and_determine_checkmate     ### DOES NOT WORK CORRECTLY
-    #binding.pry
-    threat = check?(x_position, y_position)
-    if checkmate?(threat)
-      return true
+  def check?
+    game.pieces.where(white: false).each do |piece|
+      return true if piece.valid_move?(x_position, y_position)
     end
-    return false
+    false
   end
+
+  # def find_threat_and_determine_checkmate     ### DOES NOT WORK CORRECTLY
+  #   #binding.pry
+  #   threat = check?(x_position, y_position)
+  #   if checkmate?(threat)
+  #     return true
+  #   end
+  #   return false
+  # end
 
   # def check_mate?(threat)
   #   obstruction_array = threat.build_obstruction_array(x_position, y_position)
@@ -66,8 +57,8 @@ class King < Piece
   #   end
   # end
 
-  def checkmate?(threat)
-    return false unless check?(x_position, y_position)
+  def checkmate?
+    return false unless check?
     return false if valid_move?(x_position, y_position) 
     return false if stalemate?
     true
@@ -75,7 +66,7 @@ class King < Piece
 
 
   def stalemate?
-    return true if !check?(x_position, y_position)
+    return true if !check?
     return true if no_legal_next_move?
     return false
   end
