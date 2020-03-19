@@ -53,11 +53,31 @@ class GamesController < ApplicationController
     def show
         @game = current_game
         @pieces = current_game.pieces.order(:y_position).order(:x_position).to_a
-        @king = current_game.pieces.find_by(piece_type: "King")
-
-        flash.now[:notice] = ' IN CHECK' if @king.check?
-        flash.now[:notice] = ' IN CHECKMATE' if @king.check? && @king.checkmate?
-       
+        @king = current_game.pieces.find_by(piece_type: "King") 
+        
+        if @king.check?
+           return
+           @king.update_attributes(status: 'Check', white: true)
+           flash.alert 'Check'
+        elsif @king.check?
+           return
+           @king.update_attributes(status: 'Check', white: false)
+           flash.alert 'Check'
+        end
+            
+        if @king.checkmate?
+           return
+           @king.update_attributes(status: 'Checkmate', white: true)
+           flash.alert 'Checkmate'
+        elsif @king.checkmate?
+           return
+           @king.update_attributes(status: 'Checkmate', white: false)
+           flash.alert 'Checkmate'
+        elsif @king.stalemate? 
+           return
+           @king.update_attributes(status: 'Stalemate')
+           flash.alert 'Stalemate'
+        end    
     end
     
     def move
