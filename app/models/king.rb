@@ -97,7 +97,7 @@ class King < Piece
     end
   end
 
-  private
+  
 
   def any_moves_left?(threat = nil, obstruction_array = nil)
     possible_positions = []
