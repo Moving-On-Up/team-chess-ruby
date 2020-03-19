@@ -76,7 +76,13 @@ class GamesController < ApplicationController
             @y_position = params[:y_position]
             @piece.move_to!(@x_position,@y_position)
 
+            if @piece.piece_type == "Pawn"
+                puts "pawn_promotion? is #{@piece.pawn_promotion?}"
+                puts "piece type is #{@piece.piece_type}"
+            end
+
             if @piece.piece_type == "Pawn" && @piece.pawn_promotion?
+                puts "********** REDIRECTING TO PROMOTE *************"
                 redirect_to promote_path()
                 return
             end
@@ -108,8 +114,8 @@ class GamesController < ApplicationController
 
     def promote
         @game = Game.find_by_id(params[:game_id])
-        @white = @game.current_user == @game.white_player_id ? false: true
         @piece_id = params[:piece_id]
+        @white = @game.pieces.find_by(id: @piece_id).white
         @x = params[:x_position]
         @y = params[:y_position]
         #redirect_to game_path(@game)
@@ -117,12 +123,16 @@ class GamesController < ApplicationController
 
     def promoted
         @game = Game.find_by_id(params[:game_id])
-        @piece_id = params[:piece_id]
+        @old_id = params[:old_id]
+        @new_id = params[:new_id]
         @x = params[:x_position]
         @y = params[:y_position]
 
-        piece = @game.pieces.find_by_id(@piece_id)
-        piece.update_attributes(x_position: @x, y_position: @y, captured: false)
+        old_piece = @game.pieces.find_by_id(@old_id)
+        old_piece.update_attributes(x_position: nil, y_position: nil)
+
+        new_piece = @game.pieces.find_by_id(@new_id)
+        new_piece.update_attributes(x_position: @x, y_position: @y, captured: false)
 
         redirect_to game_path(@game)
     end
