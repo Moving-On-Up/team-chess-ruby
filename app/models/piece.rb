@@ -86,25 +86,26 @@ class Piece < ApplicationRecord
     if up?(new_y)
       # for current y + 1 up to new_y - 1, check for obstructions
       for i in current_piece.y_position+1..new_y-1 do 
-        if game.pieces.where(x_position: new_x, y_position: i) != nil
+        if game.pieces.find_by(x_position: new_x, y_position: i) != nil
           return true
         end
       end
     elsif down?(new_y)
       for i in new_y+1..current_piece.y_position-1 do 
-        if game.pieces.where(x_position: new_x, y_position: i) != nil
+        if game.pieces.find_by(x_position: new_x, y_position: i) != nil
           return true
         end
       end
     elsif left?(new_x)
       for i in new_x+1..current_piece.x_position-1 do 
-        if game.pieces.where(x_position: i, y_position: new_y) != nil
+        if game.pieces.find_by(x_position: i, y_position: new_y) != nil
           return true
         end
       end
     elsif right?(new_x)
       for i in current_piece.x_position+1..new_x-1 do 
-        if game.pieces.where(x_position: i, y_position: new_y) != nil
+        if game.pieces.find_by(x_position: i, y_position: new_y) != nil
+          puts "Square #{i},#{new_y} is not nil"
           return true
         end
       end
@@ -113,7 +114,7 @@ class Piece < ApplicationRecord
         # Northeast move
         for j in new_y+1..current_piece.y_position-1 do 
           for i in current_piece.x_position+1..new_x-1 do
-            if game.pieces.where(x_position: i, y_position: j) != nil
+            if game.pieces.find_by(x_position: i, y_position: j) != nil
               return true
             end
           end
@@ -251,6 +252,7 @@ class Piece < ApplicationRecord
 
   # returns true if piece is moving from left to right
   def right?(new_x_position)
+    puts "right? is #{(self.x_position - new_x_position.to_i) < 0}"
     (self.x_position - new_x_position.to_i) < 0
   end
 
@@ -288,10 +290,10 @@ class Piece < ApplicationRecord
         puts "*********** NOT A VALID MOVE **************"
          return false
       else
-        if !king_not_moved_to_check_or_king_not_kept_in_check?
-          puts "*********** KING MOVED OR KEPT IN CHECK **************"
-           return false
-        else
+        # if !king_not_moved_to_check_or_king_not_kept_in_check?
+        #   puts "*********** KING MOVED OR KEPT IN CHECK **************"
+        #    return false
+        # else
           dead_piece = game.pieces.find_by(x_position: new_x, y_position: new_y)
           if dead_piece != nil
             if opposition_piece?(new_x, new_y, id = dead_piece.id, white = dead_piece.white)
@@ -302,11 +304,17 @@ class Piece < ApplicationRecord
               return false
             end
           else
-            puts "*********** MOVE TO EMPTY SQUARE **************"
-            move_to_empty_square(new_x, new_y)
-            switch_turns
+            if (self.piece_type == "King" && (new_x - self.x_position).abs == 2 && self.legal_to_castle?(new_x, new_y) )
+              puts "*********** CASTLING ************"
+              self.castle(new_x, new_y)
+              switch_turns
+            else
+              puts "*********** MOVE TO EMPTY SQUARE **************"
+              move_to_empty_square(new_x, new_y)
+              switch_turns
+            end
           end
-        end
+        #end
       end
     end
   end
@@ -375,10 +383,23 @@ class Piece < ApplicationRecord
   end
 
   def verify_valid_move(new_x, new_y)
+    # if !self.valid_move?(new_x, new_y, self.id, self.white == true)
+    #   puts "***** VALID_MOVE? FALSE **********"
+    # end
+    # if !(self.is_obstructed?(new_x, new_y) == false)
+    #   puts "****** IS OBSTRUCTED ******"
+    # end
+    # if (self.contains_own_piece?(new_x, new_y) == false)
+    #   puts "******* CONTAINS OWN PIECE *********"
+    # end
+    # if !(king_not_moved_to_check_or_king_not_kept_in_check? == true)  
+    #   puts "********  KING MOVED TO OR KEPT IN CHECK ********"
+    # end  
     if self.valid_move?(new_x, new_y, self.id, self.white == true) &&
       (self.is_obstructed?(new_x, new_y) == false) &&
-      (self.contains_own_piece?(new_x, new_y) == false) &&
-      (king_not_moved_to_check_or_king_not_kept_in_check? == true) ||
+      (self.contains_own_piece?(new_x, new_y) == false) ||
+      # &&
+      # (king_not_moved_to_check_or_king_not_kept_in_check? == true) ||
       (self.piece_type == "Pawn" && self.pawn_promotion?)
       return true
     else
