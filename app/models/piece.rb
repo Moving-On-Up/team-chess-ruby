@@ -267,9 +267,11 @@ class Piece < ApplicationRecord
   def find_capture_piece(x_end, y_end)
     if self.piece_type == "Pawn"
       if en_passant?(x_end, y_end)
-        game.pieces.where(y_position: y_position, x_position: x_end, piece_type: "Pawn").first
-      else
-        game.pieces.find_by(x_position: x_end, y_position: y_end)
+        if self.white?
+          game.pieces.find_by(x_position: x_end, y_position: y_end+1)
+        else # black
+          game.pieces.find_by(x_position: x_end, y_position: y_end-1)
+        end
       end
     else
       game.pieces.where(x_position: x_end, y_position: y_end).first
@@ -300,6 +302,7 @@ class Piece < ApplicationRecord
               puts "*********** MOVE TO AND CAPTURE **************" 
               move_to_capture_piece_and_capture(dead_piece, new_x, new_y)
               switch_turns
+              self.update_attributes(move_number: move_number+1)
             else
               return false
             end
@@ -308,10 +311,17 @@ class Piece < ApplicationRecord
               puts "*********** CASTLING ************"
               self.castle(new_x, new_y)
               switch_turns
+              # Don't update move number since castle already does that
+            elsif (self.piece_type == "Pawn" && en_passant?(new_x,new_y))
+              dead_piece = find_capture_piece(new_x, new_y)
+              move_to_capture_piece_and_capture(dead_piece, new_x, new_y)
+              switch_turns
+              self.update_attributes(move_number: move_number+1)
             else
               puts "*********** MOVE TO EMPTY SQUARE **************"
               move_to_empty_square(new_x, new_y)
               switch_turns
+              self.update_attributes(move_number: move_number+1)
             end
           end
         #end
@@ -428,12 +438,12 @@ class Piece < ApplicationRecord
     return params = {piece: "piece", x_position: "self.x_position", y_position: "self.y_position", captured: "self.captured", white: "self.white", id: "self.id", piece_type: "self.piece_type"}
   end
 
-  def is_captured
-    capture_piece = self.find_capture_piece(piece_params[:x_position].to_i, piece_params[:y_position].to_i)
-    if !capture_piece.nil?
-      self.remove_piece(capture_piece)
-    end
-  end
+  # def is_captured
+  #   capture_piece = self.find_capture_piece(piece_params[:x_position].to_i, piece_params[:y_position].to_i)
+  #   if !capture_piece.nil?
+  #     self.remove_piece(capture_piece)
+  #   end
+  # end
 
   def king_not_moved_to_check_or_king_not_kept_in_check?
     #function checks if player is not moving king into a check position
