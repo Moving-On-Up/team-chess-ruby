@@ -26,10 +26,28 @@ class King < Piece
   # end
 
   def check?
-    game.pieces.where(white: false).each do |piece|
-      return true if piece.valid_move?(x_position, y_position)
+    # puts "***********************************************************"
+    # puts "self.white is #{self.white}"
+    # puts "!self.white is #{!self.white}"
+    flag = false
+    game.pieces.where(white: !self.white, captured: false).each do |piece|
+        # puts "********************** piece is #{piece.name} at #{piece.x_position} , #{piece.y_position}"
+        # puts "test is #{piece.verify_valid_move(self.x_position, self.y_position)}"
+        if piece.verify_valid_move(self.x_position, self.y_position)
+          flag = true
+          piece.king_check = 1
+        else
+          piece.king_check = 0
+        end
+        #piece.save
     end
-    false
+
+    game.save
+
+    if flag 
+      true
+    else false
+    end
   end
 
   # def find_threat_and_determine_checkmate     ### DOES NOT WORK CORRECTLY
@@ -59,14 +77,16 @@ class King < Piece
 
   def checkmate?
     return false unless check?
-    return false if valid_move?(x_position, y_position) 
+    # Need to determine how to check all possible king moves that could move out of check
+    # or capture opponent, plus all other piece moves that could block check
+    #return false if valid_move?(x_position, y_position) 
     return false if stalemate?
     true
   end
 
 
   def stalemate?
-    return true if !check?
+    #return true if !check?
     return true if no_legal_next_move?
     return false
   end

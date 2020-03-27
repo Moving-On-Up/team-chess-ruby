@@ -51,33 +51,56 @@ class GamesController < ApplicationController
     end
     
     def show
+        #puts "BEFORE GAME"
         @game = current_game
+        #puts "BEFORE PIECES"
         @pieces = current_game.pieces.order(:y_position).order(:x_position).to_a
-        @king = current_game.pieces.find_by(piece_type: "King") 
-        
-        if @king.check?
-           return
-           @king.update_attributes(status: 'Check', white: true)
-           flash.alert 'Check'
-        elsif @king.check?
-           return
-           @king.update_attributes(status: 'Check', white: false)
-           flash.alert 'Check'
-        end
-            
-        if @king.checkmate?
-           return
-           @king.update_attributes(status: 'Checkmate', white: true)
-           flash.alert 'Checkmate'
-        elsif @king.checkmate?
-           return
-           @king.update_attributes(status: 'Checkmate', white: false)
-           flash.alert 'Checkmate'
-        elsif @king.stalemate? 
-           return
-           @king.update_attributes(status: 'Stalemate')
-           flash.alert 'Stalemate'
-        end    
+        #puts "BEFORE KINGS"
+        kings = current_game.pieces.where(piece_type: "King") 
+
+        #puts "BEFORE LOOP"
+
+        kings.each do |k| 
+
+            #puts "ENTERING LOOP"
+          
+            # if @king.checkmate?
+            #     puts "----- CHECKMATE -----"
+            #     @king.update_attributes(status: 'Checkmate')
+            #     flash.alert 'Checkmate'
+            #     # Set winner and loser IDs
+            #     if @king.white
+            #         @game.winner_player_id = @game.white_player_id
+            #         @game.loser_player_id = @game.black_player_id
+            #     else
+            #         @game.winner_player_id = @game.black_player_id
+            #         @game.loser_player_id = @game.winner_player_id
+            #     end
+            #     # Set game status and result (?)
+
+            #     redirect to root_path
+            if k.check?
+                #puts "----- CHECK -----"
+                #k.update_attributes(status: 'Check')
+                #k.update_attributes(king_check: 1)
+                flash.now[:notice] = k.color.capitalize + ' King in Check'
+                # return
+            else
+                #puts "----- NOT IN CHECK -----"
+            end
+
+            # elsif @king.stalemate? 
+            #     puts "----- STALEMATE -----"
+            #     @king.update_attributes(status: 'Stalemate')
+            #     flash.alert 'Stalemate'
+            #     # Set game status and result (?)
+                
+            #     #return
+            # end   
+        end 
+
+        #puts "EXITED LOOP"
+
     end
     
     def move
@@ -96,11 +119,6 @@ class GamesController < ApplicationController
             @y_position = params[:y_position]
             @piece.move_to!(@x_position,@y_position)
 
-            if @piece.piece_type == "Pawn"
-                puts "pawn_promotion? is #{@piece.pawn_promotion?}"
-                puts "piece type is #{@piece.piece_type}"
-            end
-
             if @piece.piece_type == "Pawn" && @piece.pawn_promotion?
                 puts "********** REDIRECTING TO PROMOTE *************"
                 redirect_to promote_path()
@@ -115,7 +133,7 @@ class GamesController < ApplicationController
                 :refresh => true
               })
             else 
-                flash[:alert] = "Not yet your turn!"
+                flash.now[:notice] = "Not yet your turn!"
             end
             redirect_to game_path(@game)
         end
@@ -138,7 +156,6 @@ class GamesController < ApplicationController
         @white = @game.pieces.find_by(id: @piece_id).white
         @x = params[:x_position]
         @y = params[:y_position]
-        #redirect_to game_path(@game)
     end
 
     def promoted
