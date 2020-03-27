@@ -123,12 +123,12 @@ RSpec.describe Piece, type: :model do
       expect(black_bishop.x_position).to eq nil
     end
 
-    it "should return false if a pawn tries to capture opponent vertically" do
-      pawn = game.pieces.find_by(name: "Pawn_white")
-      bishop = game.pieces.find_by(name: "Bishop_black")
-      bishop.update_attributes(x_position: 1, y_position: 6)
-      expect(pawn.up?(6) || pawn.down?(6)).to eq true
-    end
+    # it "should return false if a pawn tries to capture opponent vertically" do
+    #   pawn = game.pieces.find_by(name: "Pawn_white")
+    #   bishop = game.pieces.find_by(name: "Bishop_black")
+    #   bishop.update_attributes(x_position: 1, y_position: 6)
+    #   expect(pawn.up?(6) || pawn.down?(6)).to eq true
+    # end
 
     # it "should return true if a pawn tries to capture opponent diagonally" do
     #   pawn = FactoryBot.create(:pawn, x_position:2, y_position: 5, player_id: current_user.id, game_id: game.id, white:false)
