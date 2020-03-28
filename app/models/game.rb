@@ -94,6 +94,16 @@ class Game < ApplicationRecord
   def loser
     User.find_by_id(loser_player_id)
   end
+
+  def check?
+    kings = games.pieces.where(piece_type: "King")
+    kings.each do |k|
+      game.pieces.where(white: !k.white).each do |piece|
+        return true if piece.verify_valid_move(k.x_position, k.y_position)
+      end
+    end
+    false
+  end
  
  
 end

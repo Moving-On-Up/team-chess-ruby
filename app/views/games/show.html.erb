@@ -1,5 +1,10 @@
 <div class="background">
    <br />
+   <p style="text-align:center"><b>
+    <% flash.each do |type, msg| %>
+            <%= msg %>
+    <% end %>
+    </b></p>
     <p style="text-align:center"><b>Game Name: <%= @game.name %></b></p>
     <p style="text-align:center"><b>Logged In User: <%= User.find_by_id(current_user.id).email %></b></p>
     <p style="text-align:center"><b>Black Player: <%= User.find_by_id(@game.black_player_id).email %></b></p>
