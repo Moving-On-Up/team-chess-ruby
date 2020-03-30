@@ -21,7 +21,7 @@
             <% end %>
             <p style="text-align:center"><h2 style="color:white;">White Player: </h2><h2><%= User.find_by_id(@game.white_player_id).email %></h2></p>
             <% if @game.white_player_id == @game.turn_player_id %>
-                <p style="text-align:center"><h2 style="color:white">White's turn to move<</h2></p>
+                <p style="text-align:center"><h2 style="color:white">White's turn to move</h2></p>
             <% end %>
             <p style="text-align:center"><h2><a href="/">Return to Menu</a></h2></p>
         </div>
