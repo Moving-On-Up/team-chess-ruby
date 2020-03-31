@@ -186,6 +186,12 @@ background-color: white;
   margin-top: 50px;
 }
 
+
+.column {
+  flex: 1;
+  text-align: center;
+}
+
 label.checkbox {
 text-align: left !important;
 }
@@ -194,9 +200,16 @@ input[type=checkbox] {
 margin-right: 10px !important;
 }
 
+
+.flex-container {
+  display: flex;
+  flex-direction: row;
+}
+
 #flex-content-container {
    width: 100%;
  }
+
 
 .frosty {
   background: rgba(0, 0, 0, 0.4);

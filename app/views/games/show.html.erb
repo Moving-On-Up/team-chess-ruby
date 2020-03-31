@@ -1,25 +1,31 @@
 <div class="background">
-   <br />
-   <p style="text-align:center"><b>
-    <% flash.each do |type, msg| %>
-            <%= msg %>
-    <% end %>
-    </b></p>
-    <p style="text-align:center"><b>Game Name: <%= @game.name %></b></p>
-    <p style="text-align:center"><b>Logged In User: <%= User.find_by_id(current_user.id).email %></b></p>
-    <p style="text-align:center"><b>Black Player: <%= User.find_by_id(@game.black_player_id).email %></b></p>
+   <div class="flex-container">
+      <div class="column">
+        <h1 style="text-align:center">
+            <% flash.each do |type, msg| %>
+                    <%= msg %>
+            <% end %>
+            </h1>
+            <p style="text-align:center"><h2 style="color:black;">Game Name: </h2><h2><%= @game.name %><h2></p>
+            <p style="text-align:center"><h2 style="color:black;">Logged In User: </h2><h2><%= User.find_by_id(current_user.id).email %></h2></p>
+            <p style="text-align:center"><h2 style="color:black;">Black Player: </h2><h2><%= User.find_by_id(@game.black_player_id).email %></h2></p>
 
-    <% if @game.black_player_id == @game.turn_player_id %>
-        <p style="text-align:center"><b>It is black's turn to move</b></p>
-    <% end %>
+            <% if @game.black_player_id == @game.turn_player_id %>
+                <p style="text-align:center"><h2 style="color:black">Black's turn to move</h2></p>
+            <% end %>
 
-    <% if current_user.id == @game.turn_player_id %>
-        <%= simple_form_for @game, :url => game_forfeit_path(@game.id) do |f| %>
-            <p style="text-align:center"><%= f.submit 'Forfeit', class: 'btn btn-danger' %></p>
-        <% end %>
-    <% end %>
-
-    <div class="flex-container">
+            <% if current_user.id == @game.turn_player_id %>
+                <%= simple_form_for @game, :url => game_forfeit_path(@game.id) do |f| %>
+                    <p style="text-align:center"><%= f.submit 'Forfeit', class: 'btn btn-danger' %></p>
+                <% end %>
+            <% end %>
+            <p style="text-align:center"><h2 style="color:white;">White Player: </h2><h2><%= User.find_by_id(@game.white_player_id).email %></h2></p>
+            <% if @game.white_player_id == @game.turn_player_id %>
+                <p style="text-align:center"><h2 style="color:white">White's turn to move</h2></p>
+            <% end %>
+            <p style="text-align:center"><h2><a href="/">Return to Menu</a></h2></p>
+        </div>
+   
         <div class="container">
         <% for j in 1..8 %>
             <% for i in 1..8 do %>
@@ -44,12 +50,11 @@
             <% end %>
         <% end %>
         </div>
+        <div class="column">
+      </div>
     </div>
     <br />
-    <p style="text-align:center"><b>White Player: <%= User.find_by_id(@game.white_player_id).email %></b></p>
-    <% if @game.white_player_id == @game.turn_player_id %>
-        <p style="text-align:center"><b>It is white's turn to move</b></p>
-    <% end %>
+    
 
  <br />
 </div>
