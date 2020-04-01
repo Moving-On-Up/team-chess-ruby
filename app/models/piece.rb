@@ -139,13 +139,13 @@ class Piece < ApplicationRecord
 
       elsif new_x < current_piece.x_position && new_y < current_piece.y_position
         # Northwest move
-        puts "NORTHWEST MOVE"
+        #puts "NORTHWEST MOVE"
         
         for i in 1..x_distance-1 do
           #puts "i is #{i}, j is #{j}"
           if !game.pieces.where(x_position: current_piece.x_position-i, y_position: current_piece.y_position-i).blank?
-            puts "not nil piece is #{game.pieces.where(x_position: current_piece.x_position-i, y_position: current_piece.y_position-i)}"
-            puts "TRUE!"
+            #puts "not nil piece is #{game.pieces.where(x_position: current_piece.x_position-i, y_position: current_piece.y_position-i)}"
+            #puts "TRUE!"
             return true
           end
         end

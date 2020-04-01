@@ -27,23 +27,23 @@ RSpec.describe Piece, type: :model do
       expect(black_queen.is_obstructed?(8,1)).to eq true
     end
 
-    # it "should return true when a piece is obstructed vertically" do
-    #   white_pawn = FactoryBot.create(:pawn, x_position: 1..8, y_position: 7, white:true, game_id: game.id)
-    #   black_pawn = FactoryBot.create(:pawn, x_position: 1..8, y_position: 2, white:false, game_id: game.id)
-    #   #expect(white_rook.is_obstructed?(8,7)).to eq true
-    #   expect(black_rook.is_obstructed?(8,2)).to eq true
-    #   expect(white_queen.is_obstructed?(4,4)).to eq true
-    #   expect(black_queen.is_obstructed?(4,4)).to eq true
-    # end
+    #it "should return true when a piece is obstructed vertically" do
+    #  white_pawn = FactoryBot.create(:pawn, x_position: 1..8, y_position: 7, white:true, game_id: game.id)
+    #  black_pawn = FactoryBot.create(:pawn, x_position: 1..8, y_position: 2, white:false, game_id: game.id)
+    #  #expect(white_rook.is_obstructed?(8,7)).to eq true
+    #  #expect(black_rook.is_obstructed?(8,2)).to eq true
+    #  expect(white_queen.is_obstructed?(4,4)).to eq true
+    #  expect(black_queen.is_obstructed?(4,4)).to eq true
+    #end
 
-    # it "should return true when a piece is obstructing diagonally" do
-    #   white_bishop = FactoryBot.create(:bishop, x_position: 2, y_position: 6, white:true, game_id: game.id)
-    #   black_bishop = FactoryBot.create(:bishop, x_position: 6, y_position: 3, white:false, game_id: game.id)
-    #   #expect(white_queen.is_obstructed?(2,6)).to eq true
-    #   expect(black_queen.is_obstructed?(6,3)).to eq true
-    #   expect(white_bishop.is_obstructed?(4,8)).to eq true
-    #   expect(black_bishop.is_obstructed?(4,1)).to eq true
-    # end
+    it "should return true when a piece is obstructing diagonally" do
+      white_bishop = FactoryBot.create(:bishop, x_position: 2, y_position: 6, white:true, game_id: game.id)
+      black_bishop = FactoryBot.create(:bishop, x_position: 6, y_position: 3, white:false, game_id: game.id)
+      expect(white_queen.is_obstructed?(2,6)).to eq true
+      expect(black_queen.is_obstructed?(6,3)).to eq true
+      expect(white_bishop.is_obstructed?(4,8)).to eq true
+      expect(black_bishop.is_obstructed?(4,1)).to eq true
+    end
   end
 
   describe "#remove_piece" do
@@ -123,12 +123,12 @@ RSpec.describe Piece, type: :model do
       expect(black_bishop.x_position).to eq nil
     end
 
-    # it "should return false if a pawn tries to capture opponent vertically" do
-    #   pawn = game.pieces.find_by(name: "Pawn_white")
-    #   bishop = game.pieces.find_by(name: "Bishop_black")
-    #   bishop.update_attributes(x_position: 1, y_position: 6)
-    #   expect(pawn.up?(6) || pawn.down?(6)).to eq true
-    # end
+    it "should return false if a pawn tries to capture opponent vertically" do
+      pawn = game.pieces.find_by(name: "Pawn_white")
+      bishop = game.pieces.find_by(name: "Bishop_black")
+      bishop.update_attributes(x_position: 1, y_position: 6)
+      expect(pawn.up?(1, 6) || pawn.down?(1, 6)).to eq true
+    end
 
     # it "should return true if a pawn tries to capture opponent diagonally" do
     #   pawn = FactoryBot.create(:pawn, x_position:2, y_position: 5, player_id: current_user.id, game_id: game.id, white:false)

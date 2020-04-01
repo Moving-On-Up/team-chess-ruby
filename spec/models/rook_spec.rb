@@ -46,7 +46,6 @@ RSpec.describe Rook, type: :model do
       expect(rook.valid_move?(5, 7)).to eq(true)
     end
 
-
     it "should return true to move to a non-same-color square" do
       rook = FactoryBot.create(:rook, x_position:5, y_position: 5, player_id: current_user.id, game_id: game.id, white:false)
       expect(rook.valid_move?(2, 3)).to eq(true)

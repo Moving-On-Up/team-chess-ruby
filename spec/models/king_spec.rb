@@ -28,9 +28,9 @@ RSpec.describe King, type: :model do
     expect(king.valid_move?(6, 6)).to eq(true)
    end
 
-  #  it "should return false to move two squares forward" do
-  #   expect(king.valid_move?(7, 5)).to eq(false)
-  #  end
+   it "should return false to move two squares forward" do
+    expect(king.valid_move?(7, 5)).to eq(false)
+   end
 
   end
 
@@ -82,8 +82,6 @@ RSpec.describe King, type: :model do
       game.reload
       #expect(game.state).to eq "end"
     end
-
-
      
     it "should return false if the king tries to move into check by vertical pawn capture" do
       black_king = FactoryBot.create(:king, x_position:8, y_position: 1, game: game, white: false)
