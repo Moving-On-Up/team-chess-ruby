@@ -2,7 +2,7 @@
    <br />
     <div class="booyah-box col-10 offset-1">
       <% if current_user.avatar.attached? %>
-        <%= image_tag url_for(current_user.avatar) %>
+        <%= image_tag current_user.avatar.variant(resize: "100x100") %>
       <%end %>
       <h1>My Dashboard</h1>
       

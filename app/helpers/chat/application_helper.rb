@@ -36,7 +36,7 @@ module Chat
     def chat_avatar(user)
       if user.avatar.attached?
         #if main_app != nil
-          image_tag(url_for(user.avatar), class: "chat__user-avatar")
+          image_tag(Rails.application.routes.url_helpers.url_for(user.avatar), class: "chat__user-avatar")
         # elsif engine != nil
         #   image_tag(engine.url_for(user.avatar), class: "chat__user-avatar")
         #end
