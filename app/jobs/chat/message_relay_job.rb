@@ -2,6 +2,7 @@
 
 module Chat
   class MessageRelayJob < ApplicationJob
+
     def perform(message_id)
       message = Chat::Message.find(message_id)
       broadcast(
@@ -10,8 +11,9 @@ module Chat
     end
 
     def render_message(message)
+      #current_id ||= ::User.where.not(id: message.user).first
       {
-        user: message.user_id, avatar: renderer.chat_avatar(message.user).to_s
+        user: message.user_id, avatar: renderer.chat_avatar_3(message.user).to_s
       }.merge(content(message))
     end
 

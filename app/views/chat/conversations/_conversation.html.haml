@@ -13,7 +13,7 @@
         - if conversation.users.to_a.size > 2
           Group Chat
         - else
-          = conversation.users.where.not(id: current_user.id).first.email
+          = conversation.users.where.not(id: current_user.id).first.first_name
       .flex
       .date
         - if conversation.last_message.present?

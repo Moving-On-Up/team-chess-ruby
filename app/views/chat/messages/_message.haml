@@ -2,9 +2,9 @@
   - if message.user == previous&.user
     .transcript_placeholder_avatar
   - else
-    = chat_avatar(message.user)
+    = chat_avatar_2(message.user)
   .message{ class: ("image" if message.image?).to_s }
     - if message.image?
-      = image_tag message.image.attachment
+      = image_tag message.image.url
     - else
       .content= raw(message.text)
