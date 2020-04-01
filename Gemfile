@@ -16,6 +16,12 @@ gem 'uglifier', '>= 1.3.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'mini_racer', platforms: :ruby
 
+gem 'chat'
+
+gem 'haml'
+
+gem 'haml-rails'
+
 gem 'firebase', '~> 0.2.8'
 
 gem 'google-cloud-firestore', '~> 1.4.0'

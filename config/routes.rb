@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
-  devise_for :users
+  mount Chat::Engine => "/chat", as: "chat"
+  devise_for :users, :controllers => { registrations: 'registrations' }
   root 'home#index'
   get "/about", :controller => "home", :action => "about"
   resources :games do
@@ -7,8 +8,6 @@ Rails.application.routes.draw do
   end
   resources :pieces , only: :update
   resources :users, only: :show
-
-  #post 'games/:id/:piece_id/:x_position/:y_position', :to => 'games#move', :as => 'move'
 
   post 'games/:game_id/:piece_id/:x_position/:y_position', :to => 'games#move', :as => 'move'
   get 'games/:game_id/promote/:piece_id/:x_position/:y_position', :to => 'games#promote', :as => 'promote'
