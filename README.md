@@ -4,7 +4,7 @@ Team MovingOnUp! Chess Application - Agile Team Development
 
 Play it for yourself at https://movingonup-chess.herokuapp.com/!
 
-This is a fully functional two-player chess application built as a capstone project for The UT Austine Online Bootcamp full-stack development program. Under the guidance of a senior software engineer, we had weekly Agile team meetings for code reviews, sprint planning, and feature assignments. Users are able to create accounts and play games against each other.
+This is a fully functional two-player chess application built as a capstone project for The UT Austin Online Bootcamp full-stack development program. Under the guidance of a senior software engineer, we had weekly Agile team meetings for code reviews, sprint planning, and feature assignments. Users are able to create accounts and play games against each other.
 
 The following tools were used to create this application:
 
