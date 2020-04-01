@@ -18,6 +18,8 @@ gem 'uglifier', '>= 1.3.0'
 
 gem 'mini_magick'
 
+gem 'aws-sdk-s3'
+
 gem 'chat'
 
 gem 'haml'
