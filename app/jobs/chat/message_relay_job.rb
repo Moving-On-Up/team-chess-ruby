@@ -13,7 +13,7 @@ module Chat
     def render_message(message)
       #current_id ||= ::User.where.not(id: message.user).first
       {
-        user: message.user_id, avatar: renderer.chat_avatar_3(message.user).to_s
+        user: message.user_id, avatar: renderer.chat_avatar(message.user).to_s
       }.merge(content(message))
     end
 

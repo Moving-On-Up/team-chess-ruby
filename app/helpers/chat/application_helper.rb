@@ -45,31 +45,31 @@ module Chat
       end
     end
 
-    def chat_avatar_2(user)
-      if user.avatar.attached?
-        #if main_app != nil
-          image_tag(main_app.url_for(user.avatar), class: "chat__user-avatar")
-        # elsif engine != nil
-        #   image_tag(engine.url_for(user.avatar), class: "chat__user-avatar")
-        #end
-      else
-        MaterialIcon.new.css_class("chat__user-avatar").person.to_s
-      end
-    end
+    # def chat_avatar_2(user)
+    #   if user.avatar.attached?
+    #     #if main_app != nil
+    #       image_tag(Rails.application.routes.url_helpers.url_for(user.avatar), class: "chat__user-avatar")
+    #     # elsif engine != nil
+    #     #   image_tag(engine.url_for(user.avatar), class: "chat__user-avatar")
+    #     #end
+    #   else
+    #     MaterialIcon.new.css_class("chat__user-avatar").person.to_s
+    #   end
+    # end
 
-    def chat_avatar_3(user)
-      if user.avatar.attached?
-        # puts "user_obj is #{user_obj}"
-        # puts "user_obj.avatar is #{user_obj.avatar}"
-        #if main_app != nil
-        image_tag(Rails.application.routes.url_helpers.url_for(user.avatar), class: "chat__user-avatar")
-        # elsif engine != nil
-        #   image_tag(engine.url_for(user.avatar), class: "chat__user-avatar")
-        #end
-      else
-        MaterialIcon.new.css_class("chat__user-avatar").person.to_s
-      end
-    end
+    # def chat_avatar_3(user)
+    #   if user.avatar.attached?
+    #     # puts "user_obj is #{user_obj}"
+    #     # puts "user_obj.avatar is #{user_obj.avatar}"
+    #     #if main_app != nil
+    #     image_tag(Rails.application.routes.url_helpers.url_for(user.avatar), class: "chat__user-avatar")
+    #     # elsif engine != nil
+    #     #   image_tag(engine.url_for(user.avatar), class: "chat__user-avatar")
+    #     #end
+    #   else
+    #     MaterialIcon.new.css_class("chat__user-avatar").person.to_s
+    #   end
+    # end
 
     def chat_list
       @chat_list ||= current_user.conversations.includes(:users).order(
