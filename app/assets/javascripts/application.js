@@ -11,12 +11,13 @@
 // about supported directives.
 //
 
-//= require jquery
+
 //= require rails-ujs
+//= require jquery
+//= require jquery-ui
 //= require activestorage
 //= require popper
 //= require tether
 //= require bootstrap-sprockets
 //= require_tree .
-//= require jquery-ui
 //= require chat
