@@ -16,6 +16,16 @@ gem 'uglifier', '>= 1.3.0'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'mini_racer', platforms: :ruby
 
+gem 'mini_magick'
+
+gem 'aws-sdk-s3'
+
+gem 'chat'
+
+gem 'haml'
+
+gem 'haml-rails'
+
 gem 'firebase', '~> 0.2.8'
 
 gem 'google-cloud-firestore', '~> 1.4.0'
@@ -24,8 +34,9 @@ gem 'google-cloud-firestore', '~> 1.4.0'
 gem 'coffee-rails', '~> 4.2'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.5'
-# Use Redis adapter to run Action Cable in production
-# gem 'redis', '~> 4.0'
+
+#Use Redis adapter to run Action Cable in production
+gem 'redis', '~> 4.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -65,7 +76,7 @@ end
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
-gem 'jquery-rails'
+#gem 'jquery-rails'
 gem 'popper_js', '~> 1.11.1'
 gem 'bootstrap', '4.0.0.alpha6'
 gem 'simple_form'

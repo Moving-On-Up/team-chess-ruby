@@ -1,11 +1,22 @@
 <div class="background">
    <br />
     <div class="booyah-box col-10 offset-1">
-      <h1>My Dashboard</h1><h2><%= @user.email %></h2>
+      <% if current_user.avatar.attached? %>
+        <%= image_tag current_user.avatar.variant(resize: "100x100") %>
+      <%end %>
+      <h1>My Dashboard</h1>
+      
+      <h2><%= @user.first_name %> <%= @user.last_name %></h2>
+      
+      <h2><%= @user.email %></h2>
 
       <h3>Member Since: <%= @user.created_at.strftime("%B %d, %Y") %></h3>
 
       <h4><%= @user.games.count %> total games</h4>
+
+      <h4>Wins: <%= @user.games.where(winner_player_id: @user.id).count %></h4>
+
+      <h4>Losses: <%= @user.games.where(winner_player_id: @user.id).count %></h4>
 
         <% @user.games.each do |game| %>
              <% if current_user && current_user.id == game.white_player_id && game.result != nil || current_user && current_user.id == game.black_player_id && game.result != nil %>
