@@ -1,0 +1,9 @@
+$('#brd').html("<%= j(render "board", locals: {:game => @game}) %>");
+init_draggables_and_droppables();
+$.ajax({
+        type: "GET",
+        url: "<%= @game.id %>/load_display",
+        success: function(){
+        console.log("display refresh success"); 
+        }
+    });
