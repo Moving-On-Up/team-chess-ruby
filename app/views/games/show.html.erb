@@ -1,55 +1,13 @@
 <div class="background">
    <div class="flex-container">
-      <div class="column">
-        <h1 style="text-align:center">
-            <% flash.each do |type, msg| %>
-                    <%= msg %>
-            <% end %>
-            </h1>
-            <p style="text-align:center"><h2 style="color:black;">Game Name: </h2><h2><%= @game.name %><h2></p>
-            <p style="text-align:center"><h2 style="color:black;">Logged In User: </h2><h2><%= User.find_by_id(current_user.id).email %></h2></p>
-            <p style="text-align:center"><h2 style="color:black;">Black Player: </h2><h2><%= User.find_by_id(@game.black_player_id).email %></h2></p>
-
-            <% if @game.black_player_id == @game.turn_player_id %>
-                <p style="text-align:center"><h2 style="color:black">Black's turn to move</h2></p>
-            <% end %>
-
-            <% if current_user.id == @game.turn_player_id %>
-                <%= simple_form_for @game, :url => game_forfeit_path(@game.id) do |f| %>
-                    <p style="text-align:center"><%= f.submit 'Forfeit', class: 'btn btn-danger' %></p>
-                <% end %>
-            <% end %>
-            <p style="text-align:center"><h2 style="color:white;">White Player: </h2><h2><%= User.find_by_id(@game.white_player_id).email %></h2></p>
-            <% if @game.white_player_id == @game.turn_player_id %>
-                <p style="text-align:center"><h2 style="color:white">White's turn to move</h2></p>
-            <% end %>
-            <p style="text-align:center"><h2><a href="/">Return to Menu</a></h2></p>
+      <div class="column" id="left-column">
+        <%= render "display", locals: {:game => @game} %>
         </div>
    
-        <div class="container">
-        <% for j in 1..8 %>
-            <% for i in 1..8 do %>
-                <% if j % 2 == 1 %>
-                    <% if i % 2 == 1 %>
-                        <div id="<%= i.to_s + j.to_s %>" class = "square whiteSquare droppable">
-                    <% else %>
-                        <div id="<%= i.to_s + j.to_s %>" class = "square brownSquare droppable">
-                    <% end %>
-                <% else %>
-                    <% if i % 2 == 1 %>
-                        <div id="<%= i.to_s + j.to_s %>" class="square brownSquare droppable">
-                    <% else %>
-                        <div id="<%= i.to_s + j.to_s %>" class="square whiteSquare droppable">
-                    <% end %>
-                <% end %>
-                <% if @game.contains_piece?(i, j) %>
-                    <%= image_tag(@game.pieces.find_by(x_position: i, y_position: j).name + ".png", 
-                        :class => "draggable", :id => @game.pieces.find_by(x_position: i, y_position: j).id) %>
-                <% end %>
-                </div>
-            <% end %>
-        <% end %>
+        <div class="container" id="brd">
+        <%= render "board", locals: {:game => @game} %>
         </div>
+
         <div class="column">
         <!--  background is the background color of the launch fab -->
         <!--  color is the icon color on the launch fab. Can be light or dark -->
@@ -73,23 +31,38 @@
 <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-database.js"></script>
 
 <script>
-    $(function() {
 
-        $(".draggable").draggable();
+    function init_draggables_and_droppables() {
+
+        $(".draggable").draggable({ revert: 'invalid' });
         $(".droppable").droppable({
             drop: function( event, ui ) {
+
                 var drop_target_id = event.target.id;
                 var target_x = drop_target_id[0];
                 var target_y = drop_target_id[1];
                 var piece_id = ui.draggable.prop('id');
                 var path = "/games/<%= @game.id.to_s %>/" + piece_id + "/" + target_x + "/" + target_y;
-                var $form =  $('#move');
-                $form.attr('action', path); 
                 console.log(path);
-                $form.submit();         
+                var data = $("#move").serializeArray();//serialize form inputs
+
+                $.ajax({
+                    data: data,
+                    type: "POST",
+                    url: path,
+                    success: function(){
+                    console.log("board refresh success"); 
+                    }
+                });
+       
             }     
         });
 
+    }
+
+    jQuery(function($) {
+        init_draggables_and_droppables();
+    
         //Your web app's Firebase configuration
         var firebaseConfig = {
             apiKey: "AIzaSyCa0OdzNtqg2CRUQibJT8ZxYjocMs8M3lQ",
@@ -109,14 +82,16 @@
         gamesRef.on('child_changed', function(snapshot) {
 
             console.log("child changed");
-            //console.log("snapshot value is " + snapshot.val());
 
-            location.reload(true);
-            
-            // $('#board').load(location.href+" #board>*","");
-            // $('#current_player').load(location.href+" #current_player>*","");
-                //console.log(snapshot.val());  // Alerts "San Francisco"
-            //$('#scriptID').load(location.href+" #scriptID>*","");
+            $.ajax({
+                    type: "GET",
+                    url: "<%= @game.id %>/load_board",
+                    success: function(){
+                    console.log("load board refresh success"); 
+                    }
+                });
+    
+
         }, function(error) {
             console.error(error);
         });

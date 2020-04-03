@@ -108,10 +108,14 @@ class GamesController < ApplicationController
         @pieces = @game.pieces
         @piece = Piece.find_by_id(params[:piece_id])
         @current_user = current_user.id
+        puts "current_user is #{@current_user}"
         if @game.turn_player_id == @current_user
+            puts "if true"
             firebase_url    = 'https://fir-chess-270721.firebaseio.com/';
             firebase_secret = '8g8o1V0UsNy7O1I4kcRXlClM8vo4V4Yi44pQOLqt';
             firebase = Firebase::Client.new(firebase_url, firebase_secret)
+
+            puts "firebase is #{firebase}"
 
             path = "games/" + @game.firebase_id;
     
@@ -125,17 +129,29 @@ class GamesController < ApplicationController
                 return
             end
 
+            puts "Before firebase";
+
             response = firebase.update(path, {
                 :refresh => false
               })
 
+              puts "firebase set to false";
+
               response = firebase.update(path, {
                 :refresh => true
               })
+
+              puts "firebase set to true";
             else 
-                flash.now[:notice] = "Not yet your turn!"
+                #flash.now[:notice] = "Not yet your turn!"
+                puts "nope"
             end
-            redirect_to game_path(@game)
+            puts "end"
+            #redirect_to game_path(@game)
+
+            respond_to do |format|
+                format.js
+            end
         end
 
     def forfeit
@@ -173,7 +189,22 @@ class GamesController < ApplicationController
 
         redirect_to game_path(@game)
     end
+
+    def load_board
+        @game = Game.find_by_id(params[:game_id])
+
+        respond_to do |format|
+            format.js
+        end
+    end
    
+    def load_display
+        @game = Game.find_by_id(params[:game_id])
+
+        respond_to do |format|
+            format.js
+        end
+    end
 
     private
     
