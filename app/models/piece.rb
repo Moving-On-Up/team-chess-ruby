@@ -364,25 +364,10 @@ class Piece < ApplicationRecord
     self.game.save
   end
 
-  def verify_valid_move(new_x, new_y)
-    # if !self.valid_move?(new_x, new_y, self.id, self.white == true)
-    #   puts "***** VALID_MOVE? FALSE **********"
-    # end
-    # if !(self.is_obstructed?(new_x, new_y) == false)
-    #   puts "****** IS OBSTRUCTED ******"
-    # end
-    # if !(self.contains_own_piece?(new_x, new_y) == false)
-    #   puts "******* CONTAINS OWN PIECE *********"
-    # end
-    # if !(king_not_moved_to_check_or_king_not_kept_in_check?(new_x, new_y) == true)  
-    #   puts "********  KING MOVED TO OR KEPT IN CHECK ********"
-    # end  
+  def verify_valid_move(new_x, new_y) 
     if self.valid_move?(new_x, new_y, self.id, self.white == true) &&
       (self.is_obstructed?(new_x, new_y) == false) &&
       (self.contains_own_piece?(new_x, new_y) == false) ||
-      #&&
-      #||
-      #(king_not_moved_to_check_or_king_not_kept_in_check?(new_x, new_y) == true) ||
       (self.piece_type == "Pawn" && self.pawn_promotion?)
       return true
     else
@@ -418,8 +403,6 @@ class Piece < ApplicationRecord
     #binding.pry
 
     # Both scenarios can be checked by moving to new coordinates then checking for check
-
-    #if self.game.pieces.where(white: !self.white, king_check: 1) > 0
     original_x = self.x_position
     original_y = self.y_position
     self.x_position = new_x
@@ -430,8 +413,6 @@ class Piece < ApplicationRecord
       self.x_position = original_x
       self.y_position = original_y
       self.save
-      #current_king.check?
-      #flash.now[:notice] = 'Move Puts or Keeps ' + current_king.color.capitalize + ' King In Check'
       return false
     else
       self.x_position = original_x
@@ -439,29 +420,7 @@ class Piece < ApplicationRecord
       self.save
       return true
     end
-    #end
 
-    # king = self.game.pieces.where(:piece_type =>"King").where(:player_id => self.game.turn_player_id)[0]
-    # if self.piece_type == "King"
-    #   if self.check?(piece_params[:x_position].to_i, piece_params[:y_position].to_i, self.id, self.white == true).blank?
-    #     king.king_check = 0
-    #     return true
-    #   else
-    #     return false
-    #   end
-    # elsif self.piece_type != "King" && king.king_check == 1
-    #   if ([[piece_params[:x_position].to_i, piece_params[:y_position].to_i]] & king.check?(king.x_position, king.y_position).build_obstruction_array(king.x_position, king.y_position)).count == 1 ||
-    #     (self.valid_move?(piece_params[:x_position].to_i, piece_params[:y_position].to_i, self.id, self.white == true) == true &&
-    #     king.check?(king.x_position, king.y_position).x_position == piece_params[:x_position].to_i &&
-    #     king.check?(king.x_position, king.y_position).y_position == piece_params[:y_position].to_i)
-    #     king.king_check = 0 
-    #     return true
-    #   else
-    #     return false
-    #   end
-    # else
-    #   return true
-    # end
   end
 
   def update_moves(new_x, new_y)

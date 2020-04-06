@@ -43,7 +43,6 @@ RSpec.describe King, type: :model do
     it 'should return true when king is in check' do
         rook = FactoryBot.create(:rook, x_position: 1, y_position: 3, white: false, game: game)
         expect(king.check?).to be true
-        # expect(controller).to flash[:notice]
     end
   end
 
@@ -60,7 +59,6 @@ RSpec.describe King, type: :model do
       black_piece3 = FactoryBot.create(:pawn, player_id: current_user2.id,x_position:2, y_position: 4, game_id: game.id, white:false)
       black_piece4 = FactoryBot.create(:pawn, player_id: current_user2.id,x_position:2, y_position: 5, game_id: game.id, white:false) 
       expect(black_king.checkmate?).to eq false
-      #expect(rook.status).to eq 201
     end
     
     it "should return true if opponent king is in check and can move out of check" do
@@ -80,7 +78,6 @@ RSpec.describe King, type: :model do
       white_queen = FactoryBot.create(:queen, player_id: current_user.id,x_position:7, y_position: 4, game_id: game.id, white:true)
       expect(white_queen.move_to!(7, 3)).to eq true
       game.reload
-      #expect(game.state).to eq "end"
     end
      
     it "should return false if the king tries to move into check by vertical pawn capture" do

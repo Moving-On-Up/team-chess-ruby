@@ -86,7 +86,6 @@ class Game < ApplicationRecord
     User.find_by_id(black_player_id)
   end
 
- 
   def winner
     User.find_by_id(winner_player_id)
   end
@@ -104,6 +103,5 @@ class Game < ApplicationRecord
     end
     false
   end
- 
  
 end
