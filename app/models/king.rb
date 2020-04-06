@@ -10,21 +10,6 @@ class King < Piece
     (legal_to_castle?(new_x_position, new_y_position) && (left?(new_x_position) || right?(new_x_position)) && x_distance == 2)
   end
 
-  # def check?(x_position, y_position, id = nil, white = nil)
-  #   game.pieces.each do | f |
-  #     if f.player_id != self.player_id && f.x_position != nil
-  #       if f.valid_move?(x_position, y_position, id, white) == true && 
-  #          f.is_obstructed?(x_position, y_position) == false 
-  #           f.king_check = 1
-  #           f.save
-  #           return f ##true
-  #           break
-  #       end
-  #     end
-  #   end
-  #   return false   
-  # end
-
   def check?
     # puts "***********************************************************"
     # puts "self.white is #{self.white}"
@@ -50,31 +35,6 @@ class King < Piece
     end
   end
 
-  # def find_threat_and_determine_checkmate     ### DOES NOT WORK CORRECTLY
-  #   #binding.pry
-  #   threat = check?(x_position, y_position)
-  #   if checkmate?(threat)
-  #     return true
-  #   end
-  #   return false
-  # end
-
-  # def check_mate?(threat)
-  #   obstruction_array = threat.build_obstruction_array(x_position, y_position)
-  #   # check if king can capture the threat
-  #   if valid_move?(threat.x_position, threat.y_position) == true && check?(threat.x_position, threat.y_position).blank? ||
-  #   # check if any other piece can move to block the king, or capture the threat
-  #     can_block_king?(threat, obstruction_array) == true ||
-  #   # check if king has many moves left
-  #     any_moves_left?(threat, obstruction_array) == true
-  #     #binding.pry
-  #     return false
-  #   else
-  #     #binding.pry
-  #     return true
-  #   end
-  # end
-
   def checkmate?
     return false unless check?
     # Need to determine how to check all possible king moves that could move out of check
@@ -83,7 +43,6 @@ class King < Piece
     return false if stalemate?
     true
   end
-
 
   def stalemate?
     #return true if !check?
@@ -116,8 +75,6 @@ class King < Piece
       @rook_for_castling.update_attributes(x_position: 6, move_number: move_number+1)
     end
   end
-
-  
 
   def any_moves_left?(threat = nil, obstruction_array = nil)
     possible_positions = []
@@ -164,7 +121,6 @@ class King < Piece
     return false
   end
   
-
   def no_legal_next_move?
     myPieces = game.pieces.where(piece_type: "King")
     myPieces.each do |piece|
