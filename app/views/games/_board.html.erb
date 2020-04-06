@@ -1,0 +1,22 @@
+<% for j in 1..8 %>
+    <% for i in 1..8 do %>
+        <% if j % 2 == 1 %>
+            <% if i % 2 == 1 %>
+                <div id="<%= i.to_s + j.to_s %>" class = "square whiteSquare droppable">
+            <% else %>
+                <div id="<%= i.to_s + j.to_s %>" class = "square brownSquare droppable">
+            <% end %>
+        <% else %>
+            <% if i % 2 == 1 %>
+                <div id="<%= i.to_s + j.to_s %>" class="square brownSquare droppable">
+            <% else %>
+                <div id="<%= i.to_s + j.to_s %>" class="square whiteSquare droppable">
+            <% end %>
+        <% end %>
+        <% if @game.contains_piece?(i, j) %>
+            <%= image_tag(@game.pieces.find_by(x_position: i, y_position: j).name + ".png", 
+                :class => "draggable", :id => @game.pieces.find_by(x_position: i, y_position: j).id) %>
+        <% end %>
+        </div>
+    <% end %>
+<% end %>

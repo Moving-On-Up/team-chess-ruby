@@ -1,0 +1,2 @@
+$('#act').html("<%= j(render "active", locals: {:games => @games}) %>");
+$('#ava').html("<%= j(render "available", locals: {:games => @games, :user => @user}) %>");

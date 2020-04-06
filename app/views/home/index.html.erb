@@ -8,17 +8,11 @@
 
   </div>
 
-  <% @games.active.each do |game| %>
-    <div class="booyah-box col-10 offset-1">
-      <h1><%= game.name %></h1>
-      <% if game.user.present? %>
-        <small><%= game.user.email %></small>
-      <% end %>
-      <%= simple_form_for game, :url => game_path(game.id), :method => :get do |f| %>
-        <%= f.submit 'Play', class: 'btn btn-danger' %>
-      <% end %>
-   </div>
-  <% end %>
+  <div id="act">
+
+  <%= render "active", locals: {:games => @games} %>
+
+  </div>
 
   <div class="col-10 offset-1">
 
@@ -26,21 +20,19 @@
 
   </div>
 
-  
-  <% @games.available.each do |game| %>
-    <div class="booyah-box col-10 offset-1">
-        <h1><%= game.name %></h1>
-        <% if game.user.present? %>
-          <small><%= game.user.email %></small>
-        <% end %>
-        <%= simple_form_for game do |f| %>
-          <% if game.user.present? %>
-              <% if game.user.id != @current_user.id %>
-                  <%= f.submit 'Join', class: 'btn btn-danger' %>
-              <% end %>
-          <% end %>
-        <% end %>
-      </div>
-    <% end %>
-  <br />
-</div>
+  <div id="ava">
+
+  <%= render "available", locals: {:games => @games} %>
+
+  </div>
+
+  <script>
+
+  var timelyrefreshAvailable = function(){
+    $.ajax({
+    url: "load_available"
+    })
+  };
+  setInterval(timelyrefreshAvailable,80000);
+
+  </script>
