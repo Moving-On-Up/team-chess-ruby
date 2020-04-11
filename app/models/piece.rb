@@ -1,5 +1,4 @@
 class Piece < ApplicationRecord
-  #after_initialize :find_piece, :verify_two_players, :verify_player_turn, :verify_valid_move
 
   belongs_to :user, required: false
   belongs_to :game
@@ -80,9 +79,7 @@ class Piece < ApplicationRecord
       return false
     end
 
-    if up?(new_x, new_y)
-      # for current y + 1 up to new_y - 1, check for obstructions
-      
+    if up?(new_x, new_y) 
       for i in current_piece.y_position+1..new_y-1 do 
         if game.pieces.find_by(x_position: new_x, y_position: i) != nil
           return true
@@ -106,59 +103,34 @@ class Piece < ApplicationRecord
 
       for i in current_piece.x_position+1..new_x-1 do 
         if game.pieces.find_by(x_position: i, y_position: new_y) != nil
-          #puts "Square #{i},#{new_y} is not nil"
           return true
         end
       end
     elsif diagonal?(x_distance, y_distance)
       if new_x > current_piece.x_position && new_y < current_piece.y_position
-        # Northeast move
-        #puts "NORTHEAST MOVE"
-
         for i in 1..x_distance-1 do
-          #puts "i is #{i}, j is #{j}"
           if !game.pieces.where(x_position: current_piece.x_position+i, y_position: current_piece.y_position-i).blank?
-            # puts "not nil piece is #{game.pieces.where(x_position: current_piece.x_position-i, y_position: current_piece.y_position-i)}"
-            # puts "TRUE!"
             return true
           end
         end
 
       elsif new_x > current_piece.x_position && new_y > current_piece.y_position
-        # Southeast move
-        #puts "SOUTHEAST MOVE"
-
         for i in 1..x_distance-1 do
-          #puts "i is #{i}, j is #{j}"
           if !game.pieces.where(x_position: current_piece.x_position+i, y_position: current_piece.y_position+i).blank?
-            # puts "not nil piece is #{game.pieces.where(x_position: current_piece.x_position-i, y_position: current_piece.y_position-i)}"
-            # puts "TRUE!"
             return true
           end
         end
 
       elsif new_x < current_piece.x_position && new_y < current_piece.y_position
-        # Northwest move
-        #puts "NORTHWEST MOVE"
-        
         for i in 1..x_distance-1 do
-          #puts "i is #{i}, j is #{j}"
           if !game.pieces.where(x_position: current_piece.x_position-i, y_position: current_piece.y_position-i).blank?
-            #puts "not nil piece is #{game.pieces.where(x_position: current_piece.x_position-i, y_position: current_piece.y_position-i)}"
-            #puts "TRUE!"
             return true
           end
         end
 
       else
-        # Southwest move
-        #puts "SOUTHWEST MOVE"
-
         for i in 1..x_distance-1 do
-          #puts "i is #{i}, j is #{j}"
           if !game.pieces.where(x_position: current_piece.x_position-i, y_position: current_piece.y_position+i).blank?
-            # puts "not nil piece is #{game.pieces.where(x_position: current_piece.x_position-i, y_position: current_piece.y_position-i)}"
-            # puts "TRUE!"
             return true
           end
         end
@@ -246,58 +218,45 @@ class Piece < ApplicationRecord
     new_x = new_x.to_i
     new_y = new_y.to_i
     if !correct_turn?
-      puts "*********** INCORRECT TURN **************"
       return false
     else
       if !verify_valid_move(new_x, new_y)
-        puts "*********** NOT A VALID MOVE **************"
          return false
-
       else
-
         if (king_not_moved_to_check_or_king_not_kept_in_check?(new_x, new_y) == false) 
-        # puts "First test is #{!game.pieces.where(x_position: new_x, y_position: new_y).blank?}"
-        # puts "Second test is #{game.pieces.where(x_position: new_x, y_position: new_y).first.king_check == 1}"
-        # puts "Third test is #{game.pieces.where(white: !self.white?, king_check: 1).count == 1}"
           if !game.pieces.where(x_position: new_x, y_position: new_y).blank? &&
             game.pieces.where(x_position: new_x, y_position: new_y).first.king_check == 1 &&
             game.pieces.where(white: !self.white?, king_check: 1).count == 1
-            puts "Proceed"
           else
-            puts "********  KING MOVED TO OR KEPT IN CHECK ********"
             return false
           end
         end
 
-          dead_piece = game.pieces.find_by(x_position: new_x, y_position: new_y)
-          if dead_piece != nil
-            if opposition_piece?(new_x, new_y, id = dead_piece.id, white = dead_piece.white)
-              puts "*********** MOVE TO AND CAPTURE **************" 
-              move_to_capture_piece_and_capture(dead_piece, new_x, new_y)
-              switch_turns
-              self.update_attributes(move_number: move_number+1)
-            else
-              return false
-            end
+        dead_piece = game.pieces.find_by(x_position: new_x, y_position: new_y)
+        if dead_piece != nil
+          if opposition_piece?(new_x, new_y, id = dead_piece.id, white = dead_piece.white)
+            move_to_capture_piece_and_capture(dead_piece, new_x, new_y)
+            switch_turns
+            self.update_attributes(move_number: move_number+1)
           else
-            if (self.piece_type == "King" && (new_x - self.x_position).abs == 2 && self.legal_to_castle?(new_x, new_y) )
-              puts "*********** CASTLING ************"
-              self.castle(new_x, new_y)
-              switch_turns
-              # Don't update move number since castle already does that
-            elsif (self.piece_type == "Pawn" && en_passant?(new_x,new_y))
-              dead_piece = find_capture_piece(new_x, new_y)
-              move_to_capture_piece_and_capture(dead_piece, new_x, new_y)
-              switch_turns
-              self.update_attributes(move_number: move_number+1)
-            else
-              puts "*********** MOVE TO EMPTY SQUARE **************"
-              move_to_empty_square(new_x, new_y)
-              switch_turns
-              self.update_attributes(move_number: move_number+1)
-            end
+            return false
           end
-        
+        else
+          if (self.piece_type == "King" && (new_x - self.x_position).abs == 2 && self.legal_to_castle?(new_x, new_y) )
+            self.castle(new_x, new_y)
+            switch_turns
+            # Don't update move number since castle already does that
+          elsif (self.piece_type == "Pawn" && en_passant?(new_x,new_y))
+            dead_piece = find_capture_piece(new_x, new_y)
+            move_to_capture_piece_and_capture(dead_piece, new_x, new_y)
+            switch_turns
+            self.update_attributes(move_number: move_number+1)
+          else
+            move_to_empty_square(new_x, new_y)
+            switch_turns
+            self.update_attributes(move_number: move_number+1)
+          end
+        end
       end
     end
   end
@@ -365,7 +324,7 @@ class Piece < ApplicationRecord
   end
 
   def verify_valid_move(new_x, new_y) 
-    if self.valid_move?(new_x, new_y, self.id, self.white == true) &&
+    if self.valid_move?(new_x, new_y, self.id, self.white) &&
       (self.is_obstructed?(new_x, new_y) == false) &&
       (self.contains_own_piece?(new_x, new_y) == false) ||
       (self.piece_type == "Pawn" && self.pawn_promotion?)
@@ -400,7 +359,6 @@ class Piece < ApplicationRecord
     #function checks if player is not moving king into a check position
     #and also checking that if king is in check, player must move king out of check,
     #this function restricts any other random move if king is in check.
-    #binding.pry
 
     # Both scenarios can be checked by moving to new coordinates then checking for check
     original_x = self.x_position

@@ -62,29 +62,10 @@ class GamesController < ApplicationController
 
         kings.each do |k| 
 
-            #puts "ENTERING LOOP"
-          
-            # if @king.checkmate?
-            #     puts "----- CHECKMATE -----"
-            #     @king.update_attributes(status: 'Checkmate')
-            #     flash.alert 'Checkmate'
-            #     # Set winner and loser IDs
-            #     if @king.white
-            #         @game.winner_player_id = @game.white_player_id
-            #         @game.loser_player_id = @game.black_player_id
-            #     else
-            #         @game.winner_player_id = @game.black_player_id
-            #         @game.loser_player_id = @game.winner_player_id
-            #     end
-            #     # Set game status and result (?)
-
-            #     redirect to root_path
             if k.check?
-                #puts "----- CHECK -----"
-                #k.update_attributes(status: 'Check')
-                #k.update_attributes(king_check: 1)
+                
                 flash.now[:notice] = k.color.capitalize + ' King in Check'
-                # return
+                
             else
                 #puts "----- NOT IN CHECK -----"
             end
@@ -99,8 +80,6 @@ class GamesController < ApplicationController
             # end   
         end 
 
-        #puts "EXITED LOOP"
-
     end
     
     def move
@@ -110,14 +89,13 @@ class GamesController < ApplicationController
         @current_user = current_user.id
         puts "current_user is #{@current_user}"
         if @game.turn_player_id == @current_user
-            puts "if true"
             firebase_url    = 'https://fir-chess-270721.firebaseio.com/';
             firebase_secret = '8g8o1V0UsNy7O1I4kcRXlClM8vo4V4Yi44pQOLqt';
             firebase = Firebase::Client.new(firebase_url, firebase_secret)
 
             puts "firebase is #{firebase}"
 
-            path = "games/" + @game.firebase_id;
+            path = "games/" + @game.firebase_id
     
             @x_position = params[:x_position]
             @y_position = params[:y_position]
@@ -129,19 +107,23 @@ class GamesController < ApplicationController
                 return
             end
 
-            puts "Before firebase";
+            puts "Before firebase"
 
-            response = firebase.update(path, {
-                :refresh => false
-              })
+            refreshVal = firebase.get(path + "/refresh")
 
-              puts "firebase set to false";
+            if refreshVal.body == true
+                puts "Firebase set to false"
+                response = firebase.update(path, {
+                    :refresh => false
+                })
+            else
+                puts "Firebase set to true"
+                response = firebase.update(path, {
+                    :refresh => true
+                  })
+            end
 
-              response = firebase.update(path, {
-                :refresh => true
-              })
-
-              puts "firebase set to true";
+            
             else 
                 #flash.now[:notice] = "Not yet your turn!"
                 puts "nope"

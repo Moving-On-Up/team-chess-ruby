@@ -10,7 +10,7 @@ class Pawn < Piece
 
 # ----- lines 9-12 Diagonal capture -----
 # ----- lines 13-20 Vertical opening and subsequent moves valid only if there is no opposition piece/no piece at destination coordinate-------
-# ----- Same color piece at destination coordinate is checked in the verify_valid_move in the piece controller -----
+# ----- Same color piece at destination coordinate is checked in the verify_valid_move in the piece model -----
     if en_passant?(new_x_position, new_y_position)
       return true
     elsif (x_distance == y_distance) && !white? && opposition_piece?(new_x_position, new_y_position, id, color)

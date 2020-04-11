@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
 
-  # Rails.application.routes.default_url_options[:host] = "localhost:3029"
-
   mount Chat::Engine => "/chat", as: "chat"
   devise_for :users, :controllers => { registrations: 'registrations' }
   root 'home#index'
