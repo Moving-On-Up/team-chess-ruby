@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_03_31_224309) do
+ActiveRecord::Schema.define(version: 2020_04_11_201744) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -97,6 +97,7 @@ ActiveRecord::Schema.define(version: 2020_03_31_224309) do
     t.integer "move_number", default: 0
     t.integer "king_check", default: 0
     t.integer "status", default: 0
+    t.integer "en_passant_eligible", default: 0
   end
 
   create_table "users", force: :cascade do |t|

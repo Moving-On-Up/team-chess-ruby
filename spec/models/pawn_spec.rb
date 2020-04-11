@@ -73,9 +73,21 @@ RSpec.describe Pawn, type: :model do
 
     # ------ En Passant ------------
 
+    it "should return true for white pawn to be eligible for en passant" do
+      black_pawn = FactoryBot.create(:pawn, x_position:2, y_position: 5, player_id: current_user.id, game_id: game.id, white:false)
+      white_pawn = FactoryBot.create(:pawn, x_position:1, y_position: 5, player_id: current_user.id, game_id: game.id, white:true, move_number: 1, en_passant_eligible: 1)
+      expect(white_pawn.en_passant_eligible?(1, 5)).to eq(true)
+    end
+
+    it "should return false for white pawn to be eligible for en passant with no adjacent opposing pawn" do
+      black_pawn = FactoryBot.create(:pawn, x_position:3, y_position: 5, player_id: current_user.id, game_id: game.id, white:false)
+      white_pawn = FactoryBot.create(:pawn, x_position:1, y_position: 5, player_id: current_user.id, game_id: game.id, white:true, move_number: 1, en_passant_eligible: 1)
+      expect(white_pawn.en_passant_eligible?(1, 5)).to eq(false)
+    end
+
     it "should return true for black pawn to capture white pawn en passant" do
       black_pawn = FactoryBot.create(:pawn, x_position:2, y_position: 5, player_id: current_user.id, game_id: game.id, white:false)
-      white_pawn = FactoryBot.create(:pawn, x_position:1, y_position: 5, player_id: current_user.id, game_id: game.id, white:true, move_number: 1)
+      white_pawn = FactoryBot.create(:pawn, x_position:1, y_position: 5, player_id: current_user.id, game_id: game.id, white:true, move_number: 1, en_passant_eligible: 1)
       expect(black_pawn.en_passant?(1, 6)).to eq(true)
     end
 
