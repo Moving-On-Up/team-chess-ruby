@@ -87,7 +87,6 @@ class GamesController < ApplicationController
         @pieces = @game.pieces
         @piece = Piece.find_by_id(params[:piece_id])
         @current_user = current_user.id
-        puts "current_user is #{@current_user}"
         if @game.turn_player_id == @current_user
             firebase_url    = 'https://fir-chess-270721.firebaseio.com/';
             firebase_secret = '8g8o1V0UsNy7O1I4kcRXlClM8vo4V4Yi44pQOLqt';
@@ -102,7 +101,6 @@ class GamesController < ApplicationController
             @piece.move_to!(@x_position,@y_position)
 
             if @piece.piece_type == "Pawn" && @piece.pawn_promotion?
-                puts "********** REDIRECTING TO PROMOTE *************"
                 redirect_to promote_path()
                 return
             end
@@ -122,7 +120,6 @@ class GamesController < ApplicationController
                     :refresh => true
                   })
             end
-
             
             else 
                 #flash.now[:notice] = "Not yet your turn!"

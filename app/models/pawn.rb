@@ -30,10 +30,33 @@ class Pawn < Piece
     end
   end
 
+  def en_passant_eligible?(new_x_position, new_y_position)
+
+    if self.white? && new_y_position != 5
+      return false
+    elsif self.black? && new_y_position != 4
+      return false
+    end
+
+    if new_x_position > 1
+      left_pawn = game.pieces.where(y_position: y_position, x_position: new_x_position-1, piece_type: "Pawn", white: !self.white).first
+    end
+    
+    if new_x_position < 8
+      right_pawn = game.pieces.where(y_position: y_position, x_position: new_x_position+1, piece_type: "Pawn", white: !self.white).first
+    end
+
+    if left_pawn.nil? && right_pawn.nil?
+      return false
+    else
+      return true
+    end
+  end
+
   def en_passant?(new_x_position, new_y_position)
     return false unless ((new_y_position == y_position + 1 && !white?) || (new_y_position == y_position - 1 && white?)) && ((new_x_position == x_position + 1) || (new_x_position == x_position - 1)) && ((new_y_position == 3 && white?) || (new_y_position == 6 && !white?))
     other_piece = game.pieces.where(y_position: y_position, x_position: new_x_position, piece_type: "Pawn").first
-    return false if other_piece.nil? || other_piece.move_number != 1
+    return false if other_piece.nil? || other_piece.move_number != 1 || other_piece.en_passant_eligible == 0
     return true
   end
 

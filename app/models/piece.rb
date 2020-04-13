@@ -245,16 +245,27 @@ class Piece < ApplicationRecord
           if (self.piece_type == "King" && (new_x - self.x_position).abs == 2 && self.legal_to_castle?(new_x, new_y) )
             self.castle(new_x, new_y)
             switch_turns
+            return true
             # Don't update move number since castle already does that
           elsif (self.piece_type == "Pawn" && en_passant?(new_x,new_y))
             dead_piece = find_capture_piece(new_x, new_y)
             move_to_capture_piece_and_capture(dead_piece, new_x, new_y)
             switch_turns
             self.update_attributes(move_number: move_number+1)
+            return true
           else
             move_to_empty_square(new_x, new_y)
             switch_turns
             self.update_attributes(move_number: move_number+1)
+            return true
+          end
+
+          if self.piece_type == "Pawn"
+            if self.move_number == 1 && en_passant_eligible?(new_x,new_y)
+              self.update_attributes(en_passant_eligible: 1)
+            elsif self.move_number != 1 || !en_passant_eligible?(new_x,new_y)
+              self.update_attributes(en_passant_eligible: 0)
+            end
           end
         end
       end
