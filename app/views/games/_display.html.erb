@@ -1,23 +1,31 @@
-<h1 style="text-align:center">
-<% flash.each do |type, msg| %>
-        <%= msg %>
-<% end %>
-</h1>
-<p style="text-align:center"><h2 style="color:black;">Game Name: </h2><h2><%= @game.name %><h2></p>
-<p style="text-align:center"><h2 style="color:black;">Logged In User: </h2><h2><%= User.find_by_id(current_user.id).email %></h2></p>
-<p style="text-align:center"><h2 style="color:black;">Black Player: </h2><h2><%= User.find_by_id(@game.black_player_id).email %></h2></p>
 
-<% if @game.black_player_id == @game.turn_player_id %>
-    <p style="text-align:center"><h2 style="color:black">Black's turn to move</h2></p>
-<% end %>
-
-<% if current_user.id == @game.turn_player_id %>
-    <%= simple_form_for @game, :url => game_forfeit_path(@game.id) do |f| %>
-        <p style="text-align:center"><%= f.submit 'Forfeit', class: 'btn btn-danger' %></p>
+<div class="booyah-box-brown col-10 offset-1">
+    <h2 style="text-align:center">
+    <% flash.each do |type, msg| %>
+            <%= msg %>
     <% end %>
-<% end %>
-<p style="text-align:center"><h2 style="color:white;">White Player: </h2><h2><%= User.find_by_id(@game.white_player_id).email %></h2></p>
-<% if @game.white_player_id == @game.turn_player_id %>
-    <p style="text-align:center"><h2 style="color:white">White's turn to move</h2></p>
-<% end %>
-<p style="text-align:center"><h2><a href="/">Return to Menu</a></h2></p>
+    </h2>
+    <p style="text-align:center"><h2 style="color:black;">Game Name: </h2><h2><%= @game.name %><h4></p>
+    <p style="text-align:center"><h2 style="color:black;">Logged In User: </h2><h5><%= User.find_by_id(current_user.id).email %></h5></p>
+    <% if current_user.id == @game.turn_player_id %>
+        <p style="text-align:center"><h2 style="color:black">Your move</h2></p>
+    <% else %>
+        <p style="text-align:center"><h2 style="color:black">Not your move</h2></p>
+    <% end %>
+    <p style="text-align:center"><h2 style="color:black;">Black Player: </h2><h5><%= User.find_by_id(@game.black_player_id).email %></h5></p>
+
+    <% if @game.black_player_id == @game.turn_player_id %>
+        <p style="text-align:center"><h2 style="color:black">Black's turn to move</h2></p>
+    <% end %>
+
+    <% if current_user.id == @game.turn_player_id %>
+        <%= simple_form_for @game, :url => game_forfeit_path(@game.id) do |f| %>
+            <p style="text-align:center"><%= f.submit 'Forfeit', class: 'btn btn-danger' %></p>
+        <% end %>
+    <% end %>
+    <p style="text-align:center"><h2 style="color:white;">White Player: </h2><h5><%= User.find_by_id(@game.white_player_id).email %></h5></p>
+    <% if @game.white_player_id == @game.turn_player_id %>
+        <p style="text-align:center"><h2 style="color:white">White's turn to move</h2></p>
+    <% end %>
+    <p style="text-align:center"><h2><a href="/">Return to Menu</a></h2></p>
+</div>

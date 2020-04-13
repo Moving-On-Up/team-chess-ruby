@@ -1,1 +1,1 @@
-$('#left-column').html("<%= j(render "display", locals: {:game => @game}) %>");
+$('#left-column').fadeOut().html("<%= j(render "display", locals: {:game => @game}) %>").fadeIn(1000);

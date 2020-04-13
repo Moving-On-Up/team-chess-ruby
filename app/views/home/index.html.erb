@@ -2,7 +2,13 @@
 
   <div class="col-10 offset-1">
 
-  <h1>Welcome, <%= User.find_by_id(current_user.id).email %></h1>
+  <h1>Hello, <%= User.find_by_id(current_user.id).email %></h1>
+
+  <h2 style="text-align:left">
+    <% flash.each do |type, msg| %>
+            <%= msg %>
+    <% end %>
+  </h2>
 
   <h2>Active games:</h2>
 
@@ -25,14 +31,3 @@
   <%= render "available", locals: {:games => @games} %>
 
   </div>
-
-  <script>
-
-  var timelyrefreshAvailable = function(){
-    $.ajax({
-    url: "load_available"
-    })
-  };
-  setInterval(timelyrefreshAvailable,80000);
-
-  </script>

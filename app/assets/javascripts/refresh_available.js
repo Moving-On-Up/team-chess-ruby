@@ -1,11 +1,13 @@
 $(document).ready(function () {
-    // will call refreshParital every 3 seconds
-    setInterval(refreshPartial, 15000)
-
+    setInterval(refreshPartial, 20000)
 });
 
 function refreshPartial() {
     $.ajax({
-    url: "/load_available"
+    url: "/load_active"
+    })
+
+    $.ajax({
+        url: "/load_available"
     })
 }

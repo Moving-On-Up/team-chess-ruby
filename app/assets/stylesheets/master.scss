@@ -48,6 +48,16 @@ background-color: white;
   border-color: #e4e4e4 #bebebd #bebebd #e4e4e4;
 }
 
+.booyah-box-brown {
+  -moz-box-shadow: 1px 1px 2px 0 #d0d0d0;
+  -webkit-box-shadow: 1px 1px 2px 0 #d0d0d0;
+  box-shadow: 1px 1px 2px 0 #d0d0d0;
+  background: brown;
+  border: 1px solid #ccc;
+  border-color: #e4e4e4 #bebebd #bebebd #e4e4e4;
+  word-wrap: break-word;
+}
+
 .booyah-box-login {
   -moz-box-shadow: 1px 1px 2px 0 #d0d0d0;
   -webkit-box-shadow: 1px 1px 2px 0 #d0d0d0;

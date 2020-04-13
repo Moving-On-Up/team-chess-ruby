@@ -9,8 +9,6 @@
         </div>
 
         <div class="column">
-        <!--  background is the background color of the launch fab -->
-        <!--  color is the icon color on the launch fab. Can be light or dark -->
         <%= render_chat %>
       </div>
     </div>
@@ -26,7 +24,6 @@
 
 <!-- The core Firebase JS SDK is always required and must be listed first -->
 <script src="https://www.gstatic.com/firebasejs/7.11.0/firebase-app.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/7.6.1/firebase-database.js"></script>
 
@@ -45,13 +42,14 @@
                 var path = "/games/<%= @game.id.to_s %>/" + piece_id + "/" + target_x + "/" + target_y;
                 console.log(path);
                 var data = $("#move").serializeArray();//serialize form inputs
+                console.log("ajax drop: board refresh success");
 
                 $.ajax({
                     data: data,
                     type: "POST",
                     url: path,
                     success: function(){
-                    console.log("board refresh success"); 
+                    console.log("NEVER REACHES: inside drop: board refresh success"); 
                     }
                 });
        
@@ -81,16 +79,13 @@
 
         gamesRef.on('child_changed', function(snapshot) {
 
-            console.log("child changed");
-
             $.ajax({
                     type: "GET",
                     url: "<%= @game.id %>/load_board",
                     success: function(){
-                    console.log("load board refresh success"); 
+                    console.log("child changed: load board refresh success"); 
                     }
                 });
-    
 
         }, function(error) {
             console.error(error);
